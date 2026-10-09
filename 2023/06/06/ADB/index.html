@@ -1,48 +1,368 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>ADB · 栖息地</title><meta name="description" content="ADB 操作命令详解及用法大全
+下载解压 adb android-platform-tools
+配置环境变量：
 
-include mixins
 
-block site_title
-    != page.title + " · " + config.title
+zsh
+.zshrc
+home path
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+
+常用命令
+
+
+cmd
+usage
+cmd
+usage
+cmd
+usage
+
+
+
+adb version
+查看版本号
+adb start-"><meta name="og:description" content="ADB 操作命令详解及用法大全
+下载解压 adb android-platform-tools
+配置环境变量：
+
+
+zsh
+.zshrc
+home path
+
+
+
+常用命令
+
+
+cmd
+usage
+cmd
+usage
+cmd
+usage
+
+
+
+adb version
+查看版本号
+adb start-"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="ADB"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>ADB</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-06-06 16:06</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/DEV/" title="DEV">DEV</a><span>&nbsp;</span></span></p><p class="post-abstract"><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903645289398280#heading-15">ADB 操作命令详解及用法大全</a></p>
+<p>下载解压 adb android-platform-tools</p>
+<h2 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h2><table>
+<thead>
+<tr>
+<th>zsh</th>
+<th>.zshrc</th>
+<th>home path</th>
+</tr>
+</thead>
+</table>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><table>
+<thead>
+<tr>
+<th>cmd</th>
+<th>usage</th>
+<th>cmd</th>
+<th>usage</th>
+<th>cmd</th>
+<th>usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>adb version</td>
+<td>查看版本号</td>
+<td>adb start-server</td>
+<td>启动 adb 服务</td>
+<td>adb kill-server</td>
+<td>终止 adb 服务</td>
+</tr>
+<tr>
+<td>adb devices</td>
+<td>连接的设备</td>
+<td>adb root</td>
+<td>以 root 身份使用 adb</td>
+<td>adb -p <port> start-server</td>
+<td>指定 adb 端口，默认 5037</td>
+</tr>
+<tr>
+<td>adb connect:port</td>
+<td>通过制定端口连接制定 ip 的机器</td>
+<td>adb disconnect</td>
+<td>断开链接</td>
+<td>adb usb</td>
+<td>以 usb 模式重新启动 adb</td>
+</tr>
+</tbody></table>
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><p>adb 默认的端口号为 5555 ，连接设备是可以使用<code>adb connect 目标IP</code> 等同于 <code>adb connect 目标IP:5555</code></p>
+<p>修改端口可以使用 <code>adb tcpip 端口号</code> 实现，例如 <code>adb tcpip 8888</code></p>
+<h2 id="进阶玩法："><a href="#进阶玩法：" class="headerlink" title="进阶玩法："></a>进阶玩法：</h2><p>重置 adb 网络监听端口的两种方法：</p>
+<p>方法 1：通过 usb 线连接电脑跟安卓设备，输入 adb 命令：adb tcpip 5555 ；该条命令是设置网络 adb 监听的端口，5555 是默认，也可设置为其它的。(重启失效)</p>
+<p>方法 2：使用文件管理器按照以下路径打开文件：&#x2F;system&#x2F;build.prop，在该文件的最后添加以下内容：service.adb.tcp.port&#x3D;5555 (重启依然有效，可以有线或无线操作)</p>
+<p>注：方法 2 比较稳定，重启后端口号依然能保持，但是修改 build.prop 文件需要 root 权限。</p>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><ul>
+<li>有时候 devices 后面出现 unauthorized 的解决方案：</li>
+</ul>
+<p>依次运行以下命令</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">su</span><br><span class="line"><span class="built_in">export</span> <span class="attribute">TMPDIR</span>=/sdcard/.android/tmp</span><br><span class="line"><span class="built_in">export</span> <span class="attribute">HOME</span>=/sdcard</span><br><span class="line">adb kill-server</span><br><span class="line">adb devices</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>failed to start daemon , can’t connect to daemon</li>
+</ul>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb nodaemon <span class="keyword">server</span></span><br></pre></td></tr></table></figure>
+
+<p>应用管理</p>
+<h2 id="应用管理"><a href="#应用管理" class="headerlink" title="应用管理"></a>应用管理</h2><p>查看</p>
+<p>adb shell pm list packages [options]</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>显示</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>显示应用关联的 apk 文件</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>显示 disable 的应用</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>显示 enabled 的应用</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>显示系统应用</td>
+</tr>
+<tr>
+<td>-3</td>
+<td>显示第三方应用</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>显示应用的 installer</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>包含已卸载应用</td>
+</tr>
+<tr>
+<td><filter></td>
+<td>包含制定字符的应用</td>
+</tr>
+<tr>
+<td>无</td>
+<td>所有应用</td>
+</tr>
+</tbody></table>
+<p>安装</p>
+<p>adb install <package-name></p>
+<p>安装文件需要放置在当前目录下</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-l</td>
+<td>安装到保护目录&#x2F;mnt&#x2F;asec</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>允许覆盖安装</td>
+</tr>
+<tr>
+<td>-t</td>
+<td>允许安装 androidManifest.xml 里的 application 指定 android：testOnly&#x3D;ture 的应用</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>将应用安装到 sdcard</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>允许降级覆盖安装</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>授予运行时到权限</td>
+</tr>
+</tbody></table>
+<p>卸载</p>
+<p>adb uninstall [-k] [package-name]</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-k</td>
+<td>卸载时保留数据和缓存目录</td>
+</tr>
+</tbody></table>
+<p>清除应用数据和缓存</p>
+<p>adb shell pm clear <package-name></p>
+<p>查看应用安装路径</p>
+<p>adb shell pm path <package-name></p>
+<p>&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;查看前台 activity</p>
+<p>adb shell dumpsys activity activities | grep moucusedActivity</p>
+<p>查看正在运行的 services</p>
+<p>adb shell dumpsys activity services <package-name></p>
+<p>adb shell dumpsys activity services</p>
+<p>查看应用详细信息</p>
+<p>adb shell dumpsys package <package-name></p>
+<p>启动应用</p>
+<p>adb shell am start <package-name></p>
+<p>adb shell am start <package-name>&#x2F;.Activity(需要启动的 activity)</p>
+<p>交互</p>
+<p>强制停止应用</p>
+<p>adb shell am force-stop <package-name></p>
+<p>收紧内存</p>
+<p>adb shell am send-trim-memory <pid> <level></p>
+<p>pid:进程 id</p>
+<p>level：HIDDEN RUNNING_MODERATE BACKGROUND RUNING_LOW MODERATE RUNNING_CRITICAL COMPLETE</p>
+<h2 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h2><p>从设备下载文件到本地</p>
+<p>adb pull <remote> [local]</p>
+<p>remote：模拟器&#x2F;设备的文件路径</p>
+<p>local：本地路径，留空默认即当前目录</p>
+<p>将本地文件推送到设备</p>
+<p>adb push <local> [remote]</p>
+<p>列出制定目录的内容</p>
+<p>adb shell ls [option] <directory></p>
+<p>directory:制定目录，省略即当前</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>所有文件和目录</td>
+</tr>
+<tr>
+<td>-a</td>
+<td>所有文件包括隐藏</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>所有文件和索引编号</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>所有文件和文件大小</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>所有文件和 uid gid</td>
+</tr>
+<tr>
+<td>-R</td>
+<td>所有子目录的文件</td>
+</tr>
+</tbody></table>
+<p>切换到目录</p>
+<p>adb shell cd <directory></p>
+<p>删除</p>
+<p>adb shell rm [iptions] &lt;file&#x2F;directory&gt;</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>删除文件</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>强制删除，不提示</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>强制删除制定目录下的所有内容</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>删除指定目录，等同于 rmdir</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>交互删除，删除前提示</td>
+</tr>
+</tbody></table>
+<p>创建目录</p>
+<p>adb shell mkdir [options] <directory-name></p>
+<p>同样类型的 adb shel 命令有</p>
+<p>pwd</p>
+<p>cp</p>
+<p>mv</p>
+<h2 id="网络管理"><a href="#网络管理" class="headerlink" title="网络管理"></a>网络管理</h2><p>网络信息查看</p>
+<p>adb shell netstat</p>
+<p>将网络信息输出到制定文件</p>
+<p>adb shell netstat&gt;<file-path></p>
+<p>ping</p>
+<p>adb shell ping destination</p>
+<p>查看 ip</p>
+<p>adb shell ifconfig | grep Mask</p>
+<p>如果不行，使用一下命令：</p>
+<p>adb shell netcfg</p>
+<h2 id="按键"><a href="#按键" class="headerlink" title="按键"></a>按键</h2><p>菜单</p>
+<p>adb shell input keyevent 82</p>
+<p>home 键</p>
+<p>adb shell input keyevent 3</p>
+<p>返回键</p>
+<p>adb shell input keyevent 4</p>
+<p>静音</p>
+<p>adb shell input keyevent 164</p>
+<p>亮屏</p>
+<p>adb shell input keyevent 224</p>
+<p>关屏</p>
+<p>adb shell input keyevent 223</p>
+<p>滑动解锁</p>
+<p>adb shell input swipe 300 1000 300 500</p>
+<p>300 1000 300 500 代表起点 x 坐标 起点 y 坐标 结束 x 坐标 结束 y 坐标</p>
+<p>焦点处于文本框时输入文本</p>
+<p>adb shell input text &lt;输入内容&gt;</p>
+<p>（英文输入法下可输入英文，中文异常）</p>
+<h2 id="日志及其他"><a href="#日志及其他" class="headerlink" title="日志及其他"></a>日志及其他</h2><p>清空日志</p>
+<p>adb logcat -c</p>
+<p>显示日志在控制台</p>
+<p>adb logcat -d</p>
+<p>查看电池状况</p>
+<p>adb shell dumpsys battery</p>
+<p>查看分辨率</p>
+<p>adb shell wm size</p>
+<p>查看屏幕密度</p>
+<p>adb shell wm density</p>
+<p>查看屏幕参数</p>
+<p>adb shell dumpsys window displays</p>
+<p>查看设备 android id</p>
+<p>adb shell settings get secure android_id</p>
+<p>查看 android 系统版本</p>
+<p>adb shell getprop ro.build.version.release</p>
+<p>查看 mac 地址</p>
+<p>adb shell cat &#x2F;sys&#x2F;class&#x2F;net&#x2F;wan0&#x2F;address</p>
+<p>截图</p>
+<p>adb exec-out screencap -p &gt; sc.png</p>
+<p>重启</p>
+<p>adb reboot</p>
+<p>查看当前 activity</p>
+<p>adb shell dumpsys activity activities | grep mResumedActivity</p>
+<p>》〉》〉华为后台调用 activity</p>
+<p>om.huawei.android.launcher&#x2F;.quickstep.RecentsActivit</p>
+<p>adb 调起多任务管理</p>
+<p>adb shell am start -n com.huawei.android.launcher&#x2F;.quickstep.RecentsActivity</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/06/06/Git%E5%AE%89%E8%A3%85%E5%90%8E%E5%8F%B3%E9%94%AE%E6%B2%A1%E6%9C%89git-bash%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" title="Git安装后右键没有git bash的解决方案"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: Git安装后右键没有git bash的解决方案</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/06/06/Regex-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Regex 正则表达式">下一篇: Regex 正则表达式&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

@@ -1,48 +1,393 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>Stremio Addon：懂片帝插件开发实录 · 栖息地</title><meta name="description" content="把一次完整的技术项目从需求到落地的过程沉淀下来。不炫技，只记录真实的取舍、踩过的坑和可复用的经验。
 
-include mixins
 
-block site_title
-    != page.title + " · " + config.title
+一、起点：为什么造这个轮子事情的起因很简单：自己在用 Stremio 看片，但常用的几个中文资源站没有对应的 Addon。市场上能找到的几个要么维护停滞，要么接口失效，要么把简单的事情做得过于复杂"><meta name="og:description" content="把一次完整的技术项目从需求到落地的过程沉淀下来。不炫技，只记录真实的取舍、踩过的坑和可复用的经验。
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+一、起点：为什么造这个轮子事情的起因很简单：自己在用 Stremio 看片，但常用的几个中文资源站没有对应的 Addon。市场上能找到的几个要么维护停滞，要么接口失效，要么把简单的事情做得过于复杂"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="Stremio Addon：懂片帝插件开发实录"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>Stremio Addon：懂片帝插件开发实录</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2026-10-09 22:10</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/stremio/" title="stremio">stremio</a><span>&nbsp;</span><a class="a-tag" href="/tags/nuvio/" title="nuvio">nuvio</a><span>&nbsp;</span></span></p><p class="post-abstract"><blockquote>
+<p>把一次完整的技术项目从需求到落地的过程沉淀下来。不炫技，只记录真实的取舍、踩过的坑和可复用的经验。</p>
+</blockquote>
+<hr>
+<h2 id="一、起点：为什么造这个轮子"><a href="#一、起点：为什么造这个轮子" class="headerlink" title="一、起点：为什么造这个轮子"></a>一、起点：为什么造这个轮子</h2><p>事情的起因很简单：自己在用 Stremio 看片，但常用的几个中文资源站没有对应的 Addon。市场上能找到的几个要么维护停滞，要么接口失效，要么把简单的事情做得过于复杂。</p>
+<p>我手上有两样东西：</p>
+<ol>
+<li>一个已经能跑的 TVBox Spider（Python），包含完整的签名算法、接口调用和业务逻辑</li>
+<li>一份从 GitHub 上找到的参考项目（jpyyStremio），跑在 Vercel Edge Functions 上，架构清晰</li>
+</ol>
+<p>想法很直接：<strong>把 Python Spider 的接口能力，用 jpyy 的架构重新实现成 Stremio Addon</strong>。</p>
+<p>于是有了这个项目。过程比预想的长，也比我预想的有意思。</p>
+<hr>
+<h2 id="二、技术全景"><a href="#二、技术全景" class="headerlink" title="二、技术全景"></a>二、技术全景</h2><h3 id="目标站点的接口特点"><a href="#目标站点的接口特点" class="headerlink" title="目标站点的接口特点"></a>目标站点的接口特点</h3><p>懂片帝是一个 Next.js 应用，所有 <code>/v1/*</code> 接口都需要 HMAC-SHA256 签名。签名算法：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sign = HMAC-SHA256(</span><br><span class="line">  <span class="type">key</span> = <span class="string">&quot;8b9a908a05eac640e1ee06f52acaa741bfe4ba9e004eeffdbeb635e532e06666&quot;</span>,</span><br><span class="line">  msg = <span class="string">&quot;METHOD<span class="subst">\n</span>/path?query<span class="subst">\n</span>毫秒时间戳<span class="subst">\n</span>32位hex随机数&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>请求头需要 7 个 <code>x-ai-movie-*</code> 字段，包括时间戳、nonce、签名。</p>
+<p>关键接口：</p>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/v1/browse/catalog</code></td>
+<td>分类浏览 + 关键词搜索</td>
+</tr>
+<tr>
+<td><code>/v1/catalog/&#123;id&#125;</code></td>
+<td>影片详情</td>
+</tr>
+<tr>
+<td><code>/v1/catalog/&#123;id&#125;/episodes</code></td>
+<td>剧集列表</td>
+</tr>
+<tr>
+<td><code>/v1/playback/resolve/&#123;token&#125;</code></td>
+<td>解析播放线路</td>
+</tr>
+<tr>
+<td><code>/v1/playback/resolve-line</code></td>
+<td>解析官方票据（需登录）</td>
+</tr>
+</tbody></table>
+<h3 id="Addon-架构"><a href="#Addon-架构" class="headerlink" title="Addon 架构"></a>Addon 架构</h3><p>选 Vercel Edge Functions 作为运行环境，原因：</p>
+<ul>
+<li><strong>免费额度充足</strong>：个人自用绰绰有余</li>
+<li><strong>全球边缘节点</strong>：用户就近响应</li>
+<li><strong>无状态天然适配</strong>：Stremio Addon 本来就是无状态服务</li>
+<li><strong>CDN 缓存开箱即用</strong>：<code>Cache-Control</code> 响应头直接生效</li>
+</ul>
+<p>技术栈刻意保持极简：</p>
+<ul>
+<li>语言：纯 JavaScript（ES Module）</li>
+<li>运行时依赖：<strong>零第三方库</strong>，只用原生 <code>fetch</code> + WebCrypto</li>
+<li>缓存：Upstash Redis（可选）+ Vercel CDN</li>
+</ul>
+<p>不用 <code>node-fetch</code>、不用 <code>axios</code>、不用 <code>express</code>，是因为 Edge Runtime 本身提供了这些能力，引入库反而增加冷启动开销和版本管理成本。</p>
+<hr>
+<h2 id="三、五个真实的技术挑战"><a href="#三、五个真实的技术挑战" class="headerlink" title="三、五个真实的技术挑战"></a>三、五个真实的技术挑战</h2><h3 id="挑战-1：签名算法的跨语言对拍"><a href="#挑战-1：签名算法的跨语言对拍" class="headerlink" title="挑战 1：签名算法的跨语言对拍"></a>挑战 1：签名算法的跨语言对拍</h3><p>Python 用 <code>hmac</code> + <code>hashlib</code>，JS 用 WebCrypto。算法逻辑一样，但<strong>编码细节极易出错</strong>。</p>
+<p>我写了两个最小脚本独立对拍：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// verify-sign.mjs</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">MSG</span> = <span class="string">`GET\n/v1/browse/catalog?kind=movie&amp;page=1&amp;limit=20\n1700000000000\n<span class="subst">$&#123;<span class="string">&#x27;0&#x27;</span>.repeat(<span class="number">32</span>)&#125;</span>`</span>;</span><br><span class="line"><span class="comment">// HMAC-SHA256 → hex</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dpd.py</span></span><br><span class="line">MSG = <span class="string">&#x27;GET\n/v1/browse/catalog?kind=movie&amp;page=1&amp;limit=20\n1700000000000\n&#x27;</span> + <span class="string">&#x27;0&#x27;</span>*<span class="number">32</span></span><br><span class="line"><span class="built_in">print</span>(hmac.new(KEY, MSG.encode(), hashlib.sha256).hexdigest())</span><br></pre></td></tr></table></figure>
+
+<p>两个输出必须<strong>逐字节一致</strong>。这是后续所有请求的基础，值得花时间验证。</p>
+<p><strong>踩过的坑</strong>：</p>
+<ul>
+<li>消息分隔符是 <code>\n</code>（换行），不是空格</li>
+<li>nonce 是 <strong>32 位 hex 小写</strong>，不是 UUID</li>
+<li>时间戳是 <strong>13 位毫秒字符串</strong>，不是秒</li>
+</ul>
+<h3 id="挑战-2：resolve-票据的定位"><a href="#挑战-2：resolve-票据的定位" class="headerlink" title="挑战 2：resolve:// 票据的定位"></a>挑战 2：<code>resolve://</code> 票据的定位</h3><p>站点对同一个影片会下发 20~30 条”线路”：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">url_kind</span>=m3u8          <span class="attribute">resolved</span>=<span class="literal">true</span>   匿名可用    → 直接播放</span><br><span class="line"><span class="attribute">url_kind</span>=resolve_ticket <span class="attribute">resolved</span>=<span class="literal">false</span>  需登录     → 二次解析</span><br></pre></td></tr></table></figure>
+
+<p>官方高清线路走的是第二种。流程：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET <span class="regexp">/v1/</span>playback<span class="regexp">/resolve/</span>&#123;token&#125;</span><br><span class="line">  → 返回 line_options[]，每条含 url=resolve:<span class="regexp">//</span>&lt;ticket&gt;</span><br><span class="line"></span><br><span class="line">POST <span class="regexp">/v1/</span>playback/resolve-line</span><br><span class="line">  body: &#123;<span class="string">&quot;ticket&quot;</span>: <span class="string">&quot;&lt;去掉 resolve:// 前缀的字符串&gt;&quot;</span>&#125;</span><br><span class="line">  → 返回 line.url = https:<span class="regexp">//</span>xxx.toutiaovod.com/...mp4</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键洞察</strong>：官方线路画质最高但需 Cookie，采集 m3u8 线路画质一般但匿名可用。<strong>两条腿都要有</strong>，且要能自动切换。</p>
+<p>我的策略：</p>
+<ul>
+<li><strong>无 Cookie</strong>：只用 m3u8</li>
+<li><strong>有 Cookie</strong>：优先解析官方票据，全部失败则回退 m3u8</li>
+</ul>
+<h3 id="挑战-3：请求限流与-4xx-语义"><a href="#挑战-3：请求限流与-4xx-语义" class="headerlink" title="挑战 3：请求限流与 4xx 语义"></a>挑战 3：请求限流与 4xx 语义</h3><p>11 条票据线路并发请求，站点直接返回 429。</p>
+<p><strong>解决方案</strong>：串行 + 250ms 间隔。11 条从”17 秒 + 全部失败”变成”5 秒 + 3 条成功”。</p>
+<p>另一个发现：<strong>4xx 错误重试毫无意义</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+<th>重试</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>401</td>
+<td>登录态失效</td>
+<td>❌ 立即失败</td>
+</tr>
+<tr>
+<td>402</td>
+<td>需付费会员</td>
+<td>❌ 立即失败</td>
+</tr>
+<tr>
+<td>404</td>
+<td>线路不可用</td>
+<td>❌ 立即失败</td>
+</tr>
+<tr>
+<td>429</td>
+<td>站点限流</td>
+<td>❌ 越重试越糟</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>服务端错误</td>
+<td>✅ 可重试</td>
+</tr>
+<tr>
+<td>网络异常</td>
+<td>偶发</td>
+<td>✅ 可重试</td>
+</tr>
+</tbody></table>
+<p>改成 <code>/HTTP 4\d\d/</code> 统一判断后，失败场景的耗时从 30 秒降到 8 秒。</p>
+<h3 id="挑战-4：缓存分层与-negative-缓存"><a href="#挑战-4：缓存分层与-negative-缓存" class="headerlink" title="挑战 4：缓存分层与 negative 缓存"></a>挑战 4：缓存分层与 negative 缓存</h3><p>三级缓存设计：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>存储</th>
+<th>命中耗时</th>
+<th>生命周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1</td>
+<td>内存 Map</td>
+<td>&lt; 1ms</td>
+<td>60 秒</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>Upstash Redis</td>
+<td>&lt; 10ms</td>
+<td>5 分钟 ~ 7 天</td>
+</tr>
+<tr>
+<td>L3</td>
+<td>Vercel CDN</td>
+<td>&lt; 100ms</td>
+<td>全局 TTL</td>
+</tr>
+</tbody></table>
+<p><strong>negative 缓存</strong>是后期加的优化：</p>
+<p>某片的官方线路一旦全部失败（例如”复仇者联盟”全部 402&#x2F;404），5 分钟内不再尝试。用户第二次进入时直接走 m3u8 回退分支。</p>
+<p>效果对比：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>优化前</th>
+<th>优化后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第二次请求</td>
+<td>8.3 秒</td>
+<td>2.0 秒</td>
+</tr>
+<tr>
+<td>用户感受</td>
+<td>明显等待</td>
+<td>秒开</td>
+</tr>
+</tbody></table>
+<p>关键设计点：<strong>negative 缓存的 key 包含 cookie 的短 hash</strong>。用户切换账号后能立即重试，不被旧缓存阻挡。</p>
+<h3 id="挑战-5：IMDb-多语言匹配"><a href="#挑战-5：IMDb-多语言匹配" class="headerlink" title="挑战 5：IMDb 多语言匹配"></a>挑战 5：IMDb 多语言匹配</h3><p>这是最复杂的模块。问题背景：TMDB 返回英文原名（如 <code>3 Body Problem</code>），站点收录的是中文译名（如 <code>三体</code>），直接搜索匹配不到。</p>
+<p>四步方案：</p>
+<ol>
+<li><strong>拉取所有别名</strong>：<code>/tv/&#123;id&#125;/alternative_titles</code> 返回 9 种语言</li>
+<li><strong>按优先级排序</strong>：纯中文 &gt; 中文混合 &gt; 原始标题 &gt; 其他</li>
+<li><strong>多标题搜索</strong>：逐个搜索站点，合并去重</li>
+<li><strong>相似度匹配</strong>：Levenshtein 距离 + 年份加分 + 精确匹配加分</li>
+</ol>
+<p>实测效果：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="symbol">IMDbResolve</span>] resolve: tt13016388 type=series season=<span class="number">1</span></span><br><span class="line">[<span class="symbol">IMDbResolve</span>] 候选标题: 三体 | <span class="number">3</span> <span class="symbol">Body</span> <span class="symbol">Problem</span> | <span class="number">3</span>体 | Задача трёх тел | ...</span><br><span class="line">[<span class="symbol">IMDbResolve</span>] 搜索合并：原始 <span class="number">65</span> 条 → 过滤后 <span class="number">19</span> 条</span><br><span class="line">[<span class="symbol">IMDbResolve</span>] season <span class="number">1</span> 命中: <span class="string">&quot;三体 第1季&quot;</span></span><br><span class="line">[<span class="symbol">IMDbResolve</span>] 解析成功并缓存: tt13016388 → vodId=av_gRw-...</span><br></pre></td></tr></table></figure>
+
+<p><strong>一个反直觉的发现</strong>：<code>/v1/browse/catalog?query_mode=fast_v3&amp;q=三体</code> 比 <code>/v1/suggest?q=三体</code> <strong>快 3 倍且结果更全</strong>。</p>
+<ul>
+<li>suggest：需要额外补 N 次 detail，共 N+1 次请求</li>
+<li>fast_v3：**一次请求返回完整 cards[]**，字段齐全</li>
+</ul>
+<p>从 7 次 HTTP 降到 1 次，这是搜索体验的关键优化。</p>
+<hr>
+<h2 id="四、配置分层的设计哲学"><a href="#四、配置分层的设计哲学" class="headerlink" title="四、配置分层的设计哲学"></a>四、配置分层的设计哲学</h2><p>初期配置散落在三个位置（代码、环境变量、URL 参数），混乱且维护成本高。重构后形成清晰的三层：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>位置</th>
+<th>生命周期</th>
+<th>典型项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>部署级</strong></td>
+<td>环境变量</td>
+<td>一次部署</td>
+<td><code>UPSTASH_*</code>、<code>APP_PREFIX</code></td>
+</tr>
+<tr>
+<td><strong>用户级</strong></td>
+<td>URL <code>?cfg=</code></td>
+<td>每请求</td>
+<td><code>bd</code>、<code>bv</code>、<code>blockedLines</code>、<code>cookie</code></td>
+</tr>
+<tr>
+<td><strong>代码默认</strong></td>
+<td><code>config.js</code></td>
+<td>代码版本</td>
+<td><code>BASE_DOMAIN</code>、<code>DEFAULT_BLOCKED_LINES</code></td>
+</tr>
+</tbody></table>
+<p><strong>关键原则</strong>：</p>
+<ul>
+<li><strong>用户级配置只存用户主动改过的字段</strong>。没改的不写，服务端用代码默认值兜底。这样开发者更新默认值时所有用户自动获益。</li>
+<li><strong>代码默认 + 用户增量</strong>，不是”覆盖”。比如黑名单：<code>DEFAULT_BLOCKED_LINES ∪ user.blockedLines</code>。开发者发现某线路长期失效，加到代码里所有用户立即受益。</li>
+<li><strong><code>cfg</code> 用 base64url 编码</strong>。URL 里不能直接放 JSON，base64url 编码后全是 URL 安全字符。Stremio 客户端会自动附加这个参数到每次请求。</li>
+</ul>
+<p>这套设计的核心价值：<strong>用户永远不需要手动同步默认值，但又有完全的覆盖能力</strong>。</p>
+<hr>
+<h2 id="五、黑名单：从被动到主动"><a href="#五、黑名单：从被动到主动" class="headerlink" title="五、黑名单：从被动到主动"></a>五、黑名单：从被动到主动</h2><p>30 条 m3u8 线路展示给用户，体验很差。很多是同一内容的重复源，还有一批长期 404。</p>
+<p><strong>黑名单功能的设计</strong>：</p>
+<ol>
+<li><strong>配置入口</strong>：代码默认（<code>DEFAULT_BLOCKED_LINES</code>）+ 配置页面追加</li>
+<li><strong>生效位置</strong>：<ul>
+<li>官方票据线路：<strong>请求前过滤</strong>，省 HTTP 请求</li>
+<li>直连 m3u8 线路：<strong>响应前过滤</strong>，响应瘦身</li>
+</ul>
+</li>
+<li><strong>维护工具</strong>：<code>health.js</code> 脚本自动跑多部片，统计每个线路名的成功率</li>
+</ol>
+<p><strong>关键差异</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>过滤时机</th>
+<th>收益</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>官方票据</td>
+<td>请求前</td>
+<td><strong>省 HTTP</strong>（黑名单里的不发请求）</td>
+</tr>
+<tr>
+<td>直连 m3u8</td>
+<td>响应前</td>
+<td>响应瘦身（url 已经在响应里）</td>
+</tr>
+</tbody></table>
+<p>这个区别很微妙，但影响实际性能。早期我把两个都做成响应前过滤，白白发了不少必失败的请求。</p>
+<hr>
+<h2 id="六、调试方法论"><a href="#六、调试方法论" class="headerlink" title="六、调试方法论"></a>六、调试方法论</h2><p>这个项目调试量很大。沉淀下来的方法论：</p>
+<h3 id="1-独立探针脚本先行"><a href="#1-独立探针脚本先行" class="headerlink" title="1. 独立探针脚本先行"></a>1. 独立探针脚本先行</h3><p>改业务代码之前，先用<strong>独立脚本</strong>验证接口行为：</p>
+<ul>
+<li><code>verify-sign.mjs</code>：签名对拍</li>
+<li><code>probe.mjs</code>：遍历所有接口，输出字段结构</li>
+<li><code>test-resolve-line.mjs</code>：验证 Cookie 解析票据</li>
+<li><code>test-threads.mjs</code>：验证新发现的搜索协议</li>
+</ul>
+<p><strong>收益</strong>：接口行为弄清楚后再写业务代码，避免在 addon 里反复调试。</p>
+<h3 id="2-结构化日志"><a href="#2-结构化日志" class="headerlink" title="2. 结构化日志"></a>2. 结构化日志</h3><p>分级 + 模块前缀：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">14</span>:<span class="number">52</span>:<span class="number">37.444</span>] ℹ️ [<span class="symbol">Handler</span>] stream source=dpd id=av_5LAgCLxw...</span><br><span class="line">[<span class="number">14</span>:<span class="number">52</span>:<span class="number">40.358</span>] ℹ️ [<span class="symbol">Adapter</span>] 解析 <span class="number">11</span> 条票据线路（已配置 <span class="symbol">Cookie</span>）</span><br><span class="line">[<span class="number">14</span>:<span class="number">52</span>:<span class="number">40.676</span>] ℹ️ [<span class="symbol">HTTP</span>] <span class="number">402</span> (<span class="number">317</span>ms) .../resolve-line</span><br><span class="line">[<span class="number">14</span>:<span class="number">52</span>:<span class="number">40.677</span>] 🐛 [<span class="symbol">Adapter</span>] 票据解析失败 (高清-官方<span class="symbol">B</span>): 需付费会员</span><br></pre></td></tr></table></figure>
+
+<p><strong>允许 URL 参数临时调级</strong>：<code>?debug=1</code> 打开 debug 级别，不用改代码重启。</p>
+<h3 id="3-失败也要有语义"><a href="#3-失败也要有语义" class="headerlink" title="3. 失败也要有语义"></a>3. 失败也要有语义</h3><p>早期日志：</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[Adapter]</span> 票据解析失败: HTTP <span class="number">402</span></span><br></pre></td></tr></table></figure>
+
+<p>后期日志：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-attr">[Adapter]</span> 票据解析失败 (高清-官方<span class="selector-tag">B</span>): 需付费会员</span><br></pre></td></tr></table></figure>
+
+<p>后者一眼就能看出是”付费墙问题”，无需查资料。</p>
+<h3 id="4-时间线思维"><a href="#4-时间线思维" class="headerlink" title="4. 时间线思维"></a>4. 时间线思维</h3><p>调试性能问题时，看日志时间戳，把每一步的耗时拆出来。</p>
+<p>比如 stream 请求的 2 秒，实际是：</p>
+<ul>
+<li>Edge 冷启动：300ms</li>
+<li>episodes 缓存：200ms</li>
+<li>negative 缓存：200ms</li>
+<li>direct 缓存：200ms</li>
+<li>detail 缓存：200ms</li>
+<li>jq 处理 + 传输：900ms</li>
+</ul>
+<p>知道时间花在哪里，才有优化方向。</p>
+<hr>
+<h2 id="七、踩过的典型坑"><a href="#七、踩过的典型坑" class="headerlink" title="七、踩过的典型坑"></a>七、踩过的典型坑</h2><h3 id="坑-1：if-hasCookie-花括号位置"><a href="#坑-1：if-hasCookie-花括号位置" class="headerlink" title="坑 1：if (hasCookie) 花括号位置"></a>坑 1：<code>if (hasCookie)</code> 花括号位置</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (hasCookie) &#123;</span><br><span class="line">  <span class="comment">// 官方线路处理</span></span><br><span class="line">  <span class="keyword">if</span> (ticketLines.<span class="property">length</span> &gt; <span class="number">0</span>) &#123; ... &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123; ... &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 直连分支被错误地放在这里 ← 错误</span></span><br><span class="line">  <span class="keyword">const</span> direct = ...;</span><br><span class="line">  <span class="keyword">return</span> lines;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>hasCookie = false</code> 时整个块跳过，函数隐式返回 <code>undefined</code>，上层 <code>lines.length</code> 报错。</p>
+<p><strong>教训</strong>：<code>if</code> 块内的 <code>return</code> 一定要确认它是否在正确的条件分支下。</p>
+<h3 id="坑-2：Cookie-缺前缀"><a href="#坑-2：Cookie-缺前缀" class="headerlink" title="坑 2：Cookie 缺前缀"></a>坑 2：Cookie 缺前缀</h3><p>用户从浏览器复制的 <code>ai_movie_session</code> 值形如 <code>ums2_2026-08.eyJ2...</code>，但发送时<strong>必须补上前缀</strong>：</p>
+<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cookie: ai<span class="built_in">_</span>movie<span class="built_in">_</span>session=ums2<span class="built_in">_</span>2026-08.eyJ2...</span><br><span class="line">         ^^^^^^^^^^^^^^^^^ 前缀不能少</span><br></pre></td></tr></table></figure>
+
+<p>代码里做兼容：用户只填值就自动补前缀，填完整 Cookie 就用原样。</p>
+<h3 id="坑-3：build-version-会变"><a href="#坑-3：build-version-会变" class="headerlink" title="坑 3：build-version 会变"></a>坑 3：build-version 会变</h3><p>站点前端发版后，<code>x-ai-movie-build-version</code> 头必须同步更新，否则签名校验失败返回 401。</p>
+<p><strong>当前</strong>：默认值写在代码里，配置页面允许用户覆盖。</p>
+<p><strong>未来</strong>：可以做一个自动化探测——从站点的 JS bundle 里提取最新版本号。</p>
+<h3 id="坑-4：jq-语法"><a href="#坑-4：jq-语法" class="headerlink" title="坑 4：jq 语法"></a>坑 4：<code>jq</code> 语法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ❌ 错</span></span><br><span class="line">jq <span class="string">&#x27;.metas | length, .metas[0].name&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ✅ 对</span></span><br><span class="line">jq <span class="string">&#x27;&#123; count: (.metas | length), first: .metas[0].name &#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>前者会让 <code>jq</code> 先返回 <code>length</code> 的数字，再把数字当数组索引 <code>.metas[0]</code>，报错。</p>
+<hr>
+<h2 id="八、数值对比：优化效果一览"><a href="#八、数值对比：优化效果一览" class="headerlink" title="八、数值对比：优化效果一览"></a>八、数值对比：优化效果一览</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>优化前</th>
+<th>优化后</th>
+<th>提升</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>搜索耗时</td>
+<td>7 次 HTTP，约 3~7 秒</td>
+<td>1 次 HTTP，约 1 秒</td>
+<td><strong>~5 倍</strong></td>
+</tr>
+<tr>
+<td>首次 stream</td>
+<td>30 秒（含票据解析全部失败）</td>
+<td>30 秒</td>
+<td>—</td>
+</tr>
+<tr>
+<td>二次 stream（缓存命中）</td>
+<td>8.3 秒</td>
+<td>2.0 秒</td>
+<td><strong>~4 倍</strong></td>
+</tr>
+<tr>
+<td>官方失败分支耗时</td>
+<td>30 秒（含 4xx 重试）</td>
+<td>8 秒</td>
+<td><strong>~4 倍</strong></td>
+</tr>
+<tr>
+<td>黑名单省 HTTP</td>
+<td>无</td>
+<td>请求前过滤</td>
+<td>视黑名单大小</td>
+</tr>
+<tr>
+<td>用户可见线路数</td>
+<td>30 条（混杂失效线路）</td>
+<td>15~25 条（精选）</td>
+<td>体验提升</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="九、设计原则沉淀"><a href="#九、设计原则沉淀" class="headerlink" title="九、设计原则沉淀"></a>九、设计原则沉淀</h2><p>回头看，这个项目里几条值得记住的原则：</p>
+<h3 id="1-接口行为先于业务代码"><a href="#1-接口行为先于业务代码" class="headerlink" title="1. 接口行为先于业务代码"></a>1. 接口行为先于业务代码</h3><p>接口返回什么字段、怎么分页、错误码语义——这些必须用独立脚本验证清楚再动业务代码。</p>
+<h3 id="2-缓存要有分层，更要有”负缓存”"><a href="#2-缓存要有分层，更要有”负缓存”" class="headerlink" title="2. 缓存要有分层，更要有”负缓存”"></a>2. 缓存要有分层，更要有”负缓存”</h3><p>不仅缓存成功结果，也缓存”短期失败”。避免用户反复踩同一个坑。</p>
+<h3 id="3-配置分层，但要有明确边界"><a href="#3-配置分层，但要有明确边界" class="headerlink" title="3. 配置分层，但要有明确边界"></a>3. 配置分层，但要有明确边界</h3><p>部署级、用户级、代码默认——三层的职责不能混。</p>
+<h3 id="4-日志不只是-debug-用，更是产品的一部分"><a href="#4-日志不只是-debug-用，更是产品的一部分" class="headerlink" title="4. 日志不只是 debug 用，更是产品的一部分"></a>4. 日志不只是 debug 用，更是产品的一部分</h3><p>好的日志在故障时是救命稻草，在日常运行时是性能分析的依据。</p>
+<h3 id="5-失败要”优雅”而不是”消失”"><a href="#5-失败要”优雅”而不是”消失”" class="headerlink" title="5. 失败要”优雅”而不是”消失”"></a>5. 失败要”优雅”而不是”消失”</h3><p>官方票据全部失败不是”删除线路”，而是”回退到 m3u8”。用户永远有东西可看。</p>
+<h3 id="6-优化要看数据，不靠直觉"><a href="#6-优化要看数据，不靠直觉" class="headerlink" title="6. 优化要看数据，不靠直觉"></a>6. 优化要看数据，不靠直觉</h3><p>“多一个 resolve 请求”听起来没多少，实际占 40% 耗时。”250ms 间隔”听起来拖慢速度，实际把失败率从 100% 降到 70%。</p>
+<hr>
+<h2 id="十、未来可以做的"><a href="#十、未来可以做的" class="headerlink" title="十、未来可以做的"></a>十、未来可以做的</h2><ul>
+<li><strong>多季支持</strong>：动漫&#x2F;综艺的多 variant 结构，可以按 <code>season_label</code> 分组</li>
+<li><strong>HLS 代理</strong>：如果 m3u8 分片某天需要 Referer，本地代理模块可以补上</li>
+<li><strong>自动化 build-version 探测</strong>：从站点 JS bundle 里提取最新版本号</li>
+<li><strong>CDN 预热</strong>：热门 catalog 定时刷新 CDN 缓存</li>
+</ul>
+<hr>
+<h2 id="十一、结语"><a href="#十一、结语" class="headerlink" title="十一、结语"></a>十一、结语</h2><p>这个项目从”我想有个自己用的 Stremio 插件”开始，到”完整的、可部署的、有维护工具的开源项目”，花了大概两周的业余时间。</p>
+<p>最耗时的不是写代码，而是<strong>理解站点行为</strong>和<strong>设计正确的抽象</strong>。签名算法、票据解析、缓存分层、配置分层——每个问题的”正确答案”都不是一次想出来的，是<strong>先用独立脚本验证事实，再写业务代码</strong>逐步逼近的。</p>
+<p>如果你也在做类似的事，希望这篇文章能帮你少走几步弯路。真正的经验往往不在于”怎么做对了”，而在于”哪些路是死路”。</p>
+<hr>
+<p><strong>项目地址</strong>：<code>[dpdStremio](https://github.com/fqw000/dongpiandiStremio)</code></p>
+<p><strong>技术栈</strong>：JavaScript &#x2F; Vercel Edge Functions &#x2F; Upstash Redis &#x2F; Stremio Addon SDK</p>
+<p><strong>License</strong>：MIT</p>
+</p></div><div class="pagination"><p class="clearfix"><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2026/10/08/%E4%B8%80%E4%B8%AAIP%E7%BB%91%E5%AE%9A%E6%B5%81%E5%AA%92%E4%BD%93stream%E6%BA%90%E7%9A%84%E5%AE%8C%E6%95%B4%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95%5Bjpyy%5D/" title="一个IP绑定流媒体stream源的完整开发记录-jpyy-">下一篇: 一个IP绑定流媒体stream源的完整开发记录-jpyy-&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

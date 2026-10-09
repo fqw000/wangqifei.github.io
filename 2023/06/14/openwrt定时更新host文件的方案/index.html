@@ -1,48 +1,31 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>openwrt定时更新host文件的方案 · 栖息地</title><meta name="description" content="需求openwrt 安装以后一直没办法解决 github DNS 污染的问题，raw 和 github 图片都不能访问，导致大量的文件不能更新，或者只能访问凭运气。于是就需要配置 github 的 host 来解决 DNS 污染，写了个脚本来实现。
+步骤
+备份现有 host 文件到 hosts_or"><meta name="og:description" content="需求openwrt 安装以后一直没办法解决 github DNS 污染的问题，raw 和 github 图片都不能访问，导致大量的文件不能更新，或者只能访问凭运气。于是就需要配置 github 的 host 来解决 DNS 污染，写了个脚本来实现。
+步骤
+备份现有 host 文件到 hosts_or"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="openwrt定时更新host文件的方案"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>openwrt定时更新host文件的方案</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-06-14 17:06</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/openwrt/" title="openwrt">openwrt</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>openwrt 安装以后一直没办法解决 github DNS 污染的问题，raw 和 github 图片都不能访问，导致大量的文件不能更新，或者只能访问凭运气。于是就需要配置 github 的 host 来解决 DNS 污染，写了个脚本来实现。</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ul>
+<li>备份现有 host 文件到 hosts_origin(注意如无则新建，如有则覆盖)，并调整本分文件权限</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp <span class="regexp">/etc/</span>hosts <span class="regexp">/etc/</span>hosts_origin</span><br><span class="line">chmod <span class="number">664</span> <span class="regexp">/etc/</span>hosts_origin</span><br></pre></td></tr></table></figure>
 
-include mixins
+<ul>
+<li>在 root 目录下新建 hostsUpdate.sh 文件</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/bin/sh</span></span><br><span class="line">wget -q https:<span class="regexp">//</span>hosts.gitcdn.top<span class="regexp">/hosts.txt -O /</span>tmp/hostsNew.txt --no-check-certificate</span><br><span class="line">cat <span class="regexp">/tmp/</span>hostsNew.txt <span class="regexp">/etc/</span>hosts_origin &gt; <span class="regexp">/tmp/</span>hostsNewAll.txt</span><br><span class="line">cp <span class="regexp">/tmp/</span>hostsNewAll.txt <span class="regexp">/etc/</span>hosts</span><br><span class="line">chmod <span class="number">664</span> <span class="regexp">/etc/</span>hosts</span><br><span class="line"><span class="regexp">/etc/i</span>nit.d/dnsmasq restart</span><br></pre></td></tr></table></figure>
 
-block site_title
-    != page.title + " · " + config.title
+<ul>
+<li>修改 hostsUpdate.sh 文件权限</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">chmod</span> <span class="number">777</span> hostsUpdate.sh</span><br></pre></td></tr></table></figure>
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+<ul>
+<li>执行 hostsUpdate.sh 文件</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/root/</span>hostsUpdate.sh</span><br></pre></td></tr></table></figure>
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<ul>
+<li>设置定时任务<br>在 openwrt 中添加定时任务，保存定时任务后在系统启动项中重启 cron。<br>每天 3 点定时更新</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">0 </span><span class="number">3</span> * * * /root/update_hosts.sh</span><br></pre></td></tr></table></figure>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/06/20/Pro%E5%AE%89%E8%A3%85google%E6%A1%86%E6%9E%B6/" title="华为Mate30 Pro安装Google框架"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 华为Mate30 Pro安装Google框架</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/06/09/%E5%BF%AB%E6%9F%A0%E6%AA%AC%E7%9A%84%E8%8A%82%E7%82%B9%E6%8F%90%E5%8F%96%E5%92%8C%E8%BD%AC%E6%8D%A2/" title="快柠檬的节点提取和转换">下一篇: 快柠檬的节点提取和转换&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

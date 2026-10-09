@@ -1,48 +1,68 @@
-extends partial/layout
-
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>Ios 捷径 (ShortCuts)笔记 · 栖息地</title><meta name="description" content="Ios 捷径 (ShortCuts)变量
+用途标记 和 存储 内容（如文本、图像、网页、数据词典等）
+类型
+魔法变量捷径中任一操作的 结果输出 都可以当作用于后续操作的变量，这个变量就是魔法变量。魔法变量可以改变数据类型。点击变量名称即可进入修改变量的详细信息，
+特殊变量在设定变量的过程中或添加到参"><meta name="og:description" content="Ios 捷径 (ShortCuts)变量
+用途标记 和 存储 内容（如文本、图像、网页、数据词典等）
+类型
+魔法变量捷径中任一操作的 结果输出 都可以当作用于后续操作的变量，这个变量就是魔法变量。魔法变量可以改变数据类型。点击变量名称即可进入修改变量的详细信息，
+特殊变量在设定变量的过程中或添加到参"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="Ios 捷径 (ShortCuts)笔记"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>Ios 捷径 (ShortCuts)笔记</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-10-24 13:10</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/捷径/" title="捷径">捷径</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="Ios-捷径-ShortCuts"><a href="#Ios-捷径-ShortCuts" class="headerlink" title="Ios 捷径 (ShortCuts)"></a>Ios 捷径 (ShortCuts)</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ul>
+<li>用途<br>标记 和 存储 内容（如文本、图像、网页、数据词典等）</li>
+<li>类型<ul>
+<li>魔法变量<br>捷径中任一操作的 结果输出 都可以当作用于后续操作的变量，这个变量就是魔法变量。<br>魔法变量可以改变数据类型。点击变量名称即可进入修改变量的详细信息，</li>
+<li>特殊变量<br>在设定变量的过程中或添加到参数的过程，点击 输入 ，可显示： 每次询问 、 剪贴板 、 当前日期 、 设备详细信息 、 输入快捷指令的信息 这些特殊变量。<br>特殊变量也可通过点击 名称 或 文本栏 修改该变量的详细信息。</li>
+<li>手动变量<br>自行设定的变量。可以保留稍后需要修改的值，也可以给现有的变量添加信息。<br>操作方式：设定变量 或 添加到变量。<br>设定变量：首次设定一个新变量，或者 覆盖 之前存储过的变量。<br>添加到变量：可以将多个内容添加到同意个变量，每次运行语句都将内容追加到变量中，从而将数据存储为一个有序列表。[ 这时的变量是一个数组 ]<br>手动变量会降低代码的可读性。通过将 变量 存储到 列表 中可以实现 添加到变量 的大多数功能。</li>
+</ul>
+</li>
+</ul>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><ul>
+<li>用途<br>创建有序的数据列表，然后传递到后续操作，也可以使用列表缩小列表范围限制传递的内容。</li>
+<li>操作<ul>
+<li>列表<br>通过输入文本或者插入变量来创建有序列表。<br>将变量添加到列表的文本串中，会将变量强制转换为文本并插入列表项目中<br>列表可实现 手动添加变量 类似的效果。</li>
+<li>从列表中选取<br>运行时显示选项菜单。<br>一般与 词典 搭配使用，使用 词典 来传递列表内容<br>选择列表内容预览时是富文本预览，可预览图片等信息</li>
+<li>从列表中获取项目<br>列表中存储的每一个数据都成为是一个项目<br>一般设置在 列表 之后，对列表的内容进行缩减，从列表中取回单个项目。<br>可选：第一项、最后一项、随机项等<br>列表的内容中第一项的索引为 1 。可通过设定索引范围实现返回列表中的多个项目</li>
+</ul>
+</li>
+</ul>
+<h3 id="菜单"><a href="#菜单" class="headerlink" title="菜单"></a>菜单</h3><ul>
+<li>用途<br> 可通过菜单选择决定后续的操作，可以通过菜单预定义选项类别，不同的选项对应不同的操作。</li>
+</ul>
+<h3 id="菜单-和-列表-的区别"><a href="#菜单-和-列表-的区别" class="headerlink" title="菜单 和 列表 的区别"></a>菜单 和 列表 的区别</h3><blockquote>
+<p>菜单是显示选项列表选择后续的执行操作，列表是将内容存储在列表里供后续选择</p>
+</blockquote>
+<h3 id="如果"><a href="#如果" class="headerlink" title="如果"></a>如果</h3><ul>
+<li>用途<br>用条件判断来决定后续的执行操作。就是编程重点 if 语句</li>
+<li>可以嵌套</li>
+</ul>
+<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><ul>
+<li>用途<br>连续多次运行一组操作，和 为每个项目重复 用途类似。</li>
+<li>操作<br>重复-结束重复 是一个配对标记，会重复运行两个标记之间的操作，可以指定重复次数。<br>重复运行完成以后，重复过程中的每一次迭代的最终结果输出都会集中在一个列表里作为 重复 的结果输出。<br>设置重复的次数时，可配置一个次数变量，实现 每次询问 等操作</li>
+<li>为每个项目重复<br>用于接收列表的项目作为输入，然后针对列表重点每一项运行一次操作。</li>
+<li>重复项目<br>为每个项目重复 中用于跟踪当前项目的特殊变量。</li>
+<li>重复索引<br>用于跟踪当前循环迭代的特殊变量。<br>重复索引变量包含当前循环已经重复的次数。</li>
+</ul>
+<h3 id="词典"><a href="#词典" class="headerlink" title="词典"></a>词典</h3><pre><code>&gt; 列表可是看作是一个表格，每个行就可以看作是一个词典，每一行中的各个值就是词典的 value
+</code></pre>
+<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h3><ul>
+<li><p>用途<br>主要用于使用 Js 实现对 DOM 的操作。</p>
+</li>
+<li><p>基本格式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = [];</span><br><span class="line"></span><br><span class="line"><span class="comment">// JavaScript代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用 Completion 以完成</span></span><br><span class="line"><span class="title function_">completion</span>(result);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><ul>
+<li>用途<br>可以通过 ssh 运行脚本，将脚本的结果输出</li>
+</ul>
+<h3 id="查找-过滤"><a href="#查找-过滤" class="headerlink" title="查找 过滤"></a>查找 过滤</h3><h3 id="正则表达式-的使用"><a href="#正则表达式-的使用" class="headerlink" title="正则表达式 的使用"></a>正则表达式 的使用</h3><ul>
+<li>用途<br>用于匹配指定条件的值。<br>常搭配 匹配 查找 等使用</li>
+</ul>
+<h3 id="文本操作"><a href="#文本操作" class="headerlink" title="文本操作"></a>文本操作</h3><ul>
+<li>拆分文本<br>使用指定的分隔符，对文本进行分割，分割结果保存进列表。</li>
+<li>更改大小写</li>
+<li>合并文本<br>使用指定的连接符，将文本进行连接起来，实现追加的功能。</li>
+<li>获取匹配文本的组<br>获取符合特定捕获组的文本，或来自“匹配文本”操作输出的所有捕获组。</li>
+<li>获纠正拼写</li>
+<li>匹配文本<br>在传入操作的文本中搜索正则表达式的匹配项。</li>
+<li>替换文本<br>将传入操作的部分文本替换为其他文本。</li>
+</ul>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/10/27/360T7%E5%8D%87%E7%BA%A7openwert/" title="360T7升级openwert"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 360T7升级openwert</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/10/21/SporifyForMac-%E7%A0%B4%E8%A7%A3/" title="SporifyForMac 破解">下一篇: SporifyForMac 破解&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

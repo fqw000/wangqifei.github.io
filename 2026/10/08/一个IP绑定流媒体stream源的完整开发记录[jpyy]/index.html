@@ -1,48 +1,336 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>一个IP绑定流媒体stream源的完整开发记录-jpyy- · 栖息地</title><meta name="description" content="从 jpyy.com 到 Nuvio Provider：一个 IP 绑定流媒体源的完整开发记录一、目标站点技术分析：jpyy.com在写任何代码之前，理解目标站点的技术架构是第一步。jpyy.com（金牌影视）的技术栈有几个关键特征，它们共同决定了后续所有架构选择的方向。
+1.1 签名保护机制站点所"><meta name="og:description" content="从 jpyy.com 到 Nuvio Provider：一个 IP 绑定流媒体源的完整开发记录一、目标站点技术分析：jpyy.com在写任何代码之前，理解目标站点的技术架构是第一步。jpyy.com（金牌影视）的技术栈有几个关键特征，它们共同决定了后续所有架构选择的方向。
+1.1 签名保护机制站点所"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="一个IP绑定流媒体stream源的完整开发记录-jpyy-"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>一个IP绑定流媒体stream源的完整开发记录-jpyy-</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2026-10-08 09:10</span></p><p class="post-abstract"><h1 id="从-jpyy-com-到-Nuvio-Provider：一个-IP-绑定流媒体源的完整开发记录"><a href="#从-jpyy-com-到-Nuvio-Provider：一个-IP-绑定流媒体源的完整开发记录" class="headerlink" title="从 jpyy.com 到 Nuvio Provider：一个 IP 绑定流媒体源的完整开发记录"></a>从 jpyy.com 到 Nuvio Provider：一个 IP 绑定流媒体源的完整开发记录</h1><h2 id="一、目标站点技术分析：jpyy-com"><a href="#一、目标站点技术分析：jpyy-com" class="headerlink" title="一、目标站点技术分析：jpyy.com"></a>一、目标站点技术分析：jpyy.com</h2><p>在写任何代码之前，理解目标站点的技术架构是第一步。jpyy.com（金牌影视）的技术栈有几个关键特征，它们共同决定了后续所有架构选择的方向。</p>
+<h3 id="1-1-签名保护机制"><a href="#1-1-签名保护机制" class="headerlink" title="1.1 签名保护机制"></a>1.1 签名保护机制</h3><p>站点所有 API 请求都必须携带 <code>sign</code> 头，算法为：</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">sign</span> = <span class="function"><span class="title">SHA1</span>(<span class="title">MD5</span>(<span class="variable">sorted_params</span> + <span class="string">&quot;&amp;key=&quot;</span> + <span class="variable">SIGN_KEY</span> + <span class="string">&quot;&amp;t=&quot;</span> + <span class="variable">t</span>))</span></span><br></pre></td></tr></table></figure>
 
-include mixins
+<p>其中 <code>sorted_params</code> 是请求参数按 key 升序排列后拼接的字符串，<code>SIGN_KEY</code> 是固定值 <code>cb808529bae6b6be45ecfab29a4889bc</code>，<code>t</code> 是毫秒时间戳。</p>
+<p><strong>技术含义</strong>：任何客户端在发起请求前，都必须在本地完成 MD5 → SHA1 的链式计算。这意味着客户端必须有能力执行哈希运算。在 Node.js 环境中这不成问题，但在受限的客户端沙箱中，选择什么哈希实现就成为一个需要认真对待的问题。</p>
+<h3 id="1-2-RSC-页面数据格式"><a href="#1-2-RSC-页面数据格式" class="headerlink" title="1.2 RSC 页面数据格式"></a>1.2 RSC 页面数据格式</h3><p>站点基于 Next.js 构建，页面数据通过 React Server Components（RSC）流式协议下发。响应体不是标准 JSON，而是以 <code>id:data</code> 格式逐行返回的流式文本：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1:&#123;<span class="string">&quot;result&quot;</span>:&#123;<span class="string">&quot;totalPage&quot;</span><span class="function">:3</span>,<span class="string">...</span>&#125;&#125;</span><br><span class="line">2:&#123;<span class="string">&quot;list&quot;</span>:[&#123;<span class="string">&quot;vodId&quot;</span><span class="function">:146932</span>,<span class="string">&quot;vodName&quot;</span>:<span class="string">&quot;三体&quot;</span>,<span class="string">...</span>&#125;]&#125;</span><br><span class="line"><span class="string">...</span></span><br></pre></td></tr></table></figure>
 
-block site_title
-    != page.title + " · " + config.title
+<p><strong>技术含义</strong>：不能直接 <code>JSON.parse</code> 整个响应体，必须先按 <code>id:</code> 前缀逐行切分，再对每行的 <code>data</code> 部分尝试解析。更复杂的是，有些数据会被拆分到多行，需要处理续行逻辑。</p>
+<h3 id="1-3-域名群与动态发现"><a href="#1-3-域名群与动态发现" class="headerlink" title="1.3 域名群与动态发现"></a>1.3 域名群与动态发现</h3><p>站点并不只有一个固定域名。它运营着一个<strong>域名群</strong>——多个备用域名轮换使用，以应对网络封锁或运营策略调整。已知的域名包括 <code>0996zp.com</code>、<code>sdzhgt.com</code>、<code>hnytxj.com</code>、<code>ghw9zwp5.com</code>、<code>x8kb9k8.com</code> 等。</p>
+<p>如果客户端硬编码某一个域名，一旦该域名失效，整个服务就会中断。因此，站点提供了一个<strong>官方域名获取 API</strong>：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET <span class="regexp">/api/m</span>w-movie<span class="regexp">/anonymous/</span>website<span class="regexp">/get/</span>domain?websiteSeoId=<span class="number">86</span></span><br></pre></td></tr></table></figure>
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+<p>这个接口本身也需要签名，算法与站内其他 API 一致。它返回当前可用的域名列表，客户端可以从中选取一个有效的域名作为 <code>BASE_URL</code>。</p>
+<p><strong>技术含义</strong>：域名动态发现是保持服务长期可用的关键。不能假设某一个域名永远有效，必须有机制在域名失效时自动切换到备用域名。</p>
+<h3 id="1-4-IP-绑定的流地址"><a href="#1-4-IP-绑定的流地址" class="headerlink" title="1.4 IP 绑定的流地址"></a>1.4 IP 绑定的流地址</h3><p>这是最关键的一条。站点下发的 stream URL 与请求方 IP 绑定——谁发起请求，URL 就绑定谁的 IP。</p>
+<p><strong>技术含义</strong>：这是一个无法通过服务端逻辑优化绕过的限制。如果流地址在服务端获取，URL 绑定的就是服务器 IP，客户端播放时会因 IP 不匹配被拒绝。唯一可行的方案是在客户端本地获取流地址。这个判断直接决定了整个项目的架构方向。</p>
+<h3 id="1-5-剧集数据模型"><a href="#1-5-剧集数据模型" class="headerlink" title="1.5 剧集数据模型"></a>1.5 剧集数据模型</h3><p>站点的剧集结构是：</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vodId → detail → episodeList → [ &#123; <span class="built_in">n</span><span class="symbol">id:</span> <span class="number">1298345</span>, <span class="built_in">na</span><span class="symbol">me:</span> <span class="string">&quot;1&quot;</span> &#125;, &#123; <span class="built_in">n</span><span class="symbol">id:</span> <span class="number">1298346</span>, <span class="built_in">na</span><span class="symbol">me:</span> <span class="string">&quot;2&quot;</span> &#125;, ... ]</span><br></pre></td></tr></table></figure>
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<p><code>name</code> 字段的值是 <code>&quot;1&quot;</code>、<code>&quot;2&quot;</code>、<code>&quot;3&quot;</code>……直到该条目的最后一集。站点没有 Season 概念，episodeList 是 absolute episode（绝对集数）。</p>
+<p>更复杂的是，多季剧集在站点上表现为每季一个独立的 <code>vodId</code>，每个 <code>vodId</code> 下的 <code>episodeList</code> 从 1 开始重新计数。</p>
+<p><strong>技术含义</strong>：站点的数据结构是“每季独立条目 + 条目内绝对集数”。这与 Stremio&#x2F;Nuvio 使用的“单一 ID + Season&#x2F;Episode”模型存在根本差异，ID 转换必须在架构层面显式处理。</p>
+<h3 id="1-6-站点技术特征总结"><a href="#1-6-站点技术特征总结" class="headerlink" title="1.6 站点技术特征总结"></a>1.6 站点技术特征总结</h3><table>
+<thead>
+<tr>
+<th align="left">特征</th>
+<th align="left">技术约束</th>
+<th align="left">对架构的影响</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">签名保护</td>
+<td align="left">客户端需本地计算 SHA1(MD5(…))</td>
+<td align="left">需在受限环境中选择合适的哈希实现</td>
+</tr>
+<tr>
+<td align="left">RSC 流格式</td>
+<td align="left">不能直接 JSON.parse</td>
+<td align="left">需专门编写解析器</td>
+</tr>
+<tr>
+<td align="left">域名群</td>
+<td align="left">多个备用域名，官方 API 可获取</td>
+<td align="left">需实现域名动态发现与缓存</td>
+</tr>
+<tr>
+<td align="left">IP 绑定</td>
+<td align="left">流地址与请求方 IP 绑定</td>
+<td align="left">必须在客户端本地获取流地址</td>
+</tr>
+<tr>
+<td align="left">绝对集数</td>
+<td align="left">episodeList 是 absolute episode</td>
+<td align="left">需处理 Season&#x2F;Episode 与绝对集数的转换</td>
+</tr>
+<tr>
+<td align="left">每季独立 vodId</td>
+<td align="left">多季剧集有多个 vodId</td>
+<td align="left">SeriesResolver 需建立 Season → vodId 映射</td>
+</tr>
+</tbody></table>
+<h2 id="二、第一版：单一-JS-脚本的可行性验证"><a href="#二、第一版：单一-JS-脚本的可行性验证" class="headerlink" title="二、第一版：单一 JS 脚本的可行性验证"></a>二、第一版：单一 JS 脚本的可行性验证</h2><p>最初的实现是一份独立的 JavaScript 文件，在本地 Node.js 环境中运行。目标很纯粹：验证整条链路的可行性。</p>
+<h3 id="2-1-核心模块"><a href="#2-1-核心模块" class="headerlink" title="2.1 核心模块"></a>2.1 核心模块</h3><p><strong>签名生成</strong>。最初手写了 MD5 和 SHA1 的纯 JS 实现，避免依赖 Node.js 内置的 <code>crypto</code> 模块。这套实现后来被 <code>crypto-js</code> 替代，但手写的过程让我彻底理解了签名机制的每一步。</p>
+<p><strong>RSC 解析</strong>。编写了 <code>parseRscRecords</code> 函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">parseRscRecords</span>(<span class="params">body</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> values = [];</span><br><span class="line">    <span class="keyword">let</span> current = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">flush</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!current) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123; values.<span class="title function_">push</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(current.<span class="property">raw</span>.<span class="title function_">trim</span>())); &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">        current = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> line <span class="keyword">of</span> <span class="title class_">String</span>(body).<span class="title function_">split</span>(<span class="regexp">/\r?\n/</span>)) &#123;</span><br><span class="line">        <span class="keyword">const</span> match = line.<span class="title function_">match</span>(<span class="regexp">/^([0-9a-f]+):\s?(.*)$/i</span>);</span><br><span class="line">        <span class="keyword">if</span> (match) &#123;</span><br><span class="line">            <span class="title function_">flush</span>();</span><br><span class="line">            current = &#123; <span class="attr">raw</span>: match[<span class="number">2</span>] &#125;;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (current) &#123;</span><br><span class="line">            current.<span class="property">raw</span> += <span class="string">`\n<span class="subst">$&#123;line&#125;</span>`</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">flush</span>();</span><br><span class="line">    <span class="keyword">if</span> (values.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123; values.<span class="title function_">push</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(body)); &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> values;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个解析器后来成为整个项目的基石，在 Stremio Addon 和 Nuvio Provider 中几乎没有改动。</p>
+<p><strong>搜索匹配</strong>。根据标题搜索站点，从返回的列表中筛选出最匹配的条目。最初的实现非常简单——按标题完全匹配或包含关系判断。</p>
+<p><strong>流地址获取</strong>。调用 <code>/api/mw-movie/anonymous/v2/video/episode/url</code>，传入 <code>vodId</code> 和 <code>nid</code>，拿到多清晰度的播放地址。</p>
+<h3 id="2-2-阶段性的收获"><a href="#2-2-阶段性的收获" class="headerlink" title="2.2 阶段性的收获"></a>2.2 阶段性的收获</h3><p>这个阶段最大的价值是验证了数据流的完整性。从签名计算 → 搜索 → 详情 → 剧集 → 流地址，每一步都能在终端里看到输出。此时还没有遇到 IP 绑定、Season 转换、多语言匹配等问题，但已经确认了技术上的可行性。后来无论架构如何演进，核心逻辑都源自这份脚本。</p>
+<h2 id="三、第二版：Stremio-Addon-的架构探索"><a href="#三、第二版：Stremio-Addon-的架构探索" class="headerlink" title="三、第二版：Stremio Addon 的架构探索"></a>三、第二版：Stremio Addon 的架构探索</h2><h3 id="3-1-为什么选择-Stremio-Addon"><a href="#3-1-为什么选择-Stremio-Addon" class="headerlink" title="3.1 为什么选择 Stremio Addon"></a>3.1 为什么选择 Stremio Addon</h3><p>目标是将资源接入 Stremio 客户端。Stremio Addon 协议成熟、文档完善、社区参考丰富。Stremio Addon 本质上是一个 HTTP 服务器，部署在云端，客户端通过 <code>/stream/&#123;type&#125;/&#123;id&#125;.json</code> 这样的端点向服务器发起请求。</p>
+<h3 id="3-2-云端基础设施选型：Cloudflare、Vercel、Upstash"><a href="#3-2-云端基础设施选型：Cloudflare、Vercel、Upstash" class="headerlink" title="3.2 云端基础设施选型：Cloudflare、Vercel、Upstash"></a>3.2 云端基础设施选型：Cloudflare、Vercel、Upstash</h3><p>在确定 Stremio Addon 路线后，接下来的问题是选择什么样的云端基础设施。这个决定直接影响 Addon 的响应速度、稳定性和运维成本。</p>
+<p><strong>为什么选择边缘计算（Vercel Edge Functions）</strong></p>
+<p>传统的 Node.js 容器冷启动需要 1–5 秒，而 Vercel Edge Functions 基于 V8 隔离，冷启动时间仅 50–300ms。对于 Stremio Addon 这种“用户点击播放 → 需要快速返回流列表”的场景，冷启动延迟直接决定用户体验。边缘计算的另一个优势是全球节点就近响应——用户在亚洲发起请求，由亚洲的边缘节点处理，而不必绕道美国机房。</p>
+<p>但 Edge Functions 也有严格的资源限制：128MB 内存、50ms CPU 时间，且不能使用 Node.js API。这意味着复杂的加密计算或大型依赖包会被排除在外。对于 jpyy 的签名计算（一次 MD5 + 一次 SHA1），50ms 的 CPU 时间足够，但需要将哈希实现精简到最小。</p>
+<p><strong>Cloudflare Workers 作为备选</strong></p>
+<p>Cloudflare Workers 是另一个值得考虑的边缘计算平台，同样基于 V8 隔离，冷启动极快，免费额度更慷慨（每天 10 万次请求）。它和 Vercel Edge Functions 的取舍在于：Cloudflare 的全球节点覆盖更广，但 Vercel 与 Next.js 生态的集成更顺畅。两者在架构设计上可以互换，最终选择取决于具体需求和团队熟悉度。</p>
+<p><strong>Upstash Redis：跨实例缓存</strong></p>
+<p>边缘计算的一个固有问题是：每个边缘节点都是无状态的，请求可能被路由到任意节点。如果 Addon 在东京节点缓存了 TMDB 元数据，大阪节点的用户请求过来时，缓存就失效了。</p>
+<p>Upstash Redis 提供了跨实例的共享缓存。它是一个基于 REST API 的 Serverless Redis 服务，完美适配边缘计算环境——不需要建立 TCP 连接，直接通过 HTTP 读写，延迟在 10ms 以内。在 Stremio Addon 中，Upstash 被用来缓存三类数据：</p>
+<table>
+<thead>
+<tr>
+<th align="left">数据类型</th>
+<th align="left">缓存 TTL</th>
+<th align="left">理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">IMDb → vodId 映射</td>
+<td align="left">7 天</td>
+<td align="left">转换结果稳定，极少变化</td>
+</tr>
+<tr>
+<td align="left">TMDB 元数据</td>
+<td align="left">7 天</td>
+<td align="left">标题、别名、年份短期不变</td>
+</tr>
+<tr>
+<td align="left">站点域名</td>
+<td align="left">7 天</td>
+<td align="left">域名变化频率低</td>
+</tr>
+<tr>
+<td align="left">详情页数据</td>
+<td align="left">30 分钟</td>
+<td align="left">内容变化频率较低</td>
+</tr>
+<tr>
+<td align="left">搜索结果</td>
+<td align="left">10 分钟</td>
+<td align="left">短时间内重复搜索常见</td>
+</tr>
+</tbody></table>
+<p><strong>三层缓存架构</strong></p>
+<p>最终确定的缓存策略是三层结构：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">请求 → L1 内存缓存（&lt; <span class="number">1</span>ms，实例级，约 <span class="number">60</span> 秒）</span><br><span class="line">         ↓ 未命中</span><br><span class="line">       L2 Upstash Redis（&lt; <span class="number">10</span>ms，跨实例，几小时到几天）</span><br><span class="line">         ↓ 未命中</span><br><span class="line">       L3 Vercel CDN（&lt; <span class="number">100</span>ms，全局，按 <span class="meta">TTL</span>）</span><br><span class="line">         ↓ 未命中</span><br><span class="line">       源站请求</span><br></pre></td></tr></table></figure>
+
+<p>内存缓存是每个边缘节点自己的“私有缓存”，生命周期最短（约 60 秒），但速度最快。Upstash Redis 是全局共享的，命中率更高，但需要一次网络往返。Vercel CDN 则是静态内容层，通过 <code>Cache-Control</code> 响应头控制。</p>
+<p><strong>Redis 冷却降级机制</strong></p>
+<p>在本地开发环境中，Upstash Redis 的延迟可能较高（因为本地机器到 Redis 节点有物理距离）。为了避免 Redis 拖慢整个请求，加入了一个冷却降级机制：当 Redis 连续 3 次响应超过 500ms 或失败时，进入 60 秒冷却期，期间跳过 Redis 读写，仅使用内存缓存。冷却结束后自动恢复。这个机制保证了即使 Redis 出现网络抖动，Addon 也不会整体变慢。</p>
+<h3 id="3-3-项目结构与技术栈"><a href="#3-3-项目结构与技术栈" class="headerlink" title="3.3 项目结构与技术栈"></a>3.3 项目结构与技术栈</h3><p>整个 Stremio Addon 的项目结构如下：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">jpyyVecel/</span><br><span class="line">├── api/</span><br><span class="line">│   └── <span class="keyword">index</span>.js              <span class="meta"># Vercel Edge Function 入口</span></span><br><span class="line">├── <span class="keyword">public</span>/                   <span class="meta"># 静态资源（配置页面）</span></span><br><span class="line">│   ├── configure.html</span><br><span class="line">│   ├── configure.css</span><br><span class="line">│   └── configure.js</span><br><span class="line">├── src/</span><br><span class="line">│   ├── handler.js            <span class="meta"># 主处理逻辑（路由分发）</span></span><br><span class="line">│   ├── adapter.js            <span class="meta"># 站点适配器（搜索/详情/剧集/流媒体）</span></span><br><span class="line">│   ├── manifest.js           <span class="meta"># Stremio 清单（支持动态生成）</span></span><br><span class="line">│   ├── config.js             <span class="meta"># 全局配置（支持用户配置覆盖）</span></span><br><span class="line">│   ├── cache.js              <span class="meta"># 多级缓存（内存 + Redis + 冷却降级）</span></span><br><span class="line">│   ├── domain-resolver.js    <span class="meta"># 域名动态追踪（API + HTML 三层策略）</span></span><br><span class="line">│   ├── imdb-resolver.js      <span class="meta"># IMDb → 站内 ID 解析（多语言匹配）</span></span><br><span class="line">│   ├── tmdb.js               <span class="meta"># TMDB / Cinemeta 集成</span></span><br><span class="line">│   ├── rsc.js                <span class="meta"># Next.js RSC 流解析</span></span><br><span class="line">│   ├── http.js               <span class="meta"># HTTP 客户端（超时/重试/域名切换）</span></span><br><span class="line">│   └── helper.js             <span class="meta"># 工具函数（Hash / Utils）</span></span><br><span class="line">├── test.js                   <span class="meta"># 测试脚本</span></span><br><span class="line">├── vercel.json               <span class="meta"># Vercel 路由配置</span></span><br><span class="line">├── package.json</span><br><span class="line">└── README.md</span><br></pre></td></tr></table></figure>
+
+<p>技术栈的核心特点是<strong>零第三方依赖</strong>——整个项目仅使用原生 <code>fetch</code>，没有引入任何 npm 包。这不仅简化了部署，也避免了边缘计算环境中的依赖兼容性问题。</p>
+<h3 id="3-4-核心难题：ID-转换逻辑无处安放"><a href="#3-4-核心难题：ID-转换逻辑无处安放" class="headerlink" title="3.4 核心难题：ID 转换逻辑无处安放"></a>3.4 核心难题：ID 转换逻辑无处安放</h3><p>在开发过程中，一个严重的问题逐渐显现：ID 转换逻辑散落在各处。</p>
+<p>Stremio 场景下，一个内容可能来自不同的 ID 体系：<code>tt0944947</code>（IMDb ID）、<code>jp146932</code>（站内 ID）、<code>146932</code>（站点的 <code>vodId</code>）。不同的 ID 需要不同的处理流程。最初我把转换逻辑写在了 Search 里，后来又写到了 Meta 里，再后来又写到了 Stream 里。每处都需要 <code>startsWith</code> 判断，代码迅速失控。</p>
+<h3 id="3-5-重构：Resolver-Adapter-架构"><a href="#3-5-重构：Resolver-Adapter-架构" class="headerlink" title="3.5 重构：Resolver + Adapter 架构"></a>3.5 重构：Resolver + Adapter 架构</h3><p>代码失控让我意识到，必须在架构层面解决 ID 混乱的问题。经过几轮迭代，确定了一套分层设计：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Search</span><br><span class="line">  │</span><br><span class="line">  ├── jpId (站内ID)</span><br><span class="line">  └── <span class="built_in">imdb</span>(tt) (IMDb ID)</span><br><span class="line">        │</span><br><span class="line">        ▼</span><br><span class="line">   MediaResolver（统一入口，返回 MediaContext）</span><br><span class="line">        │</span><br><span class="line">        ├── Movie</span><br><span class="line">        └── Series</span><br><span class="line">              │</span><br><span class="line">              ▼</span><br><span class="line">        SeriesResolver（Season → vodId 映射）</span><br><span class="line">              │</span><br><span class="line">              ▼</span><br><span class="line">        EpisodeResolver（vodId + episode → nid）</span><br><span class="line">              │</span><br><span class="line">              ▼</span><br><span class="line">        StreamResolver（vodId + nid → play url）</span><br></pre></td></tr></table></figure>
+
+<p><strong>MediaResolver</strong> 是唯一的 ID 转换入口。任何地方都不自己搜索或转换，全部走 <code>MediaResolver.resolve(id)</code>，返回统一的 <code>MediaInfo</code> 结构。ID 体系的变化被隔离在一个地方。</p>
+<p><strong>SeriesResolver</strong> 负责根据 Season 找到对应的 <code>vodId</code>。例如 <code>tt0455275</code> 返回 <code>&#123; seasonMap: &#123; 1: &#123; vodId: &quot;82132&quot; &#125;, 2: &#123; vodId: &quot;91342&quot; &#125;, ... &#125; &#125;</code>。这个设计完全符合站点“每季独立 vodId”的数据结构。</p>
+<p><strong>EpisodeResolver</strong> 完全照搬原始脚本的逻辑。输入 <code>vodId</code> 和 <code>episode</code>，在 <code>episodeList</code> 中找到 <code>name == episode</code> 的条目，返回 <code>nid</code>。它完全不知道 IMDb、Season 或 TMDB 的存在。</p>
+<p><strong>StreamResolver</strong> 输入 <code>vodId</code> 和 <code>nid</code>，调用流地址 API，返回播放链接。</p>
+<p>这个架构解决了一个核心问题：ID 的统一性。所有 ID 转换都发生在 MediaResolver 内部，其他层拿到的都是已经归一化的对象。后来引入的 <code>MediaContext</code> 对象，在整个 Resolver 链中传递同一个上下文，每层只补充自己负责的字段。</p>
+<h3 id="3-6-最大的架构陷阱：Season-Episode-与-Absolute-Episode-的对撞"><a href="#3-6-最大的架构陷阱：Season-Episode-与-Absolute-Episode-的对撞" class="headerlink" title="3.6 最大的架构陷阱：Season&#x2F;Episode 与 Absolute Episode 的对撞"></a>3.6 最大的架构陷阱：Season&#x2F;Episode 与 Absolute Episode 的对撞</h3><p>这是整个开发过程中最深刻的教训。</p>
+<p><strong>问题</strong>：Stremio 的剧集模型是 Season&#x2F;Episode（如 <code>tt0944947:2:5</code> 表示第二季第五集）。而站点的 <code>episodeList</code> 是 absolute episode。</p>
+<p>最初的 EpisodeResolver 实现是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">resolve</span>(<span class="params">vodId, episodeNum</span>) &#123;</span><br><span class="line">    episodes.<span class="title function_">find</span>(<span class="function"><span class="params">ep</span> =&gt;</span> <span class="built_in">parseInt</span>(ep.<span class="property">name</span>) == episodeNum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于国产剧（单季、集数连续），这个逻辑恰好能工作。但对于多季剧集，<code>tt0944947:2:5</code> 中的 <code>episode=5</code> 会被错误地匹配到 <code>episode.name == &quot;5&quot;</code>，而实际上需要的是整部剧的绝对第 N 集。</p>
+<p><strong>根因</strong>：站点的 <code>episodeList</code> 是绝对集数，而 TMDB 是季集分离。直接混用两套 ID 体系，单季剧碰巧能工作，多季剧必然出错。</p>
+<p><strong>正确的解决方案</strong>：引入 <strong>SeriesResolver</strong> 负责 Season → vodId 的映射，让 EpisodeResolver 只负责站点层的 <code>vodId → nid</code>：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">S03E02</span><br><span class="line">  ↓ SeriesResolver：从 tt 获取 seasonMap</span><br><span class="line">seasonMap<span class="selector-attr">[3]</span><span class="selector-class">.vodId</span> = <span class="string">&quot;132032&quot;</span>（第三季的独立 vodId）</span><br><span class="line">  ↓ EpisodeResolver<span class="selector-class">.resolve</span>(<span class="string">&quot;132032&quot;</span>, <span class="number">2</span>)</span><br><span class="line">在 vodId=<span class="number">132032</span> 的 episodeList 中查找 name == <span class="string">&quot;2&quot;</span></span><br><span class="line">  ↓</span><br><span class="line">nid = <span class="number">12938475</span></span><br></pre></td></tr></table></figure>
+
+<p>这个设计完全符合站点“每季独立 vodId”的数据结构——不做任何硬性的 Season → Absolute 映射，而是让 SeriesResolver 自然地完成转换。EpisodeResolver 的职责被严格限定：永远不知道 IMDb 或 Season 的存在。</p>
+<h3 id="3-7-JP-ID-模式：站内-ID-的降级方案"><a href="#3-7-JP-ID-模式：站内-ID-的降级方案" class="headerlink" title="3.7 JP ID 模式：站内 ID 的降级方案"></a>3.7 JP ID 模式：站内 ID 的降级方案</h3><p>除了 IMDb ID，Addon 也支持站内 ID（<code>jp146932</code> 格式）。对于 JP ID，流程简单得多：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jp132032（已经知道是第四季的 vodId）</span><br><span class="line">  ↓ EpisodeResolver.<span class="built_in">resolve</span>(<span class="string">&quot;132032&quot;</span>, <span class="number">5</span>)</span><br><span class="line">查找 name == <span class="string">&quot;5&quot;</span> 的条目</span><br><span class="line">  ↓</span><br><span class="line">nid</span><br></pre></td></tr></table></figure>
+
+<p>因为 JP ID 本身就是 <code>vodId</code>，SeriesResolver 完全不需要介入。这为其他使用站内 ID 的 Addon 提供了兼容性。</p>
+<h3 id="3-8-Stremio-Addon-的-idPrefixes-机制"><a href="#3-8-Stremio-Addon-的-idPrefixes-机制" class="headerlink" title="3.8 Stremio Addon 的 idPrefixes 机制"></a>3.8 Stremio Addon 的 idPrefixes 机制</h3><p>Stremio Addon 可以通过 manifest 中的 <code>idPrefixes</code> 字段声明支持哪些 ID 格式：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;idPrefixes&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;jp&quot;</span><span class="punctuation">,</span> <span class="string">&quot;tt&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，Stremio 只会把以 <code>jp</code> 或 <code>tt</code> 开头的 ID 请求发送给这个 Addon。这是 Stremio 协议为兼容非标准 ID 体系提供的原生机制，也是 Stremio Addon 相比 Nuvio Provider 的一个明显优势。</p>
+<h3 id="3-9-域名动态追踪的完整设计"><a href="#3-9-域名动态追踪的完整设计" class="headerlink" title="3.9 域名动态追踪的完整设计"></a>3.9 域名动态追踪的完整设计</h3><p>站点域名可能随时更改，为了保持服务可用，设计了三层追踪策略：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">请求失败</span><br><span class="line">    ↓</span><br><span class="line">① 内存缓存（实例级，<span class="number">7</span> 天内有效）</span><br><span class="line">    ↓ 未命中</span><br><span class="line">② Upstash Redis 缓存（跨实例，<span class="number">7</span> 天 TTL）</span><br><span class="line">    ↓ 未命中</span><br><span class="line">③ <span class="keyword">jpyy.com </span>官方 API 获取域名列表</span><br><span class="line">    ↓ 失败</span><br><span class="line">④ <span class="keyword">jpyy.com </span>HTML 提取（兜底）</span><br><span class="line">    ↓ 失败</span><br><span class="line">⑤ 硬编码备用域名（最终兜底）</span><br></pre></td></tr></table></figure>
+
+<p>官方 API 的调用也需要签名，算法与站点 API 一致。通过 Redis 锁（<code>domain:probe:lock</code>，TTL 60 秒）防止多实例同时探测，避免对源站造成压力。</p>
+<p>域名优先级为：用户自定义配置 &gt; 官方 API 动态发现 &gt; 硬编码默认域名。在大多数情况下，官方 API 会自动获取最新域名，硬编码的默认值只作为最终兜底。</p>
+<h3 id="3-10-多语言-IMDb-匹配"><a href="#3-10-多语言-IMDb-匹配" class="headerlink" title="3.10 多语言 IMDb 匹配"></a>3.10 多语言 IMDb 匹配</h3><p>站点收录的内容以中文译名为主，而 TMDB 返回的往往是英文原名。为了解决这个问题，Addon 设计了多语言匹配策略：</p>
+<p><strong>第一步：收集候选标题</strong>。从 TMDB 的 <code>/alternative_titles</code> 和 <code>/translations</code> 接口拉取所有别名，按优先级排序：纯中文 &gt; 中文混合 &gt; 原始标题 &gt; 其他语言。</p>
+<p><strong>第二步：多标题搜索</strong>。用前 5 个候选标题逐个搜索站点，合并去重。</p>
+<p><strong>第三步：多别名匹配</strong>。对每个搜索结果，计算它与所有候选标题的最高相似度，取最大值作为匹配分数。再叠加年份加分和精确匹配加分。</p>
+<p>效果示例：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[<span class="symbol">Candidates</span>] <span class="number">5</span> 个标题: 三体 | <span class="number">3</span> <span class="symbol">Body</span> <span class="symbol">Problem</span> | <span class="number">3</span>体 | ...</span><br><span class="line">[<span class="symbol">MultiSearch</span>] <span class="string">&quot;三体&quot;</span> → <span class="number">24</span> 条</span><br><span class="line">[<span class="symbol">MultiSearch</span>] <span class="string">&quot;3 Body Problem&quot;</span> → <span class="number">24</span> 条</span><br><span class="line">[<span class="symbol">IMDb</span>→<span class="symbol">Vod</span>] <span class="symbol">Total</span> candidates: <span class="number">52</span></span><br><span class="line">[<span class="symbol">SeasonMatch</span>] - <span class="string">&quot;三体第一季（国语）&quot;</span> → season=<span class="number">1</span>, sim=<span class="number">0.85</span></span><br><span class="line">[<span class="symbol">IMDb</span>→<span class="symbol">Vod</span>] <span class="symbol">Resolved</span>: tt13016388 → vodId=<span class="number">103388</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-11-为什么-Stremio-Addon-最终不可行"><a href="#3-11-为什么-Stremio-Addon-最终不可行" class="headerlink" title="3.11 为什么 Stremio Addon 最终不可行"></a>3.11 为什么 Stremio Addon 最终不可行</h3><p>架构设计完成后，Addon 在本地测试中运行正常。云端基础设施（Vercel Edge Functions + Upstash Redis + Cloudflare 备选）也配置完毕，缓存策略和域名追踪都工作良好。但当进入实际使用阶段时，一个根本性的问题浮出水面：IP 绑定。</p>
+<p>站点下发的 stream URL 与请求方 IP 绑定。Addon 部署在 Vercel Edge Functions 上，获取到的 URL 绑定的是 Vercel 边缘节点的 IP。当 Stremio 客户端用自己的 IP 去请求这个 URL 时，服务端校验发现 IP 不匹配，直接拒绝播放。</p>
+<p>这是一个无法通过服务端逻辑优化绕过的问题。Upstash 缓存再快、Vercel Edge Functions 冷启动再短、Cloudflare 节点再多，都无法解决 IP 绑定这个根本约束。唯一可行的方案，是在客户端本地获取流地址。这个判断直接排除了 Stremio Addon 路线，将方向转向了 Nuvio Provider。</p>
+<h2 id="四、第三版：Nuvio-Provider-的架构迁移"><a href="#四、第三版：Nuvio-Provider-的架构迁移" class="headerlink" title="四、第三版：Nuvio Provider 的架构迁移"></a>四、第三版：Nuvio Provider 的架构迁移</h2><h3 id="4-1-Nuvio-Provider-与-Stremio-Addon-的本质差异"><a href="#4-1-Nuvio-Provider-与-Stremio-Addon-的本质差异" class="headerlink" title="4.1 Nuvio Provider 与 Stremio Addon 的本质差异"></a>4.1 Nuvio Provider 与 Stremio Addon 的本质差异</h3><p>Nuvio 同时兼容两种内容源：Stremio Addon 和 Local Scraper（Provider）。前者运行在服务端，后者运行在客户端本地。</p>
+<table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left">Stremio Addon</th>
+<th align="left">Nuvio Provider</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">代码运行位置</td>
+<td align="left">服务器端</td>
+<td align="left">客户端本地（用户设备）</td>
+</tr>
+<tr>
+<td align="left">运行环境</td>
+<td align="left">Node.js &#x2F; Vercel Edge &#x2F; Cloudflare Workers</td>
+<td align="left">React Native + Hermes</td>
+</tr>
+<tr>
+<td align="left">Node.js 模块</td>
+<td align="left">完全可用</td>
+<td align="left">不可用（<code>crypto</code>、<code>fs</code> 等）</td>
+</tr>
+<tr>
+<td align="left"><code>async/await</code></td>
+<td align="left">原生支持</td>
+<td align="left">需转译或改用 Promise 链</td>
+</tr>
+<tr>
+<td align="left">ID 处理</td>
+<td align="left">支持 <code>idPrefixes</code> 自定义</td>
+<td align="left">固定接收 TMDB ID</td>
+</tr>
+<tr>
+<td align="left">部署方式</td>
+<td align="left">需要服务器</td>
+<td align="left">无需服务器，文件即可分发</td>
+</tr>
+<tr>
+<td align="left">缓存能力</td>
+<td align="left">内存 + Upstash Redis + CDN 三层缓存</td>
+<td align="left">仅内存 Map</td>
+</tr>
+<tr>
+<td align="left">日志调试</td>
+<td align="left">云端日志直接可见</td>
+<td align="left">iOS + Hermes 下 console.log 不显示</td>
+</tr>
+</tbody></table>
+<p>Nuvio 官方文档明确说明，Providers 在用户设备上本地运行，Nuvio 应用使用 Hermes JavaScript 引擎。</p>
+<h3 id="4-2-架构迁移的核心变化"><a href="#4-2-架构迁移的核心变化" class="headerlink" title="4.2 架构迁移的核心变化"></a>4.2 架构迁移的核心变化</h3><p><strong>参数变化</strong>。Stremio Addon 接收的是 <code>videoID</code>（格式由 <code>idPrefixes</code> 决定，可以是 <code>tt</code> 或 <code>jp</code>）。Nuvio Provider 的 <code>getStreams</code> 接收的是固定的 <code>tmdbId</code>（纯数字）、<code>mediaType</code>、<code>season</code>、<code>episode</code>。</p>
+<p>这意味着，Stremio Addon 中 <code>SeriesResolver</code> 的“根据 Season 找到 vodId”的逻辑，在 Nuvio Provider 中需要从 TMDB 元数据出发：先通过 TMDB API 获取影片标题和别名，再搜索站点找到 <code>vodId</code>。</p>
+<p><strong>环境变化</strong>。Stremio Addon 中可以直接使用 <code>async/await</code> 和 Node.js 内置模块。Nuvio Provider 运行在 Hermes 引擎中，<code>async/await</code> 需要通过构建工具转译，Node.js 的 <code>crypto</code> 模块不可用。</p>
+<p><strong>缓存能力退化</strong>。这是最显著的损失。Stremio Addon 中可以使用 Upstash Redis 实现跨实例缓存，使用 Vercel CDN 实现静态内容缓存。Nuvio Provider 运行在客户端沙箱中，无法连接任何外部缓存服务，只能用内存 <code>Map</code> 做进程内缓存。这意味着之前设计的三层缓存架构完全无法复用，只能重新设计一套客户端可用的缓存策略。</p>
+<p><strong>日志调试</strong>。Stremio Addon 部署在云端，可以直接在 Vercel 日志面板或 Cloudflare Workers 日志中查看 <code>console.log</code> 输出。Nuvio Provider 在 iOS 真机上运行时，Hermes 的 <code>console.log</code> 输出不会显示在 Plugin Tester 中。</p>
+<h3 id="4-3-Hermes-环境下的关键技术方案"><a href="#4-3-Hermes-环境下的关键技术方案" class="headerlink" title="4.3 Hermes 环境下的关键技术方案"></a>4.3 Hermes 环境下的关键技术方案</h3><p><strong>async&#x2F;await 的转译</strong>。Hermes 引擎不原生支持动态加载代码中的 <code>async/await</code> 语法。源码中只写标准 <code>async/await</code>，由 <code>build.js</code> 自动转译为 Hermes 兼容的生成器函数。构建产物顶部会生成 <code>__async</code> 辅助函数。</p>
+<p>关键原则：源码中只写标准 <code>async/await</code>，不要手动写 <code>__async</code>、<code>function*</code> 或 <code>yield</code>。我曾犯过这个错误——把构建产物的形式直接写进源码，导致 <code>build.js</code> 不再生成 <code>__async</code> 辅助函数，运行时直接报 <code>ReferenceError: property &#39;__async&#39; doesn&#39;t exist</code>。</p>
+<p><strong>加密模块的选择</strong>。Nuvio 环境内置了 <code>crypto-js</code>，可以直接通过 <code>require(&#39;crypto-js&#39;)</code> 调用 MD5 和 SHA1。Node.js 的内置 <code>crypto</code> 模块以及一些假设 Node&#x2F;浏览器环境的加密库（如 <code>node-forge</code>）在 Hermes 环境中不可用。</p>
+<p><strong>日志调试的变通方案</strong>。在 <code>getStreams</code> 中维护一个 <code>step</code> 变量，在关键步骤前更新它。出错时返回一条错误条目，把出错步骤和错误信息写入 <code>title</code> 字段：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStreams</span>(<span class="params">tmdbId, mediaType, season, episode</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> step = <span class="string">&quot;init&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        step = <span class="string">&quot;normalizeInput&quot;</span>;</span><br><span class="line">        <span class="keyword">const</span> input = <span class="title function_">normalizeInput</span>(tmdbId, mediaType, season, episode);</span><br><span class="line"></span><br><span class="line">        step = <span class="string">&quot;resolveTmdbMetadata&quot;</span>;</span><br><span class="line">        <span class="keyword">const</span> metadata = <span class="keyword">await</span> <span class="title function_">resolveTmdbMetadata</span>(input);</span><br><span class="line"></span><br><span class="line">        step = <span class="string">&quot;searchVod&quot;</span>;</span><br><span class="line">        <span class="keyword">const</span> items = <span class="keyword">await</span> <span class="title function_">searchVod</span>(input, metadata);</span><br><span class="line"></span><br><span class="line">        step = <span class="string">&quot;pickVod&quot;</span>;</span><br><span class="line">        <span class="keyword">const</span> vod = <span class="title function_">pickVod</span>(items, input, metadata);</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="attr">name</span>: <span class="variable constant_">PROVIDER_NAME</span>,</span><br><span class="line">            <span class="attr">title</span>: <span class="string">`[<span class="subst">$&#123;step&#125;</span>] <span class="subst">$&#123;e.message&#125;</span>`</span>,</span><br><span class="line">            <span class="attr">url</span>: <span class="string">&quot;https://test.com/error&quot;</span>,</span><br><span class="line">            <span class="attr">quality</span>: <span class="string">&quot;ERROR&quot;</span></span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样即使 <code>console.log</code> 不显示，也能在 Results 里看到 <code>[searchVod] RSC 请求失败 HTTP 403 @ /vod/search/...</code> 这样的精确定位信息。</p>
+<h3 id="4-4-ID-转换：从-TMDB-ID-到站内-ID"><a href="#4-4-ID-转换：从-TMDB-ID-到站内-ID" class="headerlink" title="4.4 ID 转换：从 TMDB ID 到站内 ID"></a>4.4 ID 转换：从 TMDB ID 到站内 ID</h3><p>Nuvio Provider 的核心复杂度在于 ID 转换。<code>getStreams</code> 接收的是 TMDB ID，而站点使用内部的 <code>vodId</code> 和 <code>nid</code>。转换链路如下：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TMDB ID → TMDB 元数据（标题<span class="regexp">/别名/</span>年份） → 站内搜索 → 匹配算法 → vodId → nid → stream URL</span><br></pre></td></tr></table></figure>
+
+<p><strong>多语言别名匹配</strong>。TMDB 返回的往往是英文原名（如 “3 Body Problem”），而站点收录的是中文译名（”三体”）。解决方案是从 TMDB 拉取所有别名，按“纯中文 &gt; 中文为主 &gt; 其他”的优先级排序：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getTitlePriority</span>(<span class="params">title</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!title) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">const</span> chineseCount = (title.<span class="title function_">match</span>(<span class="regexp">/[\u4e00-\u9fa5]/g</span>) || []).<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">const</span> totalLength = title.<span class="property">length</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="regexp">/^[\u4e00-\u9fa5]+$/</span>.<span class="title function_">test</span>(title)) <span class="keyword">return</span> <span class="number">3</span>;       <span class="comment">// 纯中文</span></span><br><span class="line">    <span class="keyword">if</span> (chineseCount / totalLength &gt; <span class="number">0.5</span>) <span class="keyword">return</span> <span class="number">2</span>;       <span class="comment">// 中文为主</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;                                              <span class="comment">// 其他</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>相似度评分与多别名匹配</strong>。对每个站内搜索结果，计算它与所有候选标题的最高相似度。如果 TMDB 返回了 5 个别名，只要其中任何一个与站内标题匹配，就能得到高分：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">scoreVod</span>(<span class="params">item, metadata</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> candidateTitles = [metadata.<span class="property">title</span>, metadata.<span class="property">originalTitle</span>, ...metadata.<span class="property">aliases</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> maxSim = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> t <span class="keyword">of</span> candidateTitles) &#123;</span><br><span class="line">        <span class="keyword">const</span> sim = <span class="title function_">similarity</span>(t, item.<span class="property">vodName</span>);</span><br><span class="line">        <span class="keyword">if</span> (sim &gt; maxSim) maxSim = sim;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (maxSim &lt; <span class="number">0.3</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> score = maxSim;</span><br><span class="line">    <span class="comment">// 年份加分、精确匹配加分、季数加分...</span></span><br><span class="line">    <span class="keyword">return</span> score;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相似度计算采用组合策略：包含关系直接返回 0.85，否则用编辑距离（Levenshtein Distance）计算。再叠加年份匹配、精确匹配和季数标记的加分，最终得分超过阈值 0.5 的条目才被接受。</p>
+<p><strong>搜索查询数量限制</strong>。为了平衡速度与覆盖，电影最多生成 5 个查询词，电视剧最多 6 个，优先使用已排序的中文别名。</p>
+<h3 id="4-5-剧集处理在-Nuvio-Provider-中的延续"><a href="#4-5-剧集处理在-Nuvio-Provider-中的延续" class="headerlink" title="4.5 剧集处理在 Nuvio Provider 中的延续"></a>4.5 剧集处理在 Nuvio Provider 中的延续</h3><p>Stremio Addon 阶段关于剧集处理的思考，在 Nuvio Provider 中依然适用。对于多季剧集，需要在 Provider 内部从站内详情页的 <code>vodName</code> 中提取季数信息，筛选出对应季的 <code>vodId</code>，再在该条目的 <code>episodeList</code> 中按 Episode 查找 <code>nid</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">extractSeasonNumber</span>(<span class="params">title</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!title) <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">const</span> cnMap = &#123; <span class="string">&#x27;一&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;二&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;三&#x27;</span>: <span class="number">3</span>, <span class="comment">/* ... */</span> &#125;;</span><br><span class="line">    <span class="keyword">const</span> cnMatch = title.<span class="title function_">match</span>(<span class="regexp">/第([一二三四五六七八九十])季/</span>);</span><br><span class="line">    <span class="keyword">if</span> (cnMatch) <span class="keyword">return</span> cnMap[cnMatch[<span class="number">1</span>]] || <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">const</span> numMatch = title.<span class="title function_">match</span>(<span class="regexp">/第\s*(\d+)\s*季/</span>);</span><br><span class="line">    <span class="keyword">if</span> (numMatch) <span class="keyword">return</span> <span class="built_in">parseInt</span>(numMatch[<span class="number">1</span>], <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">const</span> enMatch = title.<span class="title function_">match</span>(<span class="regexp">/season\s*(\d+)/i</span>);</span><br><span class="line">    <span class="keyword">if</span> (enMatch) <span class="keyword">return</span> <span class="built_in">parseInt</span>(enMatch[<span class="number">1</span>], <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">const</span> sMatch = title.<span class="title function_">match</span>(<span class="regexp">/\bS(\d+)\b/</span>);</span><br><span class="line">    <span class="keyword">if</span> (sMatch) <span class="keyword">return</span> <span class="built_in">parseInt</span>(sMatch[<span class="number">1</span>], <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-6-域名动态发现的客户端实现"><a href="#4-6-域名动态发现的客户端实现" class="headerlink" title="4.6 域名动态发现的客户端实现"></a>4.6 域名动态发现的客户端实现</h3><p>在 Nuvio Provider 中，由于运行在客户端沙箱，无法使用 Redis 缓存，域名追踪策略简化为：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">请求失败</span><br><span class="line">    ↓</span><br><span class="line">① 内存缓存（实例级，<span class="number">7</span> 天内有效）</span><br><span class="line">    ↓ 未命中</span><br><span class="line">② <span class="keyword">jpyy.com </span>官方 API 获取域名列表</span><br><span class="line">    ↓ 失败</span><br><span class="line">③ 硬编码备用域名（最终兜底）</span><br></pre></td></tr></table></figure>
+
+<p>官方 API 的调用仍然需要签名，算法与站点 API 一致。内存缓存使用 <code>Map</code> 实现，TTL 设置为 7 天（但实际受限于应用生命周期）。</p>
+<h3 id="4-7-缓存能力的退化与重新设计"><a href="#4-7-缓存能力的退化与重新设计" class="headerlink" title="4.7 缓存能力的退化与重新设计"></a>4.7 缓存能力的退化与重新设计</h3><p>从 Stremio Addon 迁移到 Nuvio Provider 时，最大的能力损失是缓存。Stremio Addon 拥有三层缓存（内存 → Upstash Redis → Vercel CDN），而 Nuvio Provider 只能用内存 <code>Map</code>。</p>
+<p>这意味着之前为 Stremio Addon 设计的缓存策略完全无法复用。但可以借鉴其分层思路，在客户端沙箱内重新设计：</p>
+<table>
+<thead>
+<tr>
+<th align="left">数据类型</th>
+<th align="left">缓存方式</th>
+<th align="left">TTL</th>
+<th align="left">依据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">TMDB 元数据</td>
+<td align="left">内存 Map</td>
+<td align="left">6 小时</td>
+<td align="left">标题、别名在短时间内不变</td>
+</tr>
+<tr>
+<td align="left">RSC 搜索请求</td>
+<td align="left">内存 Map</td>
+<td align="left">5 分钟</td>
+<td align="left">同一影片短时间内重复搜索常见</td>
+</tr>
+<tr>
+<td align="left">详情页数据</td>
+<td align="left">内存 Map</td>
+<td align="left">30 分钟</td>
+<td align="left">详情页内容变化频率低</td>
+</tr>
+<tr>
+<td align="left">流地址</td>
+<td align="left">不缓存</td>
+<td align="left">—</td>
+<td align="left">IP 绑定，且有效期短</td>
+</tr>
+</tbody></table>
+<p>Nuvio 自身的元数据管线中，TMDB 数据的缓存 TTL 为 7 天，Metadata Screen 的缓存 TTL 为 5 分钟。Provider 的内存缓存可以参照这个比例，根据沙箱内存限制适当缩短。</p>
+<h2 id="五、技术探讨：运行效率与云端工具"><a href="#五、技术探讨：运行效率与云端工具" class="headerlink" title="五、技术探讨：运行效率与云端工具"></a>五、技术探讨：运行效率与云端工具</h2><p>在 Nuvio Provider 的开发过程中，一个反复出现的权衡是：如何在客户端沙箱的限制下，尽可能提升运行效率。这引出了几个值得深入探讨的技术方向。</p>
+<h3 id="5-1-云端工具能否用于-Provider-场景"><a href="#5-1-云端工具能否用于-Provider-场景" class="headerlink" title="5.1 云端工具能否用于 Provider 场景"></a>5.1 云端工具能否用于 Provider 场景</h3><p>一个自然的想法是：既然 Provider 运行在客户端，能否借助云端工具来分担一些计算或缓存任务？答案是——部分可以，但受限于 IP 绑定。</p>
+<p>对于 IP 绑定的流媒体源，流地址的获取必须在客户端完成，因此 Vercel Edge Functions、Cloudflare Workers 等边缘计算平台无法直接参与流地址的获取。但它们在以下环节仍有价值：</p>
+<p><strong>构建与转译</strong>。<code>build.js</code> 使用的 esbuild 本身就是一种高效的构建工具。对于包含大量依赖的 Provider，可以在 CI&#x2F;CD 流程中执行构建，确保产物始终是最新的。</p>
+<p><strong>预解析与缓存</strong>。如果能提前将 TMDB 元数据预解析并缓存到云端（如 Upstash Redis），Provider 在客户端只需要查询缓存，而不是每次都请求 TMDB API。但问题在于：Provider 运行在 Hermes 沙箱中，无法直接连接 Redis。除非 Nuvio 在应用层面提供了某种桥接机制，否则这个方向在 Provider 场景下走不通。</p>
+<p><strong>Stremio Addon 作为补充</strong>。对于不涉及 IP 绑定的内容（如元数据、目录），可以编写一个独立的 Stremio Addon 部署在 Vercel 上，利用 Edge Functions 的低延迟特性。Provider 和 Addon 可以并行运行，Provider 负责 IP 绑定的流地址，Addon 负责元数据增强。</p>
+<h3 id="5-2-边缘计算与冷启动优化"><a href="#5-2-边缘计算与冷启动优化" class="headerlink" title="5.2 边缘计算与冷启动优化"></a>5.2 边缘计算与冷启动优化</h3><p>如果选择 Stremio Addon 路线（仅用于非 IP 绑定的场景），Vercel Edge Functions 是值得考虑的选择。它们运行在基于 V8 隔离的轻量级运行时上，冷启动时间仅 50–300ms，而传统的 Node.js 容器冷启动需要 1–5 秒。</p>
+<p>Cloudflare Workers 是另一个值得考虑的备选，同样基于 V8 隔离，免费额度更慷慨，全球节点覆盖更广。两者在架构设计上可以互换，选择取决于具体需求。</p>
+<p>但 Edge Functions 也有严格的资源限制：128MB 内存、50ms CPU 时间，且不能使用 Node.js API。这意味着复杂的加密计算或大型依赖包会被排除在外。</p>
+<h3 id="5-3-多级缓存策略的价值与边界"><a href="#5-3-多级缓存策略的价值与边界" class="headerlink" title="5.3 多级缓存策略的价值与边界"></a>5.3 多级缓存策略的价值与边界</h3><p>在 Stremio Addon 阶段，三层缓存架构（内存 → Upstash Redis → Vercel CDN）显著提升了响应速度。Upstash Redis 的跨实例缓存让不同边缘节点的请求能共享热点数据，Vercel CDN 则通过 <code>Cache-Control</code> 响应头进一步减轻源站压力。</p>
+<p>Redis 冷却降级机制是一个值得记录的设计：当 Redis 连续 3 次响应超过 500ms 或失败时，进入 60 秒冷却期，期间跳过 Redis 读写，仅使用内存缓存。这个机制保证了即使 Redis 出现网络抖动，Addon 也不会整体变慢。</p>
+<p>但在 Nuvio Provider 中，这套机制完全无法复用。客户端沙箱不允许连接外部缓存服务，只能用内存 <code>Map</code>。这意味着 Provider 的缓存命中率天然低于 Stremio Addon——每次用户重新打开应用，内存缓存都会清空。</p>
+<h3 id="5-4-预解析与异步加载"><a href="#5-4-预解析与异步加载" class="headerlink" title="5.4 预解析与异步加载"></a>5.4 预解析与异步加载</h3><p>对于 TMDB 元数据的获取，可以在 Provider 初始化时进行预解析——在用户点击播放之前，提前获取并缓存常见的元数据。但这需要 Nuvio 提供初始化钩子，目前 Provider 的 <code>getStreams</code> 是按需调用的，没有全局初始化时机。</p>
+<p>另一种思路是在 <code>getStreams</code> 内部并行发起多个 TMDB 请求。电影需要请求详情、别名、翻译三个接口，电视剧还需要季详情。这些请求之间没有依赖关系，使用 <code>Promise.all</code> 可以显著减少总耗时。</p>
+<h3 id="5-5-构建工具的选择"><a href="#5-5-构建工具的选择" class="headerlink" title="5.5 构建工具的选择"></a>5.5 构建工具的选择</h3><p>Nuvio 官方的 <code>build.js</code> 使用了 esbuild 进行打包和转译。esbuild 的特点是构建速度极快，对于包含大量依赖的 Provider，构建时间可以控制在毫秒级别。</p>
+<p>构建产物的体积直接影响加载速度。官方文档提到，对于使用 <code>node-forge</code>、<code>cheerio</code> 等重型依赖的 Provider，<code>--minify</code> 可以将文件体积减少约 50%。更小的文件意味着更快的加载时间和更少的内存占用。</p>
+<h3 id="5-6-技术方案的边界"><a href="#5-6-技术方案的边界" class="headerlink" title="5.6 技术方案的边界"></a>5.6 技术方案的边界</h3><p>需要清醒认识到的是：Provider 运行在客户端沙箱中，无法直接使用云端工具来提升运行时效率。所有优化必须在客户端层面完成——内存缓存、并行请求、减少查询词数量、限制别名数量。云端工具的价值主要体现在开发阶段（构建、测试）和辅助场景（非 IP 绑定的 Stremio Addon）中。</p>
+<h2 id="六、沉淀下来的技术方案"><a href="#六、沉淀下来的技术方案" class="headerlink" title="六、沉淀下来的技术方案"></a>六、沉淀下来的技术方案</h2><p>经过三版迭代，最终写入 Nuvio Provider 代码的技术方案如下：</p>
+<h3 id="6-1-模块划分"><a href="#6-1-模块划分" class="headerlink" title="6.1 模块划分"></a>6.1 模块划分</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">src<span class="regexp">/jpyy/</span></span><br><span class="line">├── index.js           <span class="comment"># 主入口，导出 getStreams</span></span><br><span class="line">├── sign.js            <span class="comment"># 签名生成（SHA1(MD5(...))）</span></span><br><span class="line">├── rsc.js             <span class="comment"># RSC 流解析器</span></span><br><span class="line">└── tmdb-resolver.js   <span class="comment"># TMDB 元数据解析</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-签名算法"><a href="#6-2-签名算法" class="headerlink" title="6.2 签名算法"></a>6.2 签名算法</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">CryptoJS</span> <span class="keyword">from</span> <span class="string">&quot;crypto-js&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">genSign</span>(<span class="params">&#123; method = <span class="string">&quot;GET&quot;</span>, params = &#123;&#125;, t, signKey = SIGN_KEY &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> g = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span> (method.<span class="title function_">toUpperCase</span>() === <span class="string">&quot;GET&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> keys = <span class="title class_">Object</span>.<span class="title function_">keys</span>(params).<span class="title function_">sort</span>();</span><br><span class="line">        g = keys.<span class="property">length</span> ? keys.<span class="title function_">map</span>(<span class="function"><span class="params">k</span> =&gt;</span> <span class="string">`<span class="subst">$&#123;k&#125;</span>=<span class="subst">$&#123;params[k]&#125;</span>`</span>).<span class="title function_">join</span>(<span class="string">&quot;&amp;&quot;</span>) : <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        g = <span class="title class_">Object</span>.<span class="title function_">keys</span>(params).<span class="property">length</span> ? <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(params) : <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> h = g ? <span class="string">`<span class="subst">$&#123;g&#125;</span>&amp;key=<span class="subst">$&#123;signKey&#125;</span>&amp;t=<span class="subst">$&#123;t&#125;</span>`</span> : <span class="string">`key=<span class="subst">$&#123;signKey&#125;</span>&amp;t=<span class="subst">$&#123;t&#125;</span>`</span>;</span><br><span class="line">    <span class="keyword">const</span> md5 = <span class="title class_">CryptoJS</span>.<span class="title class_">MD5</span>(h).<span class="title function_">toString</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">CryptoJS</span>.<span class="title class_">SHA1</span>(md5).<span class="title function_">toString</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-RSC-解析器"><a href="#6-3-RSC-解析器" class="headerlink" title="6.3 RSC 解析器"></a>6.3 RSC 解析器</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">parseRscRecords</span>(<span class="params">body</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> values = [];</span><br><span class="line">    <span class="keyword">let</span> current = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">flush</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!current) <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123; values.<span class="title function_">push</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(current.<span class="property">raw</span>.<span class="title function_">trim</span>())); &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">        current = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> line <span class="keyword">of</span> <span class="title class_">String</span>(body).<span class="title function_">split</span>(<span class="regexp">/\r?\n/</span>)) &#123;</span><br><span class="line">        <span class="keyword">const</span> match = line.<span class="title function_">match</span>(<span class="regexp">/^([0-9a-f]+):\s?(.*)$/i</span>);</span><br><span class="line">        <span class="keyword">if</span> (match) &#123;</span><br><span class="line">            <span class="title function_">flush</span>();</span><br><span class="line">            current = &#123; <span class="attr">raw</span>: match[<span class="number">2</span>] &#125;;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (current) &#123;</span><br><span class="line">            current.<span class="property">raw</span> += <span class="string">`\n<span class="subst">$&#123;line&#125;</span>`</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">flush</span>();</span><br><span class="line">    <span class="keyword">if</span> (values.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123; values.<span class="title function_">push</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(body)); &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> values;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-多语言别名匹配"><a href="#6-4-多语言别名匹配" class="headerlink" title="6.4 多语言别名匹配"></a>6.4 多语言别名匹配</h3><p>从 TMDB 的 <code>/alternative_titles</code> 和 <code>/translations</code> 接口拉取所有别名，按纯中文 &gt; 中文为主 &gt; 其他排序，取前 5 个作为搜索候选。</p>
+<h3 id="6-5-相似度评分"><a href="#6-5-相似度评分" class="headerlink" title="6.5 相似度评分"></a>6.5 相似度评分</h3><p>包含关系返回 0.85，否则用编辑距离计算。对每个站内结果，取与所有候选标题的最高相似度，再叠加年份、精确匹配、季数加分。</p>
+<h3 id="6-6-调试方案"><a href="#6-6-调试方案" class="headerlink" title="6.6 调试方案"></a>6.6 调试方案</h3><p><code>getStreams</code> 中维护 <code>step</code> 变量，出错时返回带 <code>[step] error.message</code> 的错误条目。</p>
+<h3 id="6-7-部署方式"><a href="#6-7-部署方式" class="headerlink" title="6.7 部署方式"></a>6.7 部署方式</h3><ul>
+<li>构建：<code>node build.js --minify jpyy</code></li>
+<li>托管：GitHub raw content URL</li>
+<li>添加仓库：在 Nuvio 的 Settings &gt; Plugins 中输入不带 <code>manifest.json</code> 的根 URL</li>
+</ul>
+<h2 id="七、经验总结"><a href="#七、经验总结" class="headerlink" title="七、经验总结"></a>七、经验总结</h2><h3 id="7-1-目标站点的技术分析决定了架构方向"><a href="#7-1-目标站点的技术分析决定了架构方向" class="headerlink" title="7.1 目标站点的技术分析决定了架构方向"></a>7.1 目标站点的技术分析决定了架构方向</h3><p>jpyy.com 的六个技术特征——签名保护、RSC 流格式、域名群、IP 绑定、绝对集数、每季独立 vodId——共同构成了整个项目的约束条件。在写代码之前，必须先把目标站点的技术特征分析清楚，否则后期会不断发现“原来还有这个限制”。</p>
+<h3 id="7-2-架构选择由运行环境决定，而非技术偏好"><a href="#7-2-架构选择由运行环境决定，而非技术偏好" class="headerlink" title="7.2 架构选择由运行环境决定，而非技术偏好"></a>7.2 架构选择由运行环境决定，而非技术偏好</h3><p>IP 绑定流媒体 → 必须在客户端获取流地址 → Stremio Addon 不可行 → Nuvio Provider 的 Hermes 环境 → 有限的 API 和语法限制。每一步选择都是上一层约束推导出来的结果，而非任意决定。</p>
+<h3 id="7-3-ID-统一是架构设计的核心"><a href="#7-3-ID-统一是架构设计的核心" class="headerlink" title="7.3 ID 统一是架构设计的核心"></a>7.3 ID 统一是架构设计的核心</h3><p>在 Stremio Addon 阶段，最大的设计问题不是代码实现，而是 ID 没有统一。<code>tt</code>、<code>jp</code>、<code>vod</code>、<code>nid</code>、<code>tmdb</code>、<code>title</code> 到处互相转换，导致 Search 转一次、Meta 转一次、Stream 又转一次。引入 <code>MediaContext</code> 对象后，整个 Resolver 链传递同一个上下文，每层只补充自己负责的字段，代码才变得清晰。</p>
+<h3 id="7-4-Season-Episode-与-Absolute-Episode-不能混用"><a href="#7-4-Season-Episode-与-Absolute-Episode-不能混用" class="headerlink" title="7.4 Season&#x2F;Episode 与 Absolute Episode 不能混用"></a>7.4 Season&#x2F;Episode 与 Absolute Episode 不能混用</h3><p>这是剧集处理的经典陷阱。Stremio 和 Nuvio 都使用 Season&#x2F;Episode 模型，而大多数中文站点使用 absolute episode。必须显式地在两者之间做转换，不能依赖“碰巧能工作”的巧合。</p>
+<h3 id="7-5-每个环境都有自己的“方言”"><a href="#7-5-每个环境都有自己的“方言”" class="headerlink" title="7.5 每个环境都有自己的“方言”"></a>7.5 每个环境都有自己的“方言”</h3><p>Stremio Addon 中 <code>async/await</code> 原生可用，Nuvio Provider 中必须转译；Stremio Addon 中 <code>crypto</code> 模块直接可用，Nuvio Provider 中只能用 <code>crypto-js</code>；Stremio Addon 中 <code>console.log</code> 云端可见，Nuvio Provider 中 iOS 真机上不显示。了解每个环境的约束，才能写出在该环境中可靠的代码。</p>
+<h3 id="7-6-调试策略需要随环境调整"><a href="#7-6-调试策略需要随环境调整" class="headerlink" title="7.6 调试策略需要随环境调整"></a>7.6 调试策略需要随环境调整</h3><p>在 Stremio Addon 中，云端日志面板是最自然的调试方式。在 Nuvio Provider 中，日志不显示，就需要改变思路——把诊断信息编码进返回数据，让 Results 标签页成为你的“调试终端”。</p>
+<h3 id="7-7-先跑通再优化，但架构决策要尽早做"><a href="#7-7-先跑通再优化，但架构决策要尽早做" class="headerlink" title="7.7 先跑通再优化，但架构决策要尽早做"></a>7.7 先跑通再优化，但架构决策要尽早做</h3><p>最初那份单一 JS 脚本验证了整条链路的可行性。但在扩展到 Stremio Addon 时，如果没有及时重构 Resolver + Adapter 架构，代码会随着 ID 转换的复杂度急剧膨胀。架构比代码重要——如果架构定错，后面改 Series 会越来越痛苦。</p>
+<h3 id="7-8-兼容性需要显式的声明机制"><a href="#7-8-兼容性需要显式的声明机制" class="headerlink" title="7.8 兼容性需要显式的声明机制"></a>7.8 兼容性需要显式的声明机制</h3><p>Stremio Addon 的 <code>idPrefixes</code> 是一个优秀的设计——它让 Addon 明确声明自己支持的 ID 格式，客户端据此分发请求。Nuvio Provider 目前缺少这个机制，Provider 只能接收 TMDB ID。这意味着如果你的数据源需要处理站内 ID，要么依赖其他 Addon 传递，要么走 Stremio Addon 路线（但 IP 绑定可能不允许）。</p>
+<h3 id="7-9-云端工具的边界"><a href="#7-9-云端工具的边界" class="headerlink" title="7.9 云端工具的边界"></a>7.9 云端工具的边界</h3><p>对于 IP 绑定的流媒体源，云端工具无法直接参与流地址的获取。但在构建、测试、以及非 IP 绑定的辅助场景（如元数据增强、目录浏览）中，Vercel Edge Functions、Cloudflare Workers 和 Upstash Redis 仍然能发挥价值。Provider 的运行时效率优化，必须完全在客户端沙箱内完成——内存缓存、并行请求、减少查询词数量、控制别名数量。从三层缓存到单层内存缓存的退化，是 Stremio Addon 迁移到 Nuvio Provider 时最需要接受的现实。</p>
+<hr>
+<p>整个项目的演进过程，就是不断遇到约束、理解约束、并在约束下寻找最优解的过程。从单一脚本到 Stremio Addon（Vercel Edge Functions + Upstash Redis + Cloudflare Workers 三层缓存架构），再到 Nuvio Provider（客户端本地运行 + 内存缓存），每一版都在上一版的基础上修正了架构缺陷。最终沉淀下来的技术方案，不是一开始就能设计出来的，而是在反复的试错和思考中逐步成型的。</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2026/10/09/Stremio-Addon%EF%BC%9A%E6%87%82%E7%89%87%E5%B8%9D%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E5%BD%95/" title="Stremio Addon：懂片帝插件开发实录"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: Stremio Addon：懂片帝插件开发实录</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/10/25/sed-awk-%E7%94%A8%E6%B3%95/" title="sed awk 用法">下一篇: sed awk 用法&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

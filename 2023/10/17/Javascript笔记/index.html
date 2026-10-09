@@ -1,48 +1,310 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>Javascript笔记 · 栖息地</title><meta name="description" content="##JavaScript
+javascript 的组成
 
-include mixins
+ECMAscript(核心)
+DOM(documents object model 文档对象模型)
+BOM(brower boject model 浏览器对象模型)
 
-block site_title
-    != page.title + " · " + config.title
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+datatype (数据类型)
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+原始数据类型
+
+String
+numb"><meta name="og:description" content="##JavaScript
+javascript 的组成
+
+ECMAscript(核心)
+DOM(documents object model 文档对象模型)
+BOM(brower boject model 浏览器对象模型)
+
+
+datatype (数据类型)
+
+原始数据类型
+
+String
+numb"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="Javascript笔记"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>Javascript笔记</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-10-17 18:10</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/javasScript/" title="javasScript">javasScript</a><span>&nbsp;</span></span></p><p class="post-abstract"><p>##JavaScript</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p><strong><em>javascript 的组成</em></strong></p>
+<ul>
+<li>ECMAscript(核心)</li>
+<li>DOM(documents object model 文档对象模型)</li>
+<li>BOM(brower boject model 浏览器对象模型)</li>
+</ul>
+<hr>
+<h4 id="-1"><a href="#-1" class="headerlink" title=""></a></h4><p><strong><em>datatype (数据类型)</em></strong></p>
+<ul>
+<li><p>原始数据类型</p>
+<ul>
+<li>String</li>
+<li>number</li>
+<li>boolen</li>
+<li>null</li>
+<li>undefined</li>
+<li>Symbol</li>
+<li>BigInt</li>
+</ul>
+</li>
+<li><p>复合数据类型</p>
+<ul>
+<li>object （其中包含 function）<br><code>函数也是对象，对象是包含多个值的变量</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>一切皆是对象</p>
+</blockquote>
+<h5 id="number"><a href="#number" class="headerlink" title="number"></a>number</h5><ul>
+<li>&#96; typeof 是操作符不是方法，所以后可以及加()也可以不加 &#x2F;&#x2F; 用于检测数据类型</li>
+<li>类型转换：Number() parseIne() parseFloat() （要注意大小写规范）</li>
+<li>NaN isNaN<br>NaN 不是一个数字，但是是 number 数字类型，<code>NaN==NaN</code>的值是<code>false</code></li>
+<li>快速转换：字符串类型的数字，如果前面放 + 会隐式调用 parseFloat</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="number">123</span>); <span class="comment">//number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="number">123</span>); <span class="comment">//number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="string">&quot;123&quot;</span>); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="string">&quot;123&quot;</span>); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">true</span>); <span class="comment">//boolean</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="string">&quot;a&quot;</span>, <span class="literal">false</span>]); <span class="comment">//object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="literal">null</span>); <span class="comment">//object  null时一个空指针，是一个对象，所以返回的值为boject</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> &#123;&#125;); <span class="comment">//object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;); <span class="comment">//function function是一个方法，是可调用对象，所以也是object</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="keyword">typeof</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;&#125;); <span class="comment">//string 主要特别注意的是typeof本身返回的值是string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">NaN</span>); <span class="comment">//number  NaN是数字类型</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="built_in">isNaN</span>); <span class="comment">//boolean isNAN是boolean，用于判断对象是否是数字类型</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Number</span>(<span class="literal">null</span>)); <span class="comment">//0</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Number</span>(<span class="literal">undefined</span>)); <span class="comment">//NaN</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="title class_">Number</span>(<span class="string">&quot;我爱祖国和人民&quot;</span>)); <span class="comment">//number number()将其他类型转换为数字类型</span></span><br><span class="line"><span class="comment">// Number()返回的值有两种，一种是数字本身，一种是NaN，都是number数字类型</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Number</span>(<span class="number">132</span>)); <span class="comment">//132</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Number</span>(<span class="string">&quot;123&quot;</span>)); <span class="comment">//123</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Number</span>(<span class="string">&quot;我爱祖国和人民11&quot;</span>)); <span class="comment">//NaN</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">parseInt</span>(<span class="string">&quot;我爱祖国11&quot;</span>)); <span class="comment">//NaN</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="built_in">parseInt</span>(<span class="string">&quot;132我爱祖国11&quot;</span>)); <span class="comment">//132 parseInt只对字符串进行从左到右的查找输入匹配的数字，遇到非数字及终止</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> <span class="built_in">parseInt</span>(<span class="string">&quot;我爱祖国11&quot;</span>)); <span class="comment">//number</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> +<span class="string">&quot;123&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> []);</span><br><span class="line"></span><br><span class="line">变量没有datatype, 只有变量的值才有datatype;</span><br><span class="line"><span class="keyword">var</span> num = <span class="number">123</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> num); <span class="comment">//number</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> name = <span class="string">&quot;jack&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> name); <span class="comment">//string</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="string"><a href="#string" class="headerlink" title="string"></a>string</h5><ul>
+<li><p>由 0-16 位 unicode 字符组成；引用时需要使用’’或者””,但不能’、”交叉使用</p>
+</li>
+<li><p>.length 属性用于计算字符串长度，不能精确计算字节！</p>
+</li>
+<li><p>转义字符使用\表示</p>
+</li>
+<li><p>类型转换： <code>toString()</code> 、 <code>String()</code> 、<code>eval()</code></p>
+</li>
+<li><p>null 和 undefined 没有 toString 方法，所以转换的时候用<code>String()</code>函数</p>
+</li>
+<li><p>注意<code>.toString()</code>是个合法的方法，而<code>.String()</code>却不是</p>
+</li>
+<li><p>快速转换：如果把某个数据转化为字符串，可以有一个快捷的方式，就是把它与一个字符串 “” 相加就可以了；</p>
+</li>
+<li><p>运算 + - * &#x2F; % (取余) &#x3D; 等</p>
+</li>
+<li><p>内置属性</p>
+<blockquote>
+<p><b> <u>属性用<code>.</code>表示，方法用 <code>( )</code> 表示</u></b></p>
+</blockquote>
+<p>length</p>
+<ul>
+<li>String length 字符串长度</li>
+<li>String slice() 字符串切片（）</li>
+<li>String substring() 字符串子字符串（）</li>
+<li>String substr() 字符串 substr（）</li>
+<li>String replace() 字符串替换（）</li>
+<li>String replaceAll() 字符串替换全部（）</li>
+<li>String toUpperCase() 字符串到大写（）</li>
+<li>String toLowerCase() 字符串到小写（）</li>
+<li>String concat() 字符串 concat（）</li>
+<li>String trim() 字符串修剪（）</li>
+<li>String trimStart() 字符串修剪开始（）</li>
+<li>String trimEnd() 字符串修剪结束（）</li>
+<li>String padStart() 字符串 padStart（）</li>
+<li>String padEnd() String padEnd（）</li>
+<li>String charAt() 字符串字符（）</li>
+<li>String charCodeAt() 字符串字符代码（）</li>
+<li>String split() 字符串拆分（）</li>
+</ul>
+</li>
+<li><p>String Concatenation(字符串拼接)</p>
+<ul>
+<li>使用字符串拼接操作符 <code>+</code> 将变量和字符串连接<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">const name</span> = <span class="string">&quot;Alice&quot;</span>;</span><br><span class="line"><span class="attribute">const age</span> = 25;</span><br><span class="line"><span class="attribute">const message</span> = <span class="string">&quot;My name is &quot;</span> + name + <span class="string">&quot; and I am &quot;</span> + age + <span class="string">&quot; years old.&quot;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>Template Strings (字符串模板)</p>
+<ul>
+<li>将变量、表达式插入到字符串的语法（syntanx)为：${……}<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">let</span> firstName = <span class="string">&quot;asdf&quot;</span>;</span><br><span class="line"><span class="attribute">let</span> <span class="literal">last</span>Name = <span class="string">&quot;wer&quot;</span>;</span><br><span class="line"><span class="attribute">let</span> name = <span class="string">&quot;<span class="variable">$&#123;firstName&#125;</span>  <span class="variable">$&#123;lastName&#125;</span>&quot;</span>;</span><br><span class="line"><span class="attribute">let</span> name1 = firstName + <span class="string">&quot; &quot;</span> + <span class="literal">last</span>Name</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>String 类型</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str1 = <span class="string">&quot;123我爱祖国和人民&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> str2 = <span class="string">&quot;123我爱祖国和人民&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> str3 = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> str4 = <span class="string">&quot; &quot;</span>;</span><br><span class="line"><span class="keyword">var</span> str5 = <span class="string">&quot;function()&#123;&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">var</span> str6 = <span class="number">123</span>;</span><br><span class="line"><span class="keyword">var</span> str7 = <span class="string">&quot;123&quot;</span>;</span><br><span class="line"><span class="comment">//  上面都是合法的string类型</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str1); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str2); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str3); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str4); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str5); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str5.<span class="property">length</span>); <span class="comment">//12</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str4.<span class="property">length</span>); <span class="comment">//1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(str6.<span class="title function_">toString</span>()); <span class="comment">//123</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">toString</span>(str6)); <span class="comment">//bojcet undefinde    这里会抛出一个TypeError，因为toString()是一个方法(method)不能当作函数(function)来调用。</span></span><br><span class="line"><span class="comment">// console.log(str6.String());   //123</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">String</span>(str6)); <span class="comment">//123   使用String()进行类型转换时，String()是一个函数(function)，不能当作方法(method)来使用。 当使用String()用来构造一个函数时才能当作方法来使用比如： const srt = new String(&quot;hello world&quot;)</span></span><br><span class="line"><span class="comment">// console.log(str6.String());   这是个不错误的用法</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str6); <span class="comment">//number</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> (str6 + <span class="string">&quot;&quot;</span>)); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> str7); <span class="comment">//string</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">typeof</span> +str7); <span class="comment">//number</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="boolean"><a href="#boolean" class="headerlink" title="boolean"></a>boolean</h5><ul>
+<li><p>boolean: true false</p>
+<ul>
+<li>true:true 本身、任何非空字符串、任何非零数值、对象(object)</li>
+<li>false:false 本身、空字符串、0、NaN、null、undefined</li>
+</ul>
+</li>
+<li><p>！（取反）与！！（取反再取反）</p>
+</li>
+</ul>
+<hr>
+<h5 id="object"><a href="#object" class="headerlink" title="object"></a>object</h5><ul>
+<li>对象（object）是一种复合数据结构，用于存储和组织相关数据和功能，对象有方法和属性组成，属性表示对象的特征或状态，方法表示对象的执行或操作。</li>
+<li>对象有键值对（properties）组成的结合，每个键值对包含一个属性名和对应的值，属性名通常是字符串，但也可以是数字和符号，值可以是任意的数据类型，包含对象、数组、正则、data 等，表示的是一组数据或者功能的集合，本质是个集合</li>
+<li>对像的属性可以通过点表示法（object.property）或方括号表示法（object[‘property’]）进行访问</li>
+<li>对象可以动态的添加、修改或者删除属性和方法</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> person = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;Alice&quot;</span>,</span><br><span class="line">  <span class="attr">age</span>: <span class="number">25</span>,</span><br><span class="line">  <span class="attr">sayHello</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(</span><br><span class="line">      <span class="string">&quot;Hello, my name is &quot;</span> + <span class="variable language_">this</span>.<span class="property">name</span> + <span class="string">&quot; and I&#x27;m &quot;</span> + <span class="variable language_">this</span>.<span class="property">age</span> + <span class="string">&quot; years old.&quot;</span></span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person.<span class="property">name</span>); <span class="comment">// 访问属性，输出 &quot;Alice&quot;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(person[<span class="string">&quot;age&quot;</span>]); <span class="comment">// 访问属性，输出 25</span></span><br><span class="line"></span><br><span class="line">person.<span class="title function_">sayHello</span>(); <span class="comment">// 调用方法，输出 &quot;Hello, my name is Alice and I&#x27;m 25 years old.&quot;</span></span><br><span class="line">person.<span class="property">gender</span> = <span class="string">&quot;Female&quot;</span>; <span class="comment">// 添加属性</span></span><br><span class="line">person.<span class="property">age</span> = <span class="number">26</span>; <span class="comment">// 修改属性</span></span><br><span class="line"><span class="keyword">delete</span> person.<span class="property">name</span>; <span class="comment">// 删除属性</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>null undefined</p>
+</li>
+<li><p>Symbol</p>
+</li>
+<li><p>BingInt</p>
+</li>
+<li><p>属性（property）和方法(method)的区别</p>
+<ul>
+<li>属性<ul>
+<li>属性和方法都是对象(object)的成员，但它们的作用和使用方式略有不同。</li>
+<li>属性（property）是对象的值(特性或状态)，用于存贮或者表示对象的状态。可以通过对象的名称和属性名来访问。对象属性通常用于存储对象的状态或特征。 例如:一个人对象可能有属性名为“姓名”、“年龄”、“性别”等，用于描述这个人的基本信息。</li>
+<li>属性（property）具有与之相关的值，可以是任何 JavaScript 数据类型，包括字符串、数字、布尔、对象等。</li>
+<li>属性可以通过点表示法（object.property）或者方括号表示法（object[‘property’]）来访问和修改</li>
+</ul>
+</li>
+<li>方法<ul>
+<li>方法(method)是对象的函数，是对象的行为和操作，用于定义对象的功能，通常是对象的函数成员，用于执行特定的动作或操作。可以在对象上调用。<br>例如，一个人对象可能有方法名为“说话”、“走路”、“睡觉”等，用于描述这个人的行为或动作。方法可以访问和修改对象的属性，也可以返回值。</li>
+<li>方法(Method)包含一系列的语句和算法，可以接受函数并返回结果。</li>
+<li>方法(Method)需要通过对象调用来执行，使用点表示法（object.method()）或者方括号表示法（object[‘method’]），在方法的内部，使用<code>this</code>关键字来引用当前对象，可以访问对象的属性和其他方法。</li>
+</ul>
+</li>
+<li>区别<ul>
+<li>属性描述对象的特征或状态，而方法描述对象的行为或操作</li>
+<li>属性存储值，方法执行操作</li>
+<li>属性可以直接访问和修改，而方法需要通过对象调用执行</li>
+<li>方法可以修改对象的属性值，但属性不能执行任何操作，只能被读取或赋值。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">举例：</span><br><span class="line">  假设我们有一辆汽车，它有许多属性和方法：</span><br><span class="line"></span><br><span class="line">  属性：车牌号、颜色、品牌、型号、车速等。这些属性描述了汽车的状态或特征，它们的值可以被读取和设置，但它们并不会对汽车本身产生任何影响。</span><br><span class="line"></span><br><span class="line">  方法：加速、刹车、转弯、打开车窗、打开收音机等。这些方法描述了汽车的行为或动作，它们会对汽车本身产生影响，例如加速会使汽车前进，刹车会使汽车停止。</span><br><span class="line"></span><br><span class="line">  因此，属性和方法的区别在于它们描述了汽车的不同方面：属性描述了汽车的状态或特征，而方法描述了汽车的行为或动作。属性可以被读取和设置，但不会对汽车本身产生任何影响；方法可以对汽车产生影响，例如改变汽车的速度或位置</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方法(method)和函数(function)的区别</p>
+<ul>
+<li><p>方法(method)</p>
+<ul>
+<li>方法和函数都可以被调用，但它们的调用方式略有不同。</li>
+<li>方法是一个对象的属性，是对象的行为和操作，定义在对象中，通过对象进行调用。</li>
+<li>方法是与对象关联的，可以使用对象内部的数据和其他方法</li>
+<li>方法(Method)需要通过对象调用来执行，使用点表示法（object.method()）或者方括号表示法（object[‘method’]），在调用时会自动绑定到对象上，在方法的内部，使用<code>this</code>关键字来引用当前对象，可以访问对象的属性和其他方法。</li>
+</ul>
+</li>
+<li><p>函数（function）</p>
+<ul>
+<li>函数是 JavaScript 中的一等公民，是一段独立的可重复用的代码块，可以在任何地方定义和调用，可以接受参数并返回值。当调用一个函数时，只需要使用函数名和一对圆括号来调用它</li>
+<li>函数是独立的，没有与之直接关联的对象</li>
+<li>函数的上下文（context）取决于它被调用的方式，可以是全局对象，也可以是调用时所指定的对象</li>
+<li>函数的调用通过函数名跟一对括号<code>function( )</code>来完成</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法示例</span></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 方法体</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">obj.<span class="title function_">method</span>(); <span class="comment">// 调用方法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数示例</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">myFunction</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// 函数体</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">myFunction</span>(); <span class="comment">// 调用函数</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">类比：</span><br><span class="line">  使用一个人类的身体来类比下方法和函数的区别。</span><br><span class="line"></span><br><span class="line">  我们的身体有许多不同的器官，例如心脏、肺、胃等。每个器官都有自己独特的功能，可以帮助我们完成不同的任务。</span><br><span class="line"></span><br><span class="line">  方法就像是身体的器官，它们属于身体的某个部分，并且可以完成该部分的特定任务。例如，心脏可以将血液循环到身体的各个部分，它就像是身体的某个部分的方法，可以完成该部分的特定任务。当我们想要使用身体的某个器官时，需要先找到它所在的部位（对象），然后使用该器官（调用该对象的方法）。</span><br><span class="line"></span><br><span class="line">  函数就像是身体的整体健康状况，它们是独立的代码块，可以实现特定的功能。例如，锻炼可以提高身体的健康状况，它就像是一个函数，可以实现特定的功能。当我们想要改善身体的健康状况时，可以根据医生或运动教练的建议来进行锻炼（调用该函数），然后根据锻炼计划来进行运动。</span><br><span class="line"></span><br><span class="line">  因此，方法和函数的区别可以类比为身体的器官和整体健康状况的区别。方法属于身体的某个部分，可以完成该部分的特定任务；函数是独立的代码块，可以实现特定的功能。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>变量（variable）</p>
+<ul>
+<li><p>变量（varibale）是用于存储和引用数据的命名容器，允许在程序中保存数据，并在需要时对其进行访问和操作&#x2F;修改。变量是数据值（values）的容器容器（containers）</p>
+</li>
+<li><p>变量的使用</p>
+<ul>
+<li><p>变量的声明（declaration）</p>
+<ul>
+<li>变量在使用之前需要先声明，声明变量意味着创建一个具有指定名称的变量，并为其分配内存空间。</li>
+<li>var 旧版本的声明方式，在块内声明的 var 变量也会重新声明其对应的块外的变量。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure></li>
+<li>const 用於声明定义一个常量的变量，后续不能重新赋值。常用于声明一些不可变的变量，只读变量，比如出生日期 等,不能被重新赋值（unreassign),也具备块作用域（block scope)</li>
+<li>let 不能被重复声明（redelared)的变量,必须在使用前声明，具有块范围（block scope）,可以被重新赋值（reassign）</li>
+</ul>
+</li>
+<li><p>变量的命名</p>
+<ul>
+<li>组成：<br>字母、数字、下划线，不能以数字开头</li>
+<li>变量名区分大小写</li>
+<li>习惯用发为第二个单词开始大写即驼峰命名法（camelCase），或者单词间用_连接即下划线命名法（snake_case）。</li>
+<li>保留关键字不可用做变量名，注意 name 比较特殊，但一般不建议做变量名使用。</li>
+<li>选择能够描述变量用途的名称。</li>
+<li>使用有意义的单词或单词组合，避免使用缩写、简写、无意义的组合</li>
+<li>建议使用名字表示对象，变量名应该反应变量所表示的概念。</li>
+<li>避免命名的歧义，避免使用容易混淆的变量名，确保容易被理解。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">10</span>;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">let</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// let x = 2; // Identifier &#x27;x&#x27; has already been declared,不能被重新声明</span></span><br><span class="line">  x = <span class="number">2</span>; <span class="comment">// 2 可以被重新赋值（reassign)</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10 ，注意这里因为作用域不同，块内let x = 1 在块外不起任何作用，所有不会报错重复声明。</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(y); <span class="comment">//x undefined 。具有块作用域block scope</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> x = <span class="number">10</span>;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">const</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// const x = 2; // Identifier &#x27;x&#x27; has already been declared,不能被重新声明</span></span><br><span class="line">  x = <span class="number">2</span>; <span class="comment">// Assignment to constant variable.const不可以被重新赋值（unreassign)</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(x);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(x); <span class="comment">// 10 ，注意这里因为作用域不同，块内const x = 1 在块外不起任何作用，所有不会报错重复声明。</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(y); <span class="comment">//x undefined 。具有块作用域block scope</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>函数（funciton）</p>
+<ul>
+<li>用于执行特定功能的可重复使用的代码块，用于执行特定的任务或操作，函数将一系列的语句组合在一起，并通过给定的输入（参数）来执行特定的计算或操作，并返回一个结果。</li>
+<li>函数可以有任意数量的参数，也可以没有参数，参数可以有默认值，也可以通过参数的位置或名称进行传递。</li>
+<li>特点 &gt; 高内聚、低耦合、复用、多态 - 封装性<br>函数将一段代码封装在内部，形成一个独立的执行单元，这样可以提高代码的可重复性和模块化 - 参数<br>sum&#x2F;&#x2F; 函数可以接受输入参数，这些参数是函数运行时提供的值。参数可以用于函数内部的计算和操作。 - 返回值<br>函数可以返回一个值作为结果，返回值可以用于将函数的计算结果传递给调用者。 - 格式<br>function functionName(argument1,argument2,……){ &#x2F;执行语句&#x2F; } - return 语句可以不带任何返回值，这时 return 的返回值时 undefined，一般用于需要提前停止函数又不用返回值的情况 - 在被调用（call &#x2F; invoke）时才执行。<br>函数的调用(call):函数名（）<br>&#96;javascript<br>function sum(a, b) {<br>if (a &gt; b) {<br>return (a - b);<br>}<br>else {<br>return (b - a); &#x2F;&#x2F;函数的返回值只能通过 return 返回，遇到执行 teturn 的代买以后函数就会终止，return 以后的语句不会被执行。一个函数可以有多个 return.<br>}<br>}<br>const mat1 &#x3D; sum(15, 2); &#x2F;&#x2F; 函数的调用(call):函数名（）<br>const mat2 &#x3D; sum(2, 15);<br>const mat3 &#x3D; sum; &#x2F;&#x2F; 调用不带（）的函数返回的时函数本身，而不是返回函数的运算值；<br>console.log(mat1, “ “, mat2); &#x2F;&#x2F;17 &#x2F;&#x2F; 函数的调用(call):函数名（）<br>console.log(mat3); &#x2F;&#x2F; 返回函数本身</li>
+<li>箭头函数 （arrow function）<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">sum2</span> = (<span class="params">a, b</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (a &gt; b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a - b;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> b - a;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sum2</span>(<span class="number">15</span>, <span class="number">2</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sum2</span>(<span class="number">2</span>, <span class="number">14</span>));</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sum2);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">sum2</span>());</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>对象 object<br>&#x2F;&#x2F; 属性（properte)和方法（method）的集合，而变量是数据的容器，所以对象也是变量，只是包含了更多的值。</p>
+</li>
+</ul>
+<p>&#x2F;&#x2F; const car &#x3D; {<br>&#x2F;&#x2F; type: “fiat”, &#x2F;&#x2F;注意对象的属性用，分割（不是；）<br>&#x2F;&#x2F; modle: “x”,<br>&#x2F;&#x2F; color: “white” &#x2F;&#x2F; 对象的最后一个字面量的结尾是不需要 ， 的，如果加了，加的，会被解释成一个额外的属性，其属性名是个空的字符串，属性值是 undefined。<br>&#x2F;&#x2F; }; &#x2F;&#x2F;要特别注意这个；不能省略<br>&#x2F;&#x2F; console.log(car.type); &#x2F;&#x2F;用对象名.属性名来访问属性值。<br>&#x2F;&#x2F; console.log(car[‘type’]); &#x2F;&#x2F; 另一种访问属性值的方法，注意 car[‘type’]和 car[“type”]效果是相同的， string 可以是用””，也可以使用’’</p>
+<p>&#x2F;&#x2F; 对象的三种创建方式：<br>&#x2F;&#x2F; 使用 对象字面量 object literal;<br>&#x2F;&#x2F; 注意对象的属性赋值用的是：而是不是&#x3D;<br>&#x2F;&#x2F; &#x2F;&#x2F; 等同于 const person &#x3D; {name: “Leon”,age: 18,city:”HeNan”};<br>&#x2F;&#x2F; const person &#x3D; {<br>&#x2F;&#x2F; name : “Leon”,<br>&#x2F;&#x2F; age : 18, &#x2F;&#x2F;属性值以：赋值，属性间用，分隔<br>&#x2F;&#x2F; city : “HeNan” &#x2F;&#x2F;最后一个属性结尾没有符号<br>&#x2F;&#x2F; };</p>
+<p>&#x2F;&#x2F; console.log(person.name); &#x2F;&#x2F;Leon</p>
+<p>&#x2F;&#x2F; 使用 new Object()创建<br>&#x2F;&#x2F; const person &#x3D; new Object();<br>&#x2F;&#x2F; person.name &#x3D; “Leon”;<br>&#x2F;&#x2F; person.age &#x3D; 18;<br>&#x2F;&#x2F; person.city &#x3D; “HeNan”;<br>&#x2F;&#x2F; console.log(person.name); &#x2F;&#x2F;Leon</p>
+<p>&#x2F;&#x2F; 使用 构造函数 constrator<br>&#x2F;&#x2F; function person(name , age , city){<br>&#x2F;&#x2F; this.name &#x3D; “Leon”;<br>&#x2F;&#x2F; this.age &#x3D; 18;<br>&#x2F;&#x2F; this.city &#x3D; “HeNan”;<br>&#x2F;&#x2F; };</p>
+<p>&#x2F;&#x2F; const person1 &#x3D; new person(‘Leon’ , 18 , ‘HeNan’); &#x2F;&#x2F;使用 new 调用构造函数 person 创建对象，将返回值再赋值给变量 person1;<br>&#x2F;&#x2F; console.log(person1.name) &#x2F;&#x2F;Leon</p>
+<p>&#x2F;&#x2F; 使用 Object.create()<br>&#x2F;&#x2F; 首先定义一个原型对象<br>&#x2F;&#x2F; const personPrototype &#x3D; { &#x2F;&#x2F;定义一个名字为 personPrototype 的原型对象<br>&#x2F;&#x2F; sayHi: function(){ &#x2F;&#x2F;原型对象的一个名为 sayHi 的方法<br>&#x2F;&#x2F; console.log(“你好，我的名字是” + this.name);<br>&#x2F;&#x2F; }<br>&#x2F;&#x2F; };<br>&#x2F;&#x2F; const person1 &#x3D; Object.create(personPrototype); &#x2F;&#x2F;使用 Objcet.crate()方法创建的对象会继承原型对象的属性和方法。<br>&#x2F;&#x2F; person1.name &#x3D; “Leon”;<br>&#x2F;&#x2F; console.log(person1.name); &#x2F;&#x2F; Leon<br>&#x2F;&#x2F; person1.sayHi(); &#x2F;&#x2F; 你好，我的名字是 Leon</p>
+<p>&#x2F;&#x2F; 访问对象属性名称（key）和值(values)的方法</p>
+<p>&#x2F;&#x2F; const person &#x3D; {<br>&#x2F;&#x2F; name: “Leon”,<br>&#x2F;&#x2F; age: 18,<br>&#x2F;&#x2F; &#x2F;&#x2F; x: “d”<br>&#x2F;&#x2F; };<br>&#x2F;&#x2F; let info &#x3D; “”;<br>&#x2F;&#x2F; for (const key in person) {<br>&#x2F;&#x2F; console.log(<code>$&#123;key&#125; : $&#123;person[key]&#125;</code>); &#x2F;&#x2F; 这里使用字符串模板语法也叫模板字面量，用&#96;&#96;表示，可以在字符串中插入变量、函数调用等<br>&#x2F;&#x2F;   &#x2F;&#x2F;info +&#x3D; <code>$&#123;key&#125; : $&#123;person[key]&#125;</code>+”\n”<br>&#x2F;&#x2F; }<br>&#x2F;&#x2F; console.log(info);</p>
+<p>&#x2F;&#x2F; const myArrary &#x3D; Object.keys(person); &#x2F;&#x2F; 使用 Object.keys()\ Object.values() 将对象 person 转换为数组<br>&#x2F;&#x2F; console.log(myArrary);</p>
+<p>&#x2F;&#x2F; let info2 &#x3D; “”;<br>&#x2F;&#x2F; for (let x in person) {<br>&#x2F;&#x2F; info2 +&#x3D; x + “:” + person[x] + “\n” + person.x &#x2F;&#x2F; x 代表 person 对象的属性，person[]代表属性值,注意这里 person[x]代表属性值，而 preson.x 不起作用因为 x 是一个变量,如果碰巧 person 对象里有名字为“x”的属性，则输出其值。<br>&#x2F;&#x2F; }<br>&#x2F;&#x2F; console.log(info2);</p>
+<p>&#x2F;_ arguments 对象 _&#x2F;</p>
+<p>&#x2F;&#x2F; argument(形参) 用于描述（在函数内）期望被提供的值的名字<br>&#x2F;&#x2F; parameter(实参) 用于描述（调用函数时）提供给每个形参的值</p>
+<p>&#x2F;* 运算符<br>&#x2F;&#x2F; let num1&#x3D;3;<br>&#x2F;&#x2F; console.log(num1++); &#x2F;&#x2F;3<br>&#x2F;&#x2F; console.log(num1); &#x2F;&#x2F;4</p>
+<p>&#x2F;&#x2F; let num2&#x3D;3;<br>&#x2F;&#x2F; console.log(++num2); &#x2F;&#x2F;4<br>&#x2F;&#x2F; console.log(num2); &#x2F;&#x2F;4</p>
+<p>&#x2F;&#x2F; var num&#x3D;0;<br>&#x2F;&#x2F; num&#x3D;num+2; &#x2F;&#x2F;2<br>&#x2F;&#x2F; num&#x3D;num<em>3; &#x2F;&#x2F;6<br>&#x2F;&#x2F; num&#x3D;num&#x2F;2; &#x2F;&#x2F;3<br>&#x2F;&#x2F; num++; &#x2F;&#x2F;3<br>&#x2F;&#x2F; num–; &#x2F;&#x2F;<br>&#x2F;&#x2F; console.log(num);<br>&#x2F;&#x2F; num+&#x3D;1;<br>&#x2F;&#x2F; console.log(num);<br>&#x2F;&#x2F; num-&#x3D;2;<br>&#x2F;&#x2F; console.log(num);<br>&#x2F;&#x2F; num</em>&#x3D;3;<br>&#x2F;&#x2F; console.log(num);<br>&#x2F;&#x2F; num&#x2F;&#x3D;2;<br>&#x2F;&#x2F; console.log(num);<br>&#x2F;&#x2F; num%3;<br>&#x2F;&#x2F; console.log(num);</p>
+<p>&#x3D; （赋值）&#x3D;&#x3D;（相等） 与 &#x3D;&#x3D;&#x3D;（恒等），</p>
+<p>对象运算符<br>In 判断左侧运算数是否是右侧运算数的成员<br>Instancesof 判断这个实例是否属于某个类或者构造函数<br>New 根据构造函数插件一个新的对象，并进行初始化<br>Delete 删除指定对象的属性、数组元素或者变量<br>. [] 存取对象和数组元素</p>
+<p>*&#x2F;</p>
+<p>&#x2F;_ 流程语句<br>&#x2F;_ 循环语句 跳转语句<br>&#x2F;&#x2F; 循环语句 ：<br>&#x2F;&#x2F; do{ &#x2F;&#x2F; 执行代码 }while(条件表达式)；<br>&#x2F;&#x2F; while(条件表达式){ &#x2F;&#x2F; 执行代码 }<br>&#x2F;&#x2F; for(循环变量&#x3D;初始值；循环条件；递增&#x2F;减计算器){ &#x2F;&#x2F;执行代码 }<br>&#x2F;&#x2F; for(声明变量 in 对象){&#x2F;&#x2F; 执行代码}</p>
+<pre><code>  // 跳转语句
+    // return  运行return以后及跳出并终止函数，return以后的代码不会执行。
+    // break  终止并跳出当前循环。
+    // continue 终止并跳回到条件判断继续执行循环，直至判断条件为false结束循环。
+
+    let a = 3 ;
+        b = 1 ;
+    // do&#123;
+    //   console.log(a + b);
+    //   continue;   //结束本次循环，然后去判断是否实行下次循环
+    //   console.log(a -b);
+    //   break; // 终止循环，不再进行判断
+    // &#125;while(a &gt; b);
+
+    while(a &gt; b)&#123;
+      console.log(a + b);
+      b++;
+      // continue;
+      break;
+    &#125;
+*/
+</code></pre>
+<p>&#x2F;* 选择语句</p>
+<p>&#x2F;&#x2F; if(条件表达式 1){<br>&#x2F;&#x2F; &#x2F;&#x2F; 执行代码;<br>&#x2F;&#x2F; }else if(条件表达式 2){<br>&#x2F;&#x2F; &#x2F;&#x2F; 执行代码 2;<br>&#x2F;&#x2F; }else{<br>&#x2F;&#x2F; &#x2F;&#x2F; 执行代码 3;<br>&#x2F;&#x2F; }</p>
+<p>&#x2F;&#x2F; switch(条件表达式){<br>&#x2F;&#x2F; case 标签 1： &#x2F;&#x2F;case 是一个常量,可以是字符串或数字,每一个标签后面需要以: 结束<br>&#x2F;&#x2F; &#x2F;&#x2F; 执行代码 1;<br>&#x2F;&#x2F; break;<br>&#x2F;&#x2F; …<br>&#x2F;&#x2F; Default:<a href=""></a><br>&#x2F;&#x2F; &#x2F;&#x2F; 执行代码 n;<br>&#x2F;&#x2F; }</p>
+<p>&#x2F;&#x2F; let a&#x3D;6;<br>&#x2F;&#x2F; b&#x3D;6;</p>
+<p>&#x2F;&#x2F; if(a&gt;b){<br>&#x2F;&#x2F; console.log(a-b);<br>&#x2F;&#x2F; }else if(a&#x3D;&#x3D;b){<br>&#x2F;&#x2F; console.log(‘a: ‘+ a + ‘, b: ‘+b)<br>&#x2F;&#x2F; }else{<br>&#x2F;&#x2F; console.log(b-a)<br>&#x2F;&#x2F; }</p>
+<p>&#x2F;&#x2F; switch(a-b){<br>&#x2F;&#x2F; case 0:<br>&#x2F;&#x2F; console.log(a-b);<br>&#x2F;&#x2F; break;<br>&#x2F;&#x2F; case 1:<br>&#x2F;&#x2F; console.log(a-b)<br>&#x2F;&#x2F; break;<br>&#x2F;&#x2F; Default:<a href=""></a><br>&#x2F;&#x2F; }<br><em>&#x2F;<br>&#x2F;</em> 异常处理语句<br>throw 主动抛出异常<br>try 指明需要处理的代码段<br>catch 捕获异常<br>finally 后期处理，无论是否有错误，都会执行<br>*&#x2F;</p>
+<p>&#x2F;_ 其他语句_&#x2F;<br>&#x2F;&#x2F; debugger 调用任何咳哟个的调试功能，没有调试功能是该语句不起作用<br>&#x2F;&#x2F; export<br>&#x2F;&#x2F; import</p>
+<p>&#x2F;* 对象、实例、类、函数、数据类型和方法<br>在 JavaScript 中，对象、实例、类、函数、数据类型和方法是不同的概念，它们有着各自的含义和用途。</p>
+<p>对象：对象是属性和方法的集合。在 JavaScript 中，几乎所有东西都是对象，包括字符串、数字、数组、函数、对象等。<br>类比：对象就像一台汽车，它由各种部件组成，比如发动机、轮胎、座椅等。每个部件都有它自己的属性，比如发动机有汽缸数、排量、功率等属性，轮胎有尺寸、胎压等属性。</p>
+<p>实例：实例是通过类创建的对象。每个实例都具有类定义的属性和方法。在 JavaScript 中，使用 new 关键字创建实例。<br>类比：实例就像一辆具体的汽车，它是由汽车工厂根据设计图纸生产出来的。每辆汽车都具有相同的属性和方法，比如同一款车型的汽车都有相同的发动机、轮胎、座椅等。</p>
+<p>类：类是一种用于创建对象的模板。在 JavaScript 中，类可以使用构造函数、类声明和类表达式来定义。<br>类比：类就像汽车工厂，它定义了汽车的基本设计图纸，并且能够根据设计图纸生产出具体的汽车。</p>
+<p>函数：函数是一种可执行的代码块，可以接受参数并返回值。在 JavaScript 中，函数可以用来执行一些操作或计算。<br>类比：函数就像汽车的驾驶员，它可以控制汽车的运行，比如加速、刹车、转向等。</p>
+<p>数据类型：数据类型指的是 JavaScript 中的基本数据类型，包括字符串、数字、布尔值、null 和 undefined。<br>类比：数据类型就像汽车的零部件，它们是汽车运行的基本构成单元，比如汽车需要发动机、轮胎等部件才能正常行驶。</p>
+<p>字面量（Literal）是指表示特定数据类型的常量值，它是程序中直接出现的数据值，而不是由变量、函数或表达式计算得出的值。字面量可以表示各种不同的数据类型，例如字符串、数字、布尔值、数组、对象等。</p>
+<p>方法：方法是对象中的函数，是可以对对象执行的操作。在 JavaScript 中，方法是对象的属性，其值为函数。<br>类比：方法就像汽车的功能，比如汽车可以加速、刹车、转向等。每个汽车都具有相同的功能，但具体实现可能有所不同。<br>属性：对象中的命名值成为属性 property ,属性的值为 value</p>
+<p>综上所述，可以用汽车来类比解释对象、实例、类、函数、数据类型和方法的概念。汽车工厂就是类，设计图纸就是对象模板，每辆汽车就是实例，驾驶员就是函数，零部件就是数据类型，而汽车的功能就是方法。<br>*&#x2F;</p>
+<p>&#x2F;&#x2F; 事件 Event<br>&#x2F;&#x2F; 对 html 元素（elements）进行的操作,当 javascript 用于 html 时，这些事件 event 可以运行对应的 JavaScript<br>&#x2F;&#x2F; 常见的用法是通过 事件 调用函数</p>
+<p>&#x2F;&#x2F; 典型的事件有，参见 html dom events：<br>&#x2F;&#x2F; onchange<br>&#x2F;&#x2F; onclick<br>&#x2F;&#x2F; onmouseover<br>&#x2F;&#x2F; onmouseout<br>&#x2F;&#x2F; onload</p>
+<p>&#x2F;_ 类 class_&#x2F;<br>&#x2F;&#x2F; 类 class 是对象 object 的模板,注意类不是一个对象<br>&#x2F;&#x2F; class ClassName {<br>&#x2F;&#x2F; constructor(){……}<br>&#x2F;&#x2F; }</p>
+<p>&#x2F;&#x2F; 使用类：<br>&#x2F;&#x2F; class Car {<br>&#x2F;&#x2F; constructor(name,year){<br>&#x2F;&#x2F; this.name &#x3D; name;<br>&#x2F;&#x2F; this.year &#x3D; year;<br>&#x2F;&#x2F; }<br>&#x2F;&#x2F; }</p>
+<p>&#x2F;&#x2F; const myCar1 &#x3D; new Car(“Hoda”, 2017);<br>&#x2F;&#x2F; console.log(myCar1.name); &#x2F;&#x2F;Hoda<br>&#x2F;&#x2F; console.log(myCar1.year); &#x2F;&#x2F;2017</p>
+<p>&#x2F;&#x2F; 创建新的对象 object 时会自动调用（call）构造函数方法（constructor method）；<br>&#x2F;&#x2F; 如果不定义构造函数方法，会自动添加一个空的构造函数方法；</p>
+<p>&#x2F;&#x2F; 类方法<br>&#x2F;&#x2F; class ClassName {<br>&#x2F;&#x2F; constructor() { … } &#x2F;&#x2F;构造函数方法 constructor method<br>&#x2F;&#x2F; method_1() { … } &#x2F;&#x2F;类方法 class method<br>&#x2F;&#x2F; method_2() { … }<br>&#x2F;&#x2F; method_3() { … }<br>&#x2F;&#x2F; }</p>
+<p>&#x2F;&#x2F; JSON<br>&#x2F;&#x2F; 存储和传输数据的格式，主要用于网页请求。<br>&#x2F;&#x2F; 数据存在 键 key&#x2F;值 value 中，名字和值是配对出现的,单个数据样式为 “key”:”value”，<br>&#x2F;&#x2F; 各数据以，分隔；<br>&#x2F;&#x2F; 所有数据用{}包围；<br>&#x2F;&#x2F; 数据中[]表示数组；</p>
+<p>&#x2F;&#x2F; 将 json 转换为 javascript 对象<br>&#x2F;&#x2F; let text &#x3D; ‘ json 字符串’; &#x2F;&#x2F; 将 json 字符串存储到一个变量里<br>&#x2F;&#x2F; const obj &#x3D; JSON.parse(text); &#x2F;&#x2F; 将 json 字符串转化为 JavaScript 对象。JSON.parse()是 JavaScript 的内置函数,用于将 JSON 转换为对象</p>
+<p>&#x2F;&#x2F; const myJSON &#x3D; ‘{“name”:”John”, “age”:30, “cars”:[“Ford”, “BMW”, “Fiat”]}’;<br>&#x2F;&#x2F; const myObj &#x3D; JSON.parse(myJSON);<br>&#x2F;&#x2F; let a &#x3D; “”;<br>&#x2F;&#x2F; for (const x in myObj.cars) {<br>&#x2F;&#x2F; a +&#x3D; myObj.cars[x];<br>&#x2F;&#x2F; };<br>&#x2F;&#x2F; console.log(a); &#x2F;&#x2F;FordBMWFiat</p>
+<p>&#x2F;&#x2F; console.log(myObj.cars[2]); &#x2F;&#x2F;Fiat</p>
+<p>&#x2F;&#x2F; for (const y in myObj) {<br>&#x2F;&#x2F; const val &#x3D; <code>$&#123;y&#125;</code> + “ : “ + <code> $&#123;myObj[y]&#125;</code>;<br>&#x2F;&#x2F; console.log(val); &#x2F;&#x2F; name : John age : 30 cars : Ford,BMW,Fiat<br>&#x2F;&#x2F; };</p>
+<p>&#x2F;&#x2F; const cKey &#x3D; Object.keys(myObj);<br>&#x2F;&#x2F; const cArray &#x3D; Object.values(myObj);<br>&#x2F;&#x2F; console.log(cKey[2]); &#x2F;&#x2F;cars<br>&#x2F;&#x2F; console.log(cArray[2]); &#x2F;&#x2F;[ ‘Ford’, ‘BMW’, ‘Fiat’ ]</p>
+<p>&#x2F;&#x2F; 代码风格</p>
+<p>&#x2F;&#x2F; 变量名称 Variable Name<br>&#x2F;&#x2F; 1.使用 camelCase 作为标识符(identifier names)（变量 cariables 和函数 functions）<br>&#x2F;&#x2F; camelCase （驼峰） 以小写字母开头，后续的单词首字母大写<br>&#x2F;&#x2F; 2.在运算符（Operators)（ &#x3D; + - * &#x2F; ）的后面放空格<br>&#x2F;&#x2F; 3.使用两个空格缩进代码块（不适用制表符进行缩进）<br>&#x2F;&#x2F; 4.以；结束简单语句，复合语句后面不跟；<br>&#x2F;&#x2F; 复杂（复合）的语句一般：将左阔行放在第一行的末尾，在左括号签放一个空格，将右括号放在新行，不带前导空格，不以；结束复杂语句（复合语句）。复合语句（compound satement）主要包括函数体（function body）\ 添加语句体（if statement body） \ 循环语句体（loop statement body）</p>
+<p>&#x2F;&#x2F; 全局变量 global variable<br>&#x2F;&#x2F; 使用大写</p>
+<p>&#x2F;&#x2F; , 与 ；的用法区别<br>&#x2F;&#x2F; 都是用于分隔语句的符号。<br>&#x2F;&#x2F; ，用于分隔表达式（expression），可以在一个语句中包含多个表达式<br>&#x2F;&#x2F; ；用于分隔语句(statement)，用于表示一个语句的结束</p>
+<p>&#x2F;&#x2F; 表达式（expression）与语句(statement)的用法区别<br>&#x2F;&#x2F; 1.返回值<br>&#x2F;&#x2F; 表达式：执行结果后返回一个值<br>&#x2F;&#x2F; 语句：执行结果只是改变程序状态或控制流程，不返回值<br>&#x2F;&#x2F; 2.赋值<br>&#x2F;&#x2F; 表达式：可以作为赋值语句的右值<br>&#x2F;&#x2F; 语句：不能在赋值语句中使用<br>&#x2F;&#x2F; 3.独立存在<br>&#x2F;&#x2F; 表达式可以独立存在<br>&#x2F;&#x2F; 语句需要在函数体、流程语句中才能存在，不能独立存在</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/10/21/Surge-For-Mac-%E7%A0%B4%E8%A7%A3/" title="SurgeForMac 破解"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: SurgeForMac 破解</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/10/02/AppleStore%E5%86%85%E8%B4%AD%E7%A0%B4%E8%A7%A3%E7%9A%84%E4%B8%80%E7%A7%8D%E6%80%9D%E8%B7%AF/" title="AppleStore内购破解的一种思路">下一篇: AppleStore内购破解的一种思路&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

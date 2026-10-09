@@ -1,48 +1,11 @@
-extends partial/layout
-
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>yt-dlp一个优秀的视频下载工具 · 栖息地</title><meta name="description" content="yt-dlpyt-dlp 是一个基于 youtube-dl 的命令行工具，用于下载网络视频和音频。它是 youtube-dl 的扩展版本，提供了更多的功能和选项，并且一般会更快地更新以适应视频网站的更改。除了支持 YouTube，yt-dlp 还支持许多其他视频和音频网站，包括 bilibili、 "><meta name="og:description" content="yt-dlpyt-dlp 是一个基于 youtube-dl 的命令行工具，用于下载网络视频和音频。它是 youtube-dl 的扩展版本，提供了更多的功能和选项，并且一般会更快地更新以适应视频网站的更改。除了支持 YouTube，yt-dlp 还支持许多其他视频和音频网站，包括 bilibili、 "><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="yt-dlp一个优秀的视频下载工具"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>yt-dlp一个优秀的视频下载工具</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-06-23 16:06</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/工具/" title="工具">工具</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="yt-dlp"><a href="#yt-dlp" class="headerlink" title="yt-dlp"></a>yt-dlp</h2><p>yt-dlp 是一个基于 youtube-dl 的命令行工具，用于下载网络视频和音频。它是 youtube-dl 的扩展版本，提供了更多的功能和选项，并且一般会更快地更新以适应视频网站的更改。除了支持 YouTube，yt-dlp 还支持许多其他视频和音频网站，包括 bilibili、 Vimeo、Dailymotion、Facebook、SoundCloud 等等。项目地址：<a target="_blank" rel="noopener" href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></p>
+<h2 id="安装及使用参考"><a href="#安装及使用参考" class="headerlink" title="安装及使用参考"></a>安装及使用参考</h2><p>使用参考：<a target="_blank" rel="noopener" href="https://www.rapidseedbox.com/blog/yt-dlp-complete-guide">YT-DLP: The Complete Guide (2023)</a></p>
+<h2 id="ios-端使用"><a href="#ios-端使用" class="headerlink" title="ios 端使用"></a>ios 端使用</h2><p>yt-dlp 在 windows、macos、linux 的安装使用以上已经介绍的非常详细了。抽时间阅读下文档基本的功能用法就可以掌握了。<br>在 ai 孙燕姿刚出来那会，个人有个需求就是在手机上下载这些 ai 孙燕姿的翻唱，毕竟在 pc 上下载再导入到手机比较繁琐。于是尝试了下在 ios 安装 yt-dlp。</p>
+<p>ios 端需要安装 ish 或者 a-shell 等工具然后安装 yt-dlp.这里推荐 a-shell ,配置更方便些。</p>
+<p>1.appstore 安装 a-shell。</p>
+<p>2.安装 SW-DLT。<a target="_blank" rel="noopener" href="https://routinehub.co/download/38094/">Shortcuts</a></p>
+<p>3.运行 SW-DLT.注意首次运行需要设置 delete all –&gt; true 删除所有的 depends，然后设置 delete all –&gt; false 再运行更新 depends。（需要注意 a-shell 软件源的连通性）</p>
+<p>4.运行 SW-DLT 使用功能(至少一次，确保 depens 安装正确)，或者在 a-shell 里使用命令运行 dy-dlp。</p>
+<p>5.下载后的文件在 files-on My iphone - a-Shell 里。</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/06/26/ios%E6%8A%93%E5%8C%85%E5%8E%BB%E5%B9%BF%E5%91%8A%E7%9A%84%E4%B8%80%E4%B8%AA%E6%93%8D%E4%BD%9C%E5%AE%9E%E4%BE%8B%E6%BC%94%E7%A4%BA/" title="ios抓包去广告的一个操作实例演示"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: ios抓包去广告的一个操作实例演示</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/06/20/Pro%E5%AE%89%E8%A3%85google%E6%A1%86%E6%9E%B6/" title="华为Mate30 Pro安装Google框架">下一篇: 华为Mate30 Pro安装Google框架&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

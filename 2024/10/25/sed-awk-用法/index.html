@@ -1,48 +1,42 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>sed awk 用法 · 栖息地</title><meta name="description" content="sed 用法sed 是个流编辑器，用来对文本逐行处理，主要用来 搜索 、替换、插入、删除操作
+基本语法结构 sed [option] &amp;#39;command&amp;#39; file
+选项：常用参数 -n: 取消自动输出，只有指定的行才会显示。常和 p 配合使用； -i: 在文件直接操作，慎重使用； -"><meta name="og:description" content="sed 用法sed 是个流编辑器，用来对文本逐行处理，主要用来 搜索 、替换、插入、删除操作
+基本语法结构 sed [option] &amp;#39;command&amp;#39; file
+选项：常用参数 -n: 取消自动输出，只有指定的行才会显示。常和 p 配合使用； -i: 在文件直接操作，慎重使用； -"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="sed awk 用法"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>sed awk 用法</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2024-10-25 12:10</span></p><p class="post-abstract"><h2 id="sed-用法"><a href="#sed-用法" class="headerlink" title="sed 用法"></a>sed 用法</h2><p>sed 是个流编辑器，用来对文本逐行处理，主要用来 搜索 、替换、插入、删除操作</p>
+<h3 id="基本语法结构"><a href="#基本语法结构" class="headerlink" title="基本语法结构"></a>基本语法结构</h3><p><code> sed [option] &#39;command&#39; file</code></p>
+<h3 id="选项："><a href="#选项：" class="headerlink" title="选项："></a>选项：</h3><p>常用参数<br> <code>-n</code>: 取消自动输出，只有指定的行才会显示。常和 p 配合使用；<br> <code>-i</code>: 在文件直接操作，慎重使用；<br> <code>-e</code>: 执行多条 sed 命令;<br> <code>-r</code>: 支持扩展正则表达式（ERE）;<br> <code>-f</code>: 从脚本文件读取 sed 命令;</p>
+<h3 id="用途："><a href="#用途：" class="headerlink" title="用途："></a>用途：</h3><ul>
+<li>替换<br>常规用法： <code>sed &#39;s/查找内容/替换内容/标志&#39; file</code></li>
+</ul>
+<p><strong>标志</strong>：<br>g: 全局替换，默认只对行的第一个查找内容替换，g 定义全局替换；<br>i: 忽略大小写；<br>n: 只替换的第 n 个匹配；</p>
+<p><strong>指定单行</strong> ： <code>sed &#39;ns/查找内容/替换内容/标志&#39; file</code><br>例： 修改第 3 行的所有 ax 为 tf<br><code> sed &#39;3s/ax/tf/g&#39; sed.txt</code></p>
+<p><strong>指定多行</strong>： <code>sed &#39;n,ms/查找内容/替换内容/标志&#39; file</code><br>例： 修改第 3-10 行的所有 ax 为 tf<br>1.<code>sed &#39;3,10s/ax/tf/g&#39; sed.txt</code><br>2.<code>sed &#39;3,10&#123;s/ax/tf/g&#125;&#39; sed.txt</code></p>
+<p><strong>符合条件的行</strong>： <code>sed &#39;/指定条件/s/查找内容/替换内容/标志&#39;file</code><br>例： 修改所有包含有<code>name</code>行内的 ax 为 tf<br><code>sed &#39;/name/s/ax/tf/g&#39; sed.txt</code><br>例： 修改第三个及以后包含有<code>name</code>的行内的ax为tf<br><code>sed &#39;/name/&#123;3,$s/sx/tf/g&#125;&#39; sed.txt</code><br><strong>替换整行</strong>: <code>sed &#39;行号c/替换内容&#39; file</code><br>例：将第三行替换为 <code># replaced line</code><br><code>sed &#39;3c/# replaced line&#39; sed.txt</code> </p>
+<ul>
+<li>插入、追加<br><strong>某行前插入</strong>： <code>sed &#39;行号i\插入内容&#39; sed.txt 例: 在sed.txt第三行前插入</code># new line<code> </code>sed ‘3i# new line’ sed.txt &#96;</li>
+</ul>
+<p><strong>末行后追加</strong>： <code>sed &#39;行号a\追加内容&#39; sed.txt</code><br>例: 在sed.txt第三行后插入 <code># new line</code><br><code>sed &#39;3a\# new line&#39; sed.txt </code></p>
+<!-- 例： 在sed.txt包含`href`的行的下一行后面追加`# new line`
+`sed '/href/{Ns/\n/# newline\n/}' sed.txt`
+`sed '/href/{Ns/\n/# newline\n/}' sed.txt` -->
 
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<ul>
+<li><p>打印<br><strong>打印指定行</strong>： <code>sed -n &#39;2p&#39; file</code><br>例： 打印首行<br><code>sed -n &#39;1p&#39; sed.txt</code><br>例： 打印第15-17行<br><code>sed &#39;15,17p&#39; sed.txt</code><br><strong>打印匹配行</strong>： <code>sed -n &#39;/匹配内容/p&#39; file</code><br>例： 打印含有<code>#</code>的行<br><code>sed &#39;/#/p&#39; sed.txt</code></p>
+</li>
+<li><p>多条命令<br><code>sed -e &#39;命令1&#39; -e &#39;命令2&#39; file</code><br>例：删除第2行并将<code>ax</code>替换为<code>tf</code><br><code>sed -e &#39;2d&#39; -e &#39;s/ax/tf/g&#39; sed.txt</code></p>
+</li>
+<li><p>正则匹配<br>sed有限支持正则表达，sed只能单行处理，对断言不支持，需要注意转义字符<br>例：删除所有以<code>#</code>开头的行<br><code>sed &#39;/^#/d&#39; sed.txt</code></p>
+</li>
+</ul>
+<h2 id="awk-用法"><a href="#awk-用法" class="headerlink" title="awk 用法"></a>awk 用法</h2><p>awk 使用按列分析处理文本。</p>
+<h3 id="基本语法结构-1"><a href="#基本语法结构-1" class="headerlink" title="基本语法结构"></a>基本语法结构</h3><p><code>awk &#39;条件 &#123; 动作&#125;&#39; file</code>  </p>
+<ul>
+<li><p>打印<br><strong>打印行</strong><br>例：打印所有行 ： <code>awk &#39;&#123;print $0&#125;&#39; file</code><br><code>awk &#39;&#123;print $0&#125;&#39; sed.txt</code><br><strong>打印列</strong><br>例： 打印第1列： <code>awk &#39;&#123;print $1&#125;&#39; file</code></p>
+</li>
+<li><p>条件过滤<br><strong>基于值过滤</strong>：</p>
+</li>
+<li><p>指定分隔符<br>默认的awk以空格或者制表符为分隔符，也可通过<code>-F</code>来指定分隔符。</p>
+</li>
+</ul>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2026/10/08/%E4%B8%80%E4%B8%AAIP%E7%BB%91%E5%AE%9A%E6%B5%81%E5%AA%92%E4%BD%93stream%E6%BA%90%E7%9A%84%E5%AE%8C%E6%95%B4%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95%5Bjpyy%5D/" title="一个IP绑定流媒体stream源的完整开发记录-jpyy-"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 一个IP绑定流媒体stream源的完整开发记录-jpyy-</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/10/25/%E7%9B%B4%E6%92%AD%E6%BA%90%E7%9A%84%E8%8E%B7%E5%8F%96%E7%BB%88%E6%9E%81%E6%96%B9%E6%A1%88/" title="直播源的获取终极方案">下一篇: 直播源的获取终极方案&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

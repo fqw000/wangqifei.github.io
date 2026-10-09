@@ -1,48 +1,26 @@
-extends partial/layout
-
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>免费的都是产品,付费的才是用户 · 栖息地</title><meta name="description" content="我们习惯了免费获取各种产品和服务，从互联网上的新闻、音乐、视频，到手机上的各种应用，甚至是实物商品。但在互联网商业模式的背后，“免费的都是产品，付费的才是用户”这句话却揭示了一个深刻的真相。
+免费的背后：成本与价值任何产品或服务都需要成本，包括研发、运营、维护等。免费的产品或服务，其成本往往由广告、"><meta name="og:description" content="我们习惯了免费获取各种产品和服务，从互联网上的新闻、音乐、视频，到手机上的各种应用，甚至是实物商品。但在互联网商业模式的背后，“免费的都是产品，付费的才是用户”这句话却揭示了一个深刻的真相。
+免费的背后：成本与价值任何产品或服务都需要成本，包括研发、运营、维护等。免费的产品或服务，其成本往往由广告、"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="免费的都是产品,付费的才是用户"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>免费的都是产品,付费的才是用户</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2024-04-06 22:04</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/感悟/" title="感悟">感悟</a><span>&nbsp;</span></span></p><p class="post-abstract"><p>我们习惯了免费获取各种产品和服务，从互联网上的新闻、音乐、视频，到手机上的各种应用，甚至是实物商品。但在互联网商业模式的背后，“免费的都是产品，付费的才是用户”这句话却揭示了一个深刻的真相。</p>
+<h3 id="免费的背后：成本与价值"><a href="#免费的背后：成本与价值" class="headerlink" title="免费的背后：成本与价值"></a>免费的背后：成本与价值</h3><p>任何产品或服务都需要成本，包括研发、运营、维护等。免费的产品或服务，其成本往往由广告、数据收集、用户行为分析等方式来弥补。换句话说，<code>免费的背后，是用户数据的变现。</code></p>
+<h3 id="付费的意义：选择与尊重"><a href="#付费的意义：选择与尊重" class="headerlink" title="付费的意义：选择与尊重"></a>付费的意义：选择与尊重</h3><p>付费的用户，则是选择为产品或服务付费，以获得更优质的体验、更强的功能、更尊贵的服务。这不仅是一种经济行为，更是一种选择和尊重。</p>
+<p>在互联网时代，用户不再只是被动的接受者，而是拥有选择权和议价权的参与者。付费，则是用户对产品或服务价值的认可，也是对自身需求的满足。</p>
+<h2 id="免费的都是产品，付费的才是用户"><a href="#免费的都是产品，付费的才是用户" class="headerlink" title="免费的都是产品，付费的才是用户"></a>免费的都是产品，付费的才是用户</h2><p>这句话的背后逻辑其实很简单，那就是任何产品或服务都需要成本。免费的产品或服务，其成本往往由以下几种方式来弥补：</p>
+<ol>
+<li>广告<br>这是最常见的免费模式，通过向用户展示广告来获取收入。例如，很多免费的新闻网站、视频网站、手机应用等都是通过广告来实现盈利。</li>
+<li>数据收集<br>免费产品或服务往往会收集用户的数据，这些数据可以用于精准广告投放、用户行为分析、产品开发等。例如，很多免费的社交软件、购物软件等都会收集用户的大量数据。</li>
+<li>用户行为分析<br>通过分析用户的使用行为，可以了解用户的喜好和需求，从而开发出更符合用户需求的产品或服务。例如，很多免费的音乐软件、视频软件等都会分析用户的使用行为，以便推荐用户可能感兴趣的内容。</li>
+<li>交叉补贴<br>一些免费产品或服务属于互联网生态的一部分，其成本由其他付费产品或服务来补贴。例如，一些免费的云存储服务、邮箱服务等，其成本由其他付费的企业服务来补贴，免费是为了培养用户习惯，也就是圈住客户。</li>
+</ol>
+<p>总而言之，<code>免费的背后并不是真的免费，而是由其他方式来支付成本。</code>因此，免费的都是产品，付费的才是用户。</p>
+<h2 id="付费的意义"><a href="#付费的意义" class="headerlink" title="付费的意义"></a>付费的意义</h2><p>付费的用户，则是选择为产品或服务付费，以获得更优质的体验、更强的功能、更尊贵的服务。这不仅是一种经济行为，更是一种选择和尊重。</p>
+<ol>
+<li>更优质的体验<br>付费用户往往可以获得更优质的用户体验，例如更少的广告、更快的速度、更强的功能、更完善的服务等。</li>
+<li>更完善的功能<br>付费用户往往可以解锁更多功能，例如高级功能、专业功能、定制功能等。</li>
+<li>更尊贵的服务<br>付费用户往往可以获得更尊贵的服务，例如专属客服、优先支持、VIP权益等。</li>
+<li>对产品和服务的支持<br>付费是用户对产品和服务的一种支持，可以帮助产品和服务持续发展。</li>
+<li>对自身权益的维护<br>付费用户往往可以获得更好的权益保障，例如隐私保护、数据安全、售后服务等。</li>
+<li>节约时间成本<br>付费用户和免费用户最大的成本其实是时间成本，包括寻找付费功能的免费替代、破解、维护等的时间成本。</li>
+</ol>
+<p>过去的很长时间里，一直没有用过机场，一直追着最新的技术更新，不在乎稳定，就是追求新技术，期间服务器也经常崩，维护的时间成本非常大，占据了很多业余时间，直到最近才开始入坑机场，使用下来就是稳定、省心，有问题不用自己排查解决，客服都能搞定，其实找客服的几率很小，处理一些敏感的网络访问还是用自己搭建服务，日常的访问多是机场了。这里的实例其实没有任何不良引导，只是更深刻的感受到 付费的才是用户，免费的都是产品 。</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2024/04/07/%E4%BD%BF%E7%94%A8fofa%E5%AE%9E%E7%8E%B0cloudflare%E4%BC%98%E9%80%89ip%E8%87%AA%E7%94%B1/" title="使用fofa实现cloudflare优选ip自由"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 使用fofa实现cloudflare优选ip自由</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/04/05/hexo%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/" title="hexo代码折叠的实现方案">下一篇: hexo代码折叠的实现方案&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

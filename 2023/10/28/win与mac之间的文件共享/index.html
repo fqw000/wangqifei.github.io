@@ -1,48 +1,28 @@
-extends partial/layout
-
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>win与mac之间的文件共享 · 栖息地</title><meta name="description" content="win 与 mac 之间的文件共享前期的文件共享主要是使用 ftp 用于不同设备之间的相互文件访问，但是固定的网络环境里会有跨网段的设备，这样使用 ftp 的过程中就异常的繁琐。目前主要使用的是 smb 方案。smb 很好的解决这个问题，几乎不需要额外的配置，跨平台和兼容性都很好。一个使用场景是：w"><meta name="og:description" content="win 与 mac 之间的文件共享前期的文件共享主要是使用 ftp 用于不同设备之间的相互文件访问，但是固定的网络环境里会有跨网段的设备，这样使用 ftp 的过程中就异常的繁琐。目前主要使用的是 smb 方案。smb 很好的解决这个问题，几乎不需要额外的配置，跨平台和兼容性都很好。一个使用场景是：w"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="win与mac之间的文件共享"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>win与mac之间的文件共享</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-10-28 18:10</span></p><p class="post-abstract"><h1 id="win-与-mac-之间的文件共享"><a href="#win-与-mac-之间的文件共享" class="headerlink" title="win 与 mac 之间的文件共享"></a>win 与 mac 之间的文件共享</h1><p>前期的文件共享主要是使用 ftp 用于不同设备之间的相互文件访问，但是固定的网络环境里会有跨网段的设备，这样使用 ftp 的过程中就异常的繁琐。<br>目前主要使用的是 smb 方案。<br>smb 很好的解决这个问题，几乎不需要额外的配置，跨平台和兼容性都很好。<br>一个使用场景是：wifi 网络和有线网络之间的跨网段访问。</p>
+<h2 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a>FTP</h2><p>FTP 的优点：</p>
+<ul>
+<li>跨平台支持<br>FTP 是一种跨平台的协议，几乎可以在任何操作系统上进行文件传输和共享。</li>
+<li>简单易用<br>FTP 协议相对简单，有许多客户端和服务器软件提供了用户友好的界面，易于配置和使用。</li>
+<li>大文件传输<br>FTP 对大文件的传输支持较好，可以处理大容量文件的上传和下载。 -匿名访问<br>FTP 支持匿名访问，允许用户使用匿名账户进行文件下载。<br>FTP 的劣势：</li>
+<li>安全性较低<br>FTP 传输的数据未加密，存在安全风险，容易受到中间人攻击和数据泄露的威胁。</li>
+<li>防火墙设置<br>FTP 使用多个端口进行数据传输，需要在防火墙上进行额外的配置以允许数据传输。</li>
+<li>相对复杂的配置<br>一些高级功能和配置可能需要更多的设置和管理。</li>
+</ul>
+<h2 id="SMB"><a href="#SMB" class="headerlink" title="SMB"></a>SMB</h2><p>SMB 的优点</p>
+<ul>
+<li><p>Windows 集成<br>SMB 是 Windows 操作系统标准的文件共享协议，与 Windows 集成良好，可以方便地在 Windows 网络中共享文件和打印机。</p>
+</li>
+<li><p>访问控制<br>SMB 支持对共享资源进行细粒度的访问控制和权限管理，可以根据用户和用户组控制文件的访问权限。</p>
+</li>
+<li><p>文件和打印机共享<br>SMB 支持同时共享文件和打印机，方便多用户访问和打印。<br>SMB 的劣势：</p>
+</li>
+<li><p>跨平台兼容性<br>SMB 在非 Windows 平台上的兼容性相对较差，可能需要额外的配置和软件来实现与其他操作系统的共享。</p>
+</li>
+<li><p>复杂性<br>SMB 协议相对复杂，需要较多的配置和管理，尤其是在大型网络环境中。</p>
+</li>
+</ul>
+<p>SMB 协议在设计时考虑了跨网段通信的需求，它是基于 TCP&#x2F;IP 协议栈的应用层协议。SMB 协议使用 TCP 作为传输协议，并利用 TCP 的可靠性和连接性来实现跨网段的数据传输。TCP 协议负责将数据分割成小的数据包，并在发送和接收之间建立可靠的连接。</p>
+<p>与此不同，FTP 协议在设计时并没有直接考虑跨网段通信的需求。FTP 协议使用两个独立的连接：控制连接和数据连接。控制连接用于发送命令和控制信息，而数据连接用于实际的文件传输。FTP 协议在建立数据连接时使用了动态端口，这可能导致跨网段通信时的问题。</p>
+<p>当 FTP 客户端和服务器位于不同的网段时，由于网络地址转换（NAT）和防火墙的存在，FTP 的数据连接可能会受到限制。NAT 和防火墙可能会阻止动态端口的打开和传输，导致 FTP 无法在跨网段的情况下正常工作。此外，FTP 的数据连接也没有内置的可靠性机制。</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/10/28/%E5%B0%8F%E7%8B%BC%E6%AF%AB%E5%9C%A8win%E4%B8%8B%E4%BD%BF%E7%94%A8%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" title="小狼毫在win下使用的异常处理"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 小狼毫在win下使用的异常处理</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/10/27/360T7%E5%8D%87%E7%BA%A7openwert/" title="360T7升级openwert">下一篇: 360T7升级openwert&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>
