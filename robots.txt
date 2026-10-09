@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+sitemap: https://wangqifei.eu.org/sitemap.xml
