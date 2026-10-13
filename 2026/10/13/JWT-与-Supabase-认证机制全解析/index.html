@@ -1,0 +1,1267 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>JWT 与 Supabase 认证机制全解析 · 栖息地</title><meta name="description" content="JWT 与 Supabase 认证机制全解析：从 Token 结构到多级降级续期的工程实践
+本文以 TryBox 应用为案例，结合真实 JWT 样本、Supabase Auth 认证流程、六层 Token 消费降级链、油猴脚本前端捕获、服务端双写策略，系统梳理 JWT 原理、Supabase 签发机"><meta name="og:description" content="JWT 与 Supabase 认证机制全解析：从 Token 结构到多级降级续期的工程实践
+本文以 TryBox 应用为案例，结合真实 JWT 样本、Supabase Auth 认证流程、六层 Token 消费降级链、油猴脚本前端捕获、服务端双写策略，系统梳理 JWT 原理、Supabase 签发机"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="JWT 与 Supabase 认证机制全解析"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>JWT 与 Supabase 认证机制全解析</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2026-10-13 23:10</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/stremio/" title="stremio">stremio</a><span>&nbsp;</span><a class="a-tag" href="/tags/jwt/" title="jwt">jwt</a><span>&nbsp;</span></span></p><p class="post-abstract"><h1 id="JWT-与-Supabase-认证机制全解析：从-Token-结构到多级降级续期的工程实践"><a href="#JWT-与-Supabase-认证机制全解析：从-Token-结构到多级降级续期的工程实践" class="headerlink" title="JWT 与 Supabase 认证机制全解析：从 Token 结构到多级降级续期的工程实践"></a>JWT 与 Supabase 认证机制全解析：从 Token 结构到多级降级续期的工程实践</h1><blockquote>
+<p>本文以 TryBox 应用为案例，结合真实 JWT 样本、Supabase Auth 认证流程、六层 Token 消费降级链、油猴脚本前端捕获、服务端双写策略，系统梳理 JWT 原理、Supabase 签发机制、Token 生命周期管理，以及如何在工程实践中实现 Token 的自动捕获、刷新与持久化。</p>
+<p>本文经过多轮修订，修正了 refresh_token 生命周期、补充了六层降级链、双写策略、并发锁、JWKS 验签等关键细节，可作为 Supabase 认证落地的完整参考。</p>
+</blockquote>
+<p>** 测试落地项目因涉及影视站点逆向，暂时private状态，后续调整。 **</p>
+<h3 id="核心结论速查表"><a href="#核心结论速查表" class="headerlink" title="核心结论速查表"></a>核心结论速查表</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>结论</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JWT 本质</td>
+<td>Base64URL 编码的三段式字符串，非加密，可解码不可篡改</td>
+</tr>
+<tr>
+<td>签发者</td>
+<td>Supabase Auth（由 <code>iss</code> 字段证明）</td>
+</tr>
+<tr>
+<td>时间戳</td>
+<td><code>exp</code>&#x2F;<code>iat</code>&#x2F;<code>amr.timestamp</code> 全部是服务器 UTC 时间</td>
+</tr>
+<tr>
+<td>access_token</td>
+<td>就是完整 JWT，有效期默认 1 小时</td>
+</tr>
+<tr>
+<td>refresh_token</td>
+<td><strong>不是 JWT，一次性使用，用后即失效（rotation）</strong></td>
+</tr>
+<tr>
+<td>session_id</td>
+<td>登录时生成，刷新时不变，重新登录才变</td>
+</tr>
+<tr>
+<td>核心设计</td>
+<td><strong>六层降级链</strong>（内存→用户配置→Redis→refresh刷新→旧access刷新→Bark告警）</td>
+</tr>
+<tr>
+<td>存储策略</td>
+<td><strong>双写</strong>：Redis（权威）+ .env.local（备份）+ 内存（缓存）</td>
+</tr>
+<tr>
+<td>前端采集</td>
+<td>油猴脚本重写 <code>localStorage.setItem</code> 钩子，<strong>只推 access 不推 refresh</strong></td>
+</tr>
+<tr>
+<td>关键约束</td>
+<td>refresh_token 绝不能下发到客户端，必须服务端集中管理</td>
+</tr>
+<tr>
+<td>并发安全</td>
+<td>刷新需加锁（Redis <code>SET NX EX</code>），避免多实例竞争导致 refresh 失效</td>
+</tr>
+<tr>
+<td>可观测性</td>
+<td>Bark 告警 + 诊断 stream，失败时主动通知而非静默</td>
+</tr>
+</tbody></table>
+<p>JWT 的设计哲学是<strong>短期凭证 + 长期刷新</strong>，在安全性和用户体验之间取得平衡。而这套系统在标准模式之上，又叠加了<strong>多级降级</strong>、<strong>双写</strong>、<strong>前端采集</strong>、<strong>告警诊断</strong>四层工程优化，本质上是一个**”以 Redis 为中心的 Token 分发与续期中间件”**，配合前端采集和后端降级，实现了跨服务、跨实例、跨客户端的统一认证。理解它，就理解了 Supabase 在生产环境落地的完整工程实践。</p>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>引言</li>
+<li>JWT 基础结构与解码原理</li>
+<li>为什么 Authorization 头中是 Supabase 签发的 JWT</li>
+<li>JWT 中关键字段详解</li>
+<li>客户端如何向服务端发起请求获取认证</li>
+<li>登录后 Authorization 是否”确定”了？</li>
+<li>access_token 与完整 JWT 的关系</li>
+<li>Token 过期机制与 refresh_token 续期</li>
+<li>Token 消费的六层降级链（核心设计）</li>
+<li>双写策略：Redis + .env.local + 内存</li>
+<li>油猴脚本：前端侧 Token 捕获</li>
+<li>Bark 告警与可观测性</li>
+<li>工程实践：Node.js + supabase-js 实现自动刷新与持续获取 Stream</li>
+<li>难点剖析与思考</li>
+<li>总结</li>
+</ol>
+<hr>
+<h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>在现代 Web 应用的身份认证体系中，JWT（JSON Web Token）已经成为事实上的标准。本文以 TryBox 应用为案例，结合其实际请求中的 JWT 样本、Supabase Auth 认证流程、服务端降级脚本以及前端油猴捕获脚本，系统性地梳理 JWT 的原理、Supabase 签发机制、Token 生命周期管理，以及如何在工程实践中实现 Token 的自动捕获、刷新与持久化。</p>
+<p>全文从以下维度展开：</p>
+<ol>
+<li>JWT 基础结构与解码原理</li>
+<li>为什么 Authorization 头中的是 Supabase 签发的 JWT</li>
+<li>JWT 中关键字段的含义与来源（重点剖析 exp、iat、amr.timestamp、session_id）</li>
+<li>客户端如何向 Supabase 发起认证请求并获取 Token</li>
+<li>登录后 Authorization 是否”确定”了？—— Token 的动态性</li>
+<li>access_token 与完整 JWT 的关系</li>
+<li>Token 过期机制与 refresh_token 续期流程</li>
+<li><strong>Token 消费的六层降级链（核心设计）</strong></li>
+<li><strong>双写策略：Redis + .env.local + 内存</strong></li>
+<li><strong>油猴脚本：前端侧 Token 捕获</strong></li>
+<li><strong>Bark 告警与可观测性</strong></li>
+<li>工程实践：在 Node.js 中使用 supabase-js 实现 Token 自动刷新与持续获取 Stream</li>
+<li>难点剖析与思考</li>
+<li>总结</li>
+</ol>
+<hr>
+<h2 id="二、JWT-基础结构与解码原理"><a href="#二、JWT-基础结构与解码原理" class="headerlink" title="二、JWT 基础结构与解码原理"></a>二、JWT 基础结构与解码原理</h2><h3 id="2-1-JWT-是什么"><a href="#2-1-JWT-是什么" class="headerlink" title="2.1 JWT 是什么"></a>2.1 JWT 是什么</h3><p>JWT（JSON Web Token）是一个由点号（<code>.</code>）分隔的三段式字符串：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">header</span><span class="selector-class">.payload</span>.signature</span><br></pre></td></tr></table></figure>
+
+<p>以案例中的 Token 为例：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJFUzI1NiIsImtpZCI6.<span class="string">..</span> . eyJpc3MiOiJodHRwczovL3NhaWNo.<span class="string">..</span> . iTwfJ4vEMu0tCHy0Zhfo.<span class="string">..</span></span><br></pre></td></tr></table></figure>
+
+<p>三段分别对应：</p>
+<table>
+<thead>
+<tr>
+<th>部分</th>
+<th>内容</th>
+<th>编码方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Header</td>
+<td>算法与密钥 ID</td>
+<td>Base64URL</td>
+</tr>
+<tr>
+<td>Payload</td>
+<td>声明（Claims）</td>
+<td>Base64URL</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td>签名</td>
+<td>二进制转 Base64URL</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-Header-解码"><a href="#2-2-Header-解码" class="headerlink" title="2.2 Header 解码"></a>2.2 Header 解码</h3><p>对第一段进行 Base64URL 解码，得到：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;alg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ES256&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;kid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;f330a998-164d-4df8-843c-1c82eec1d49a&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;typ&quot;</span><span class="punctuation">:</span> <span class="string">&quot;JWT&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>alg: ES256</code>：使用 ECDSA P-256 非对称签名算法。</li>
+<li><code>kid</code>：密钥 ID，服务端据此选择对应的公钥进行验签。</li>
+<li><code>typ: JWT</code>：令牌类型。</li>
+</ul>
+<h3 id="2-3-Payload-解码"><a href="#2-3-Payload-解码" class="headerlink" title="2.3 Payload 解码"></a>2.3 Payload 解码</h3><p>对第二段进行 Base64URL 解码，得到：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;iss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://saichcuwzbncuqnqhuul.supabase.co/auth/v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;aud&quot;</span><span class="punctuation">:</span> <span class="string">&quot;authenticated&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1791710467</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;iat&quot;</span><span class="punctuation">:</span> <span class="number">1791706867</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;wang_zi_mo@163.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;phone&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;app_metadata&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;provider&quot;</span><span class="punctuation">:</span> <span class="string">&quot;email&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;providers&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;email&quot;</span><span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;user_metadata&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;wang_zi_mo@163.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;email_verified&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;phone_verified&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;authenticated&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;aal&quot;</span><span class="punctuation">:</span> <span class="string">&quot;aal1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;amr&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;otp&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="number">1791694481</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;f97b4fb4-4fa0-4546-ac47-657e534fae5c&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;is_anonymous&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-解码方法"><a href="#2-4-解码方法" class="headerlink" title="2.4 解码方法"></a>2.4 解码方法</h3><p><strong>Python 示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">token = <span class="string">&quot;eyJhbGciOiJFUzI1NiIs...&quot;</span></span><br><span class="line">payload_b64 = token.split(<span class="string">&quot;.&quot;</span>)[<span class="number">1</span>]</span><br><span class="line">payload_b64 += <span class="string">&quot;=&quot;</span> * (-<span class="built_in">len</span>(payload_b64) % <span class="number">4</span>)</span><br><span class="line">payload = json.loads(base64.urlsafe_b64decode(payload_b64))</span><br><span class="line"><span class="built_in">print</span>(json.dumps(payload, indent=<span class="number">2</span>, ensure_ascii=<span class="literal">False</span>))</span><br></pre></td></tr></table></figure>
+
+<p><strong>命令行一行版：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">python3 -c <span class="string">&quot;</span></span><br><span class="line"><span class="string">import base64, json</span></span><br><span class="line"><span class="string">t=&#x27;你的JWT&#x27;</span></span><br><span class="line"><span class="string">p=t.split(&#x27;.&#x27;)[1]</span></span><br><span class="line"><span class="string">p+=&#x27;=&#x27;*(-len(p)%4)</span></span><br><span class="line"><span class="string">print(json.dumps(json.loads(base64.urlsafe_b64decode(p)), indent=2, ensure_ascii=False))</span></span><br><span class="line"><span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Node.js 示例：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> token = <span class="string">&quot;eyJhbGciOiJFUzI1NiIs...&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> payload = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title class_">Buffer</span>.<span class="title function_">from</span>(token.<span class="title function_">split</span>(<span class="string">&#x27;.&#x27;</span>)[<span class="number">1</span>], <span class="string">&#x27;base64url&#x27;</span>).<span class="title function_">toString</span>());</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(payload);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>重要提示</strong>：JWT 的 Header 和 Payload 只是 Base64URL 编码，并非加密。任何人都可以解码查看内容，但无法篡改，因为签名会校验失败。</p>
+</blockquote>
+<hr>
+<h2 id="三、为什么-Authorization-头中是-Supabase-签发的-JWT"><a href="#三、为什么-Authorization-头中是-Supabase-签发的-JWT" class="headerlink" title="三、为什么 Authorization 头中是 Supabase 签发的 JWT"></a>三、为什么 Authorization 头中是 Supabase 签发的 JWT</h2><h3 id="3-1-从-Payload-中寻找证据"><a href="#3-1-从-Payload-中寻找证据" class="headerlink" title="3.1 从 Payload 中寻找证据"></a>3.1 从 Payload 中寻找证据</h3><p>判断签发者的核心依据是 <code>iss</code>（Issuer）声明：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;iss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://saichcuwzbncuqnqhuul.supabase.co/auth/v1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这明确指向 Supabase 项目的 Auth 端点，说明该 Token 由 Supabase Auth 服务签发。</p>
+<p>此外，Payload 中的其他字段也完全符合 Supabase Auth 的规范：</p>
+<ul>
+<li><code>aud: &quot;authenticated&quot;</code>：受众为已认证用户。</li>
+<li><code>role: &quot;authenticated&quot;</code>：角色为已认证。</li>
+<li><code>app_metadata.provider: &quot;email&quot;</code>：认证提供者为邮箱。</li>
+<li><code>amr: [&#123; method: &quot;otp&quot;, timestamp: ... &#125;]</code>：认证方法为 OTP。</li>
+<li><code>session_id</code>、<code>aal</code>、<code>is_anonymous</code>：均为 Supabase 特有声明。</li>
+</ul>
+<h3 id="3-2-Supabase-Auth-的工作模式"><a href="#3-2-Supabase-Auth-的工作模式" class="headerlink" title="3.2 Supabase Auth 的工作模式"></a>3.2 Supabase Auth 的工作模式</h3><p>TryBox 采用 Supabase 作为认证服务。其架构如下：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">用户浏览器</span><br><span class="line">   │</span><br><span class="line">   ├── 登录请求 ──► Supabase Auth (<span class="regexp">/auth/</span>v1<span class="regexp">/otp, /</span>auth<span class="regexp">/v1/</span>verify)</span><br><span class="line">   │                       │</span><br><span class="line">   │                       ▼</span><br><span class="line">   │                签发 access_token (JWT) + refresh_token</span><br><span class="line">   │</span><br><span class="line">   └── 业务请求 ──► TryBox Server Function (<span class="regexp">/_serverFn/</span>...)</span><br><span class="line">                          │</span><br><span class="line">                          ▼</span><br><span class="line">                   验证 JWT 签名与声明</span><br><span class="line">                   （通过 Supabase JWKS 公钥）</span><br></pre></td></tr></table></figure>
+
+<p>TryBox 服务端并不签发 Token，它只是<strong>信任并验证</strong> Supabase 签发的 JWT。验证时使用 Supabase 项目的 JWKS 端点获取公钥：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:<span class="regexp">//</span>&lt;project&gt;.supabase.co<span class="regexp">/auth/</span>v1<span class="regexp">/.well-known/</span>jwks.json</span><br></pre></td></tr></table></figure>
+
+<p>JWT Header 中的 <code>kid</code> 正是用来匹配 JWKS 中对应公钥的。</p>
+<h3 id="3-3-为什么用-ES256-而非-HS256"><a href="#3-3-为什么用-ES256-而非-HS256" class="headerlink" title="3.3 为什么用 ES256 而非 HS256"></a>3.3 为什么用 ES256 而非 HS256</h3><ul>
+<li><strong>HS256</strong> 是对称加密，服务端和客户端共享同一个 secret，一旦泄露全线崩溃。</li>
+<li><strong>ES256</strong> 是非对称，Supabase 持有私钥，任何人可用公钥验证，<strong>服务端不需要持有任何 secret</strong>。</li>
+<li>这也是 Supabase 新版默认用 ES256 的原因。</li>
+</ul>
+<h4 id="3-3-1-HS256-与-ES256-的完整对比"><a href="#3-3-1-HS256-与-ES256-的完整对比" class="headerlink" title="3.3.1 HS256 与 ES256 的完整对比"></a>3.3.1 HS256 与 ES256 的完整对比</h4><p>JWT 支持多种签名算法，Supabase 历史上用过 HS256，新项目默认用 ES256。两者在安全性、密钥管理、验签方式上有本质区别：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>HS256</th>
+<th>ES256</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>全称</td>
+<td>HMAC with SHA-256</td>
+<td>ECDSA with SHA-256 (P-256)</td>
+</tr>
+<tr>
+<td>密钥类型</td>
+<td><strong>对称</strong>：同一个 secret 用于签名和验签</td>
+<td><strong>非对称</strong>：私钥签名，公钥验签</td>
+</tr>
+<tr>
+<td>签名方</td>
+<td>持有 secret 的一方</td>
+<td>持有私钥的一方（Supabase）</td>
+</tr>
+<tr>
+<td>验签方</td>
+<td>必须持有<strong>同一个 secret</strong></td>
+<td>只需持有<strong>公钥</strong></td>
+</tr>
+<tr>
+<td>密钥分发</td>
+<td>secret 必须安全地分发给所有验签方</td>
+<td>公钥可公开发布（JWKS）</td>
+</tr>
+<tr>
+<td>泄露风险</td>
+<td>secret 一旦泄露，攻击者可<strong>伪造任意 token</strong></td>
+<td>私钥泄露才危险；公钥泄露无影响</td>
+</tr>
+<tr>
+<td>JWKS 支持</td>
+<td>❌ 不支持（没有公钥概念）</td>
+<td>✅ 支持（通过 <code>/.well-known/jwks.json</code> 分发）</td>
+</tr>
+<tr>
+<td>算法标识</td>
+<td><code>HS256</code></td>
+<td><code>ES256</code></td>
+</tr>
+<tr>
+<td>签名长度</td>
+<td>较短（32 字节）</td>
+<td>较长（64 字节）</td>
+</tr>
+<tr>
+<td>计算开销</td>
+<td>较低</td>
+<td>略高（但可忽略）</td>
+</tr>
+<tr>
+<td>Supabase 默认</td>
+<td>旧项目</td>
+<td><strong>新项目默认</strong></td>
+</tr>
+<tr>
+<td>典型场景</td>
+<td>单体应用、内部服务</td>
+<td>多服务、微服务、第三方验签</td>
+</tr>
+</tbody></table>
+<p><strong>为什么 Supabase 新项目改用 ES256？</strong></p>
+<ol>
+<li><strong>服务端无需持有 secret</strong>：TryBox 只需从 Supabase 的 JWKS 端点拉公钥，不用保管任何密钥，减少了密钥泄露面。</li>
+<li><strong>多服务友好</strong>：任何想验证 Supabase JWT 的服务（TryBox、第三方集成方）都可以独立拉公钥，不需要向 Supabase 索要 secret。</li>
+<li><strong>符合 OIDC 标准</strong>：OIDC 规范推荐非对称签名，Supabase 遵循此实践。</li>
+<li><strong>私钥集中管理</strong>：只有 Supabase Auth 服务持有私钥，攻击面收窄。</li>
+</ol>
+<p><strong>HS256 的遗留问题</strong>：</p>
+<ul>
+<li>如果你在旧项目里看到 <code>alg: HS256</code>，说明用的是 Supabase 的 JWT secret 对称签名。</li>
+<li>验签方必须持有 secret，secret 泄露即全线崩溃。</li>
+<li>Supabase 已逐步迁移到 ES256，新项目不再暴露 HS256 的 secret。</li>
+</ul>
+<p><strong>如何识别当前项目用的是哪种算法？</strong></p>
+<p>看 JWT Header 的 <code>alg</code> 字段：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;alg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ES256&quot;</span><span class="punctuation">,</span>          <span class="comment">// ← 这里</span></span><br><span class="line">  <span class="attr">&quot;kid&quot;</span><span class="punctuation">:</span> <span class="string">&quot;f330a998-...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;typ&quot;</span><span class="punctuation">:</span> <span class="string">&quot;JWT&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>ES256</code>：非对称，用 JWKS 验签。</li>
+<li><code>HS256</code>：对称，用 secret 验签（旧项目）。</li>
+</ul>
+<p><strong>验证代码差异</strong>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ES256：用 JWKS 公钥验签</span></span><br><span class="line"><span class="keyword">import</span> &#123; createRemoteJWKSet, jwtVerify &#125; <span class="keyword">from</span> <span class="string">&#x27;jose&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">JWKS</span> = <span class="title function_">createRemoteJWKSet</span>(<span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;https://&lt;project&gt;.supabase.co/auth/v1/.well-known/jwks.json&#x27;</span>));</span><br><span class="line"><span class="keyword">await</span> <span class="title function_">jwtVerify</span>(token, <span class="variable constant_">JWKS</span>, &#123; <span class="attr">issuer</span>: ..., <span class="attr">audience</span>: <span class="string">&#x27;authenticated&#x27;</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// HS256：用共享 secret 验签（旧项目，不推荐）</span></span><br><span class="line"><span class="keyword">import</span> &#123; jwtVerify &#125; <span class="keyword">from</span> <span class="string">&#x27;jose&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> secret = <span class="keyword">new</span> <span class="title class_">TextEncoder</span>().<span class="title function_">encode</span>(<span class="variable constant_">SUPABASE_JWT_SECRET</span>);</span><br><span class="line"><span class="keyword">await</span> <span class="title function_">jwtVerify</span>(token, secret, &#123; <span class="attr">issuer</span>: ..., <span class="attr">audience</span>: <span class="string">&#x27;authenticated&#x27;</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>结论</strong>：ES256 是非对称签名，Supabase 新项目默认使用，验签方只需公钥；HS256 是对称签名，旧项目遗留，验签方需持有 secret，安全性较低。TryBox 案例中的 <code>alg: ES256</code> 表明它使用新式非对称签名，配合 JWKS 端点验签。</p>
+<h3 id="3-4-Node-js-验证-JWT-示例"><a href="#3-4-Node-js-验证-JWT-示例" class="headerlink" title="3.4 Node.js 验证 JWT 示例"></a>3.4 Node.js 验证 JWT 示例</h3><p>使用 <code>jose</code> 库：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createRemoteJWKSet, jwtVerify &#125; <span class="keyword">from</span> <span class="string">&#x27;jose&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">JWKS</span> = <span class="title function_">createRemoteJWKSet</span>(</span><br><span class="line">  <span class="keyword">new</span> <span class="title function_">URL</span>(<span class="string">&#x27;https://saichcuwzbncuqnqhuul.supabase.co/auth/v1/.well-known/jwks.json&#x27;</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">verifySupabaseJWT</span>(<span class="params">token</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; payload, protectedHeader &#125; = <span class="keyword">await</span> <span class="title function_">jwtVerify</span>(token, <span class="variable constant_">JWKS</span>, &#123;</span><br><span class="line">    <span class="attr">issuer</span>: <span class="string">&#x27;https://saichcuwzbncuqnqhuul.supabase.co/auth/v1&#x27;</span>,</span><br><span class="line">    <span class="attr">audience</span>: <span class="string">&#x27;authenticated&#x27;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> payload;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：</p>
+<ul>
+<li><code>issuer</code> 必须精确匹配，包括末尾的 <code>/auth/v1</code>。</li>
+<li><code>audience</code> 是 <code>authenticated</code>，不是项目 URL。</li>
+<li><code>kid</code> 自动从 Header 匹配 JWKS 中的公钥。</li>
+</ul>
+<hr>
+<h2 id="四、JWT-中关键字段详解"><a href="#四、JWT-中关键字段详解" class="headerlink" title="四、JWT 中关键字段详解"></a>四、JWT 中关键字段详解</h2><p>案例中 Payload 包含多个时间戳和会话标识，其中 <code>exp</code>、<code>iat</code>、<code>amr.timestamp</code>、<code>session_id</code> 是每次刷新或登录时可能变动的字段。下面逐一剖析。</p>
+<h3 id="4-1-exp：过期时间"><a href="#4-1-exp：过期时间" class="headerlink" title="4.1 exp：过期时间"></a>4.1 exp：过期时间</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1791710467</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>含义</strong>：JWT 的过期时间（Expiration Time）。</li>
+<li><strong>来源</strong>：Supabase Auth 服务器在签发时，用 <code>服务器当前时间 + 有效期</code> 计算得出。</li>
+<li><strong>默认有效期</strong>：Supabase 默认 <code>access_token</code> 有效期为 <strong>3600 秒（1 小时）</strong>，可在项目设置中修改。</li>
+<li><strong>验证</strong>：<code>exp - iat = 1791710467 - 1791706867 = 3600</code>，正好 1 小时。</li>
+<li><strong>时间性质</strong>：Unix 时间戳（秒），UTC，服务器时间。</li>
+<li><strong>作用</strong>：服务端验证 Token 是否过期；过期后需要用 <code>refresh_token</code> 换新的 <code>access_token</code>。</li>
+</ul>
+<h3 id="4-2-iat：签发时间"><a href="#4-2-iat：签发时间" class="headerlink" title="4.2 iat：签发时间"></a>4.2 iat：签发时间</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;iat&quot;</span><span class="punctuation">:</span> <span class="number">1791706867</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>含义</strong>：Issued At，JWT 的签发时间。</li>
+<li><strong>来源</strong>：Supabase Auth 服务器在生成 Token 时写入的服务器当前时间。</li>
+<li><strong>时间性质</strong>：Unix 时间戳（秒），UTC，服务器时间。</li>
+<li><strong>作用</strong>：判断 Token 新旧；与 <code>exp</code> 配合计算有效期。</li>
+<li><strong>变动</strong>：每次刷新 Token，<code>iat</code> 都会更新。</li>
+</ul>
+<h3 id="4-3-amr-timestamp：认证方法时间戳"><a href="#4-3-amr-timestamp：认证方法时间戳" class="headerlink" title="4.3 amr.timestamp：认证方法时间戳"></a>4.3 amr.timestamp：认证方法时间戳</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;amr&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;otp&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="number">1791694481</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>amr</strong>：Authentication Methods Reference，认证方法引用。</li>
+<li>**method: “otp”**：表示用户通过 OTP（一次性密码&#x2F;邮箱验证码）登录。</li>
+<li><strong>timestamp</strong>：该认证方法发生的<strong>服务器时间</strong>，Unix 时间戳，UTC。</li>
+<li><strong>来源</strong>：Supabase Auth 在用户完成 OTP 验证时记录。</li>
+<li><strong>与 iat 的关系</strong>：<ul>
+<li><code>amr.timestamp = 1791694481</code></li>
+<li><code>iat = 1791706867</code></li>
+<li>差值 &#x3D; <code>12386</code> 秒 ≈ 3.44 小时。</li>
+<li>说明用户最初通过 OTP 登录是在约 3.44 小时前，而当前 Token 是后来刷新得到的（<code>iat</code> 是刷新时间）。</li>
+</ul>
+</li>
+<li><strong>作用</strong>：记录认证事件；用于多因素认证（MFA）判断；服务端可据此决定是否要求重新认证。</li>
+<li><strong>变动</strong>：重新登录或重新进行 OTP 验证时，<code>timestamp</code> 会更新。</li>
+</ul>
+<h3 id="4-4-amr-数组可能有多个元素"><a href="#4-4-amr-数组可能有多个元素" class="headerlink" title="4.4 amr 数组可能有多个元素"></a>4.4 amr 数组可能有多个元素</h3><p><code>amr</code> 是<strong>数组</strong>，因为一个会话可能经历多次认证：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;amr&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;password&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="number">1791690000</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span> <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;otp&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="number">1791694481</span> <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>多元素场景</strong>：</p>
+<ul>
+<li>用户先用密码登录，再完成 MFA（TOTP&#x2F;OTP），会有两条记录。</li>
+<li><code>aal</code>（Authenticator Assurance Level）反映最高认证等级：<ul>
+<li><code>aal1</code>：单因素</li>
+<li><code>aal2</code>：多因素（如密码 + TOTP）</li>
+</ul>
+</li>
+</ul>
+<p>服务端可据此判断是否需要<strong>敏感操作二次验证</strong>。</p>
+<h3 id="4-5-session-id：会话-ID"><a href="#4-5-session-id：会话-ID" class="headerlink" title="4.5 session_id：会话 ID"></a>4.5 session_id：会话 ID</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;f97b4fb4-4fa0-4546-ac47-657e534fae5c&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>含义</strong>：Supabase Auth 为这次登录会话分配的唯一标识符，UUID 格式。</li>
+<li><strong>来源</strong>：用户登录成功时，由 Supabase Auth 服务器生成。</li>
+<li><strong>作用</strong>：<ul>
+<li>标识一次完整的登录会话。</li>
+<li>刷新 Token 时，<code>session_id</code> 保持不变。</li>
+<li>登出时，服务端会使该 <code>session_id</code> 失效。</li>
+<li>可用于会话管理、强制下线、审计等。</li>
+</ul>
+</li>
+<li><strong>变动</strong>：每次重新登录会生成新的 <code>session_id</code>；刷新 Token 不会改变。</li>
+</ul>
+<h3 id="4-6-role-与-aud-的区别"><a href="#4-6-role-与-aud-的区别" class="headerlink" title="4.6 role 与 aud 的区别"></a>4.6 role 与 aud 的区别</h3><p>容易混淆的两个字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>Supabase 中的典型值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>aud</code></td>
+<td>Audience，<strong>令牌的预期接收方</strong></td>
+<td><code>authenticated</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>Role，<strong>用户的角色</strong></td>
+<td><code>authenticated</code> &#x2F; <code>anon</code> &#x2F; <code>service_role</code></td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>aud</code> 用于<strong>跨服务验证</strong>：TryBox 验签时会检查 <code>aud === &#39;authenticated&#39;</code>，防止匿名 token 混入。</li>
+<li><code>role</code> 用于<strong>权限控制</strong>：PostgreSQL 的 RLS（行级安全）策略里会用到 <code>role</code>。</li>
+</ul>
+<p><strong>两者可能同值但语义不同</strong>，不要混淆。</p>
+<h3 id="4-7-is-anonymous-字段"><a href="#4-7-is-anonymous-字段" class="headerlink" title="4.7 is_anonymous 字段"></a>4.7 is_anonymous 字段</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;is_anonymous&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure>
+
+<p>Supabase 支持<strong>匿名登录</strong>（Anonymous Sign-ins），即无需邮箱&#x2F;密码，直接获取临时身份。此时 <code>is_anonymous: true</code>，<code>role: &#39;authenticated&#39;</code>，<code>aud: &#39;authenticated&#39;</code>，但 <code>email</code> 为空。</p>
+<p><strong>TryBox 若允许匿名用户</strong>，需在服务端额外判断 <code>is_anonymous</code>，避免匿名用户访问付费内容。</p>
+<h3 id="4-8-时间戳性质总结"><a href="#4-8-时间戳性质总结" class="headerlink" title="4.8 时间戳性质总结"></a>4.8 时间戳性质总结</h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>来源</th>
+<th>时间类型</th>
+<th>是否变动</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>exp</code></td>
+<td>过期时间</td>
+<td>服务器签发时计算</td>
+<td>Unix UTC</td>
+<td>每次刷新变</td>
+</tr>
+<tr>
+<td><code>iat</code></td>
+<td>签发时间</td>
+<td>服务器当前时间</td>
+<td>Unix UTC</td>
+<td>每次刷新变</td>
+</tr>
+<tr>
+<td><code>amr.timestamp</code></td>
+<td>认证方法发生时间</td>
+<td>服务器记录 OTP 验证时刻</td>
+<td>Unix UTC</td>
+<td>重新登录变</td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>会话 ID</td>
+<td>登录时生成</td>
+<td>UUID</td>
+<td>重新登录变</td>
+</tr>
+</tbody></table>
+<p><strong>关键结论</strong>：所有时间戳均为<strong>服务器时间（Unix UTC）</strong>，不是客户端本地时间。客户端只负责接收和存储，无法参与生成或篡改。</p>
+<h3 id="4-9-expires-in-与-expires-at-的区别"><a href="#4-9-expires-in-与-expires-at-的区别" class="headerlink" title="4.9 expires_in 与 expires_at 的区别"></a>4.9 expires_in 与 expires_at 的区别</h3><p>你提供的 session JSON 里有：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span> <span class="number">3600</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expires_at&quot;</span><span class="punctuation">:</span> <span class="number">1791716034</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>expires_in</code></td>
+<td>有效期<strong>相对</strong>时长（秒）</td>
+<td>相对值</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td>过期<strong>绝对</strong>时间戳（秒）</td>
+<td>绝对值</td>
+</tr>
+</tbody></table>
+<p><code>expires_at = 当前时间戳 + expires_in</code>。</p>
+<p><strong>JWT 里的 <code>exp</code></strong> 是 UNIX 秒级时间戳，**<code>session.expires_at</code>** 也是秒级时间戳，两者应该一致（但如果刷新有延迟可能略有差异）。</p>
+<p>**代码里判断 token 是否快过期应使用 <code>expires_at</code>**：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> expiresAtMs = session.<span class="property">expires_at</span> * <span class="number">1000</span>;  <span class="comment">// 注意乘以 1000 转毫秒</span></span><br><span class="line"><span class="keyword">const</span> remaining = expiresAtMs - <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line"><span class="keyword">if</span> (remaining &lt; <span class="number">60_000</span>) &#123;</span><br><span class="line">  <span class="comment">// 60 秒内过期，主动刷新</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>这是常见隐患</strong>：如果直接用 <code>expires_in</code> 计算，会随会话时长漂移；用 <code>expires_at</code> 更稳。</p>
+<hr>
+<h2 id="五、客户端如何向服务端发起请求获取认证"><a href="#五、客户端如何向服务端发起请求获取认证" class="headerlink" title="五、客户端如何向服务端发起请求获取认证"></a>五、客户端如何向服务端发起请求获取认证</h2><p>客户端获取 JWT 并不是向 TryBox 服务端请求，而是向 <strong>Supabase Auth 服务</strong> 请求。TryBox 只是信任并验证 Supabase 签发的 JWT。</p>
+<h3 id="5-1-整体认证流程"><a href="#5-1-整体认证流程" class="headerlink" title="5.1 整体认证流程"></a>5.1 整体认证流程</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">用户输入邮箱</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">客户端 → Supabase <span class="regexp">/auth/</span>v1/otp        （发送验证码）</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">用户收到验证码，输入</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">客户端 → Supabase <span class="regexp">/auth/</span>v1/verify     （验证 OTP）</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">Supabase 返回 access_token + refresh_token</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">客户端保存 session</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">客户端 → TryBox <span class="regexp">/_serverFn/</span>...        （带 Bearer access_token）</span><br><span class="line">   │</span><br><span class="line">   ▼</span><br><span class="line">TryBox 验证 JWT，返回播放地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-第一步：请求发送-OTP"><a href="#5-2-第一步：请求发送-OTP" class="headerlink" title="5.2 第一步：请求发送 OTP"></a>5.2 第一步：请求发送 OTP</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST https://saichcuwzbncuqnqhuul.supabase.co/auth/v1/otp</span><br><span class="line"><span class="attribute">apikey</span><span class="punctuation">: </span>&lt;Supabase anon key&gt;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;email&quot;: &quot;wang_zi_mo@163.com&quot;,</span><br><span class="line">  &quot;create_user&quot;: true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>apikey</code>：Supabase 项目的匿名公开密钥，用于标识项目，可以暴露在前端。</li>
+<li><code>create_user: true</code>：如果用户不存在则自动创建。</li>
+</ul>
+<h3 id="5-3-第二步：提交-OTP-验证"><a href="#5-3-第二步：提交-OTP-验证" class="headerlink" title="5.3 第二步：提交 OTP 验证"></a>5.3 第二步：提交 OTP 验证</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST https://saichcuwzbncuqnqhuul.supabase.co/auth/v1/verify</span><br><span class="line"><span class="attribute">apikey</span><span class="punctuation">: </span>&lt;Supabase anon key&gt;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;type&quot;: &quot;email&quot;,</span><br><span class="line">  &quot;email&quot;: &quot;wang_zi_mo@163.com&quot;,</span><br><span class="line">  &quot;token&quot;: &quot;123456&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>验证成功后，Supabase 返回 session：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eyJhbGciOiJFUzI1NiIs...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bearer&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span> <span class="number">3600</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;v1.Mr...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> ... <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-第三步：客户端保存-Token"><a href="#5-4-第三步：客户端保存-Token" class="headerlink" title="5.4 第三步：客户端保存 Token"></a>5.4 第三步：客户端保存 Token</h3><p>前端通常把 session 保存在：</p>
+<ul>
+<li><code>localStorage</code></li>
+<li><code>sessionStorage</code></li>
+<li>Cookie（取决于配置）</li>
+</ul>
+<p><code>supabase-js</code> 默认存在 <code>localStorage</code>，键名类似 <code>sb-&lt;project-ref&gt;-auth-token</code>。</p>
+<h3 id="5-5-第四步：调用-TryBox-接口"><a href="#5-5-第四步：调用-TryBox-接口" class="headerlink" title="5.5 第四步：调用 TryBox 接口"></a>5.5 第四步：调用 TryBox 接口</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://trybox.app/_serverFn/5a020077...&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;Authorization&#x27;</span>: <span class="string">`Bearer <span class="subst">$&#123;accessToken&#125;</span>`</span>,</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;x-trybox-lang&#x27;</span>: <span class="string">&#x27;zh-CN&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; ... &#125;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>TryBox 服务端会：</p>
+<ol>
+<li>从 <code>Authorization</code> 头取出 JWT。</li>
+<li>用 Supabase 项目的公钥（JWKS）验证签名。</li>
+<li>检查 <code>exp</code>、<code>iss</code>、<code>aud</code>、<code>role</code> 等。</li>
+<li>确认用户身份后，返回播放地址等数据。</li>
+</ol>
+<h4 id="5-5-1-TanStack-Start-Server-Function-序列化格式解析"><a href="#5-5-1-TanStack-Start-Server-Function-序列化格式解析" class="headerlink" title="5.5.1 TanStack Start Server Function 序列化格式解析"></a>5.5.1 TanStack Start Server Function 序列化格式解析</h4><p>TryBox 使用 TanStack Start 框架，其 Server Function 的请求体不是普通 JSON，而是一种<strong>压缩序列化格式</strong>。以电视剧请求为例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;i&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;p&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;k&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;data&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;v&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;i&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;p&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;k&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;tmdb_id&quot;</span><span class="punctuation">,</span> <span class="string">&quot;kind&quot;</span><span class="punctuation">,</span> <span class="string">&quot;season&quot;</span><span class="punctuation">,</span> <span class="string">&quot;episode&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;v&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">              <span class="punctuation">&#123;</span> <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span> <span class="attr">&quot;s&quot;</span><span class="punctuation">:</span> <span class="number">299167</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="punctuation">&#123;</span> <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span> <span class="attr">&quot;s&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tv&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="punctuation">&#123;</span> <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span> <span class="attr">&quot;s&quot;</span><span class="punctuation">:</span> <span class="number">1</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="punctuation">&#123;</span> <span class="attr">&quot;t&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span> <span class="attr">&quot;s&quot;</span><span class="punctuation">:</span> <span class="number">5</span> <span class="punctuation">&#125;</span></span><br><span class="line">            <span class="punctuation">]</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;o&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;o&quot;</span><span class="punctuation">:</span> <span class="number">0</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;f&quot;</span><span class="punctuation">:</span> <span class="number">127</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;m&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>字段含义解析：</strong></p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>t</code></td>
+<td>Type，序列化类型标记</td>
+<td><code>0</code> &#x3D; 数字，<code>1</code> &#x3D; 字符串，<code>10</code> &#x3D; 对象，<code>11</code> &#x3D; 数组</td>
+</tr>
+<tr>
+<td><code>i</code></td>
+<td>Index，索引</td>
+<td>在同一层级中的位置标识</td>
+</tr>
+<tr>
+<td><code>p</code></td>
+<td>Payload，载荷</td>
+<td>对象&#x2F;数组的实际内容</td>
+</tr>
+<tr>
+<td><code>k</code></td>
+<td>Keys，键名数组</td>
+<td>对象的键名列表</td>
+</tr>
+<tr>
+<td><code>v</code></td>
+<td>Values，值数组</td>
+<td>与 <code>k</code> 一一对应的值列表</td>
+</tr>
+<tr>
+<td><code>s</code></td>
+<td>Scalar，标量值</td>
+<td>叶子节点的实际值</td>
+</tr>
+<tr>
+<td><code>o</code></td>
+<td>Order，排序标记</td>
+<td>用于保持键序，通常为 <code>0</code></td>
+</tr>
+<tr>
+<td><code>f</code></td>
+<td>Function ID</td>
+<td>Server Function 的标识符，<code>127</code> 对应目标函数</td>
+</tr>
+<tr>
+<td><code>m</code></td>
+<td>Middleware，中间件列表</td>
+<td>空数组表示无额外中间件</td>
+</tr>
+</tbody></table>
+<p><strong>反序列化后的等效 JSON：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tmdb_id&quot;</span><span class="punctuation">:</span> <span class="number">299167</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;kind&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tv&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;season&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;episode&quot;</span><span class="punctuation">:</span> <span class="number">5</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么用这种格式？</strong></p>
+<ol>
+<li><strong>压缩体积</strong>：相比普通 JSON，省略了引号、冒号、空格，减少网络传输量。</li>
+<li><strong>保留类型信息</strong>：<code>t</code> 字段显式标注类型，避免 <code>JSON.parse</code> 后的类型歧义（例如 <code>&quot;1&quot;</code> vs <code>1</code>）。</li>
+<li><strong>防篡改</strong>：框架层可校验序列化结构，拒绝畸形请求。</li>
+<li><strong>流式支持</strong>：适合 Server Function 的流式响应场景。</li>
+</ol>
+<p><strong>电影 vs 电视剧请求体的差异：</strong></p>
+<table>
+<thead>
+<tr>
+<th>请求类型</th>
+<th>字段</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>电影</td>
+<td><code>tmdb_id</code>、<code>kind: &quot;movie&quot;</code></td>
+</tr>
+<tr>
+<td>电视剧</td>
+<td><code>tmdb_id</code>、<code>kind: &quot;tv&quot;</code>、<code>season</code>、<code>episode</code></td>
+</tr>
+</tbody></table>
+<p>其他序列化标记（<code>t</code>、<code>i</code>、<code>p</code>、<code>k</code>、<code>v</code>、<code>o</code>、<code>f</code>、<code>m</code>）完全一致。接口根据 <code>kind</code> 选择对应的 URL 模板，返回相应季集的播放地址。</p>
+<p><strong>客户端是否需要手动构造？</strong></p>
+<p>不需要。如果使用 <code>@tanstack/react-start</code> 或 <code>@tanstack/start</code> 的 Server Function 调用 API，框架会自动序列化&#x2F;反序列化。只有在手动用 <code>curl</code> 或 <code>fetch</code> 直接调用时，才需要理解这个格式。</p>
+<p><strong>调试建议</strong>：</p>
+<ul>
+<li>用浏览器 DevTools 的 Network 面板查看实际请求体。</li>
+<li>用 <code>JSON.stringify</code> 打印前先 <code>JSON.parse</code> 反序列化，便于阅读。</li>
+<li>不要手动构造这种格式，容易出错；优先用框架提供的调用方法。</li>
+</ul>
+<h3 id="5-6-使用-supabase-js-的简化写法"><a href="#5-6-使用-supabase-js-的简化写法" class="headerlink" title="5.6 使用 supabase-js 的简化写法"></a>5.6 使用 supabase-js 的简化写法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&#x27;@supabase/supabase-js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> supabase = <span class="title function_">createClient</span>(</span><br><span class="line">  <span class="string">&#x27;https://saichcuwzbncuqnqhuul.supabase.co&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;&lt;anon key&gt;&#x27;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 发送 OTP</span></span><br><span class="line"><span class="keyword">await</span> supabase.<span class="property">auth</span>.<span class="title function_">signInWithOtp</span>(&#123; <span class="attr">email</span>: <span class="string">&#x27;wang_zi_mo@163.com&#x27;</span> &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 验证 OTP</span></span><br><span class="line"><span class="keyword">const</span> &#123; data, error &#125; = <span class="keyword">await</span> supabase.<span class="property">auth</span>.<span class="title function_">verifyOtp</span>(&#123;</span><br><span class="line">  <span class="attr">email</span>: <span class="string">&#x27;wang_zi_mo@163.com&#x27;</span>,</span><br><span class="line">  <span class="attr">token</span>: <span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">  <span class="attr">type</span>: <span class="string">&#x27;email&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 拿到 access_token</span></span><br><span class="line"><span class="keyword">const</span> accessToken = data.<span class="property">session</span>.<span class="property">access_token</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 调用 TryBox Server Function</span></span><br><span class="line"><span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://trybox.app/_serverFn/5a020077...&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;Authorization&#x27;</span>: <span class="string">`Bearer <span class="subst">$&#123;accessToken&#125;</span>`</span>,</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;x-trybox-lang&#x27;</span>: <span class="string">&#x27;zh-CN&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; ... &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="六、登录后-Authorization-是否”确定”了？"><a href="#六、登录后-Authorization-是否”确定”了？" class="headerlink" title="六、登录后 Authorization 是否”确定”了？"></a>六、登录后 Authorization 是否”确定”了？</h2><h3 id="6-1-登录成功那一刻确定了什么"><a href="#6-1-登录成功那一刻确定了什么" class="headerlink" title="6.1 登录成功那一刻确定了什么"></a>6.1 登录成功那一刻确定了什么</h3><p>用户通过 OTP 验证成功后，Supabase Auth 返回一个 session，包含：</p>
+<ul>
+<li><code>access_token</code>：JWT，即第一个 access token。</li>
+<li><code>refresh_token</code>：用于后续换新 token。</li>
+<li><code>expires_in</code>：通常 3600 秒。</li>
+<li><code>user</code>：用户信息。</li>
+</ul>
+<p>此时确定了：</p>
+<ul>
+<li>会话身份（<code>sub</code>、<code>role</code>、<code>session_id</code>、<code>amr.timestamp</code>）。</li>
+<li>初始 <code>access_token</code>。</li>
+<li><code>refresh_token</code>。</li>
+</ul>
+<h3 id="6-2-但-Authorization-头不是固定不变的"><a href="#6-2-但-Authorization-头不是固定不变的" class="headerlink" title="6.2 但 Authorization 头不是固定不变的"></a>6.2 但 Authorization 头不是固定不变的</h3><p><code>access_token</code> 有有效期，通常 1 小时。过期后，客户端会用 <code>refresh_token</code> 向 Supabase 请求新的 <code>access_token</code>。</p>
+<p>刷新后：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>是否变化</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>access_token</code></td>
+<td>变</td>
+<td>新的 JWT</td>
+</tr>
+<tr>
+<td><code>iat</code></td>
+<td>变</td>
+<td>新的签发时间</td>
+</tr>
+<tr>
+<td><code>exp</code></td>
+<td>变</td>
+<td>新的过期时间</td>
+</tr>
+<tr>
+<td>签名</td>
+<td>变</td>
+<td>因为内容变了</td>
+</tr>
+<tr>
+<td><code>refresh_token</code></td>
+<td><strong>变</strong></td>
+<td><strong>rotation 机制，旧的立即失效</strong></td>
+</tr>
+<tr>
+<td><code>session_id</code></td>
+<td>通常不变</td>
+<td>还是同一个登录会话</td>
+</tr>
+<tr>
+<td><code>amr.timestamp</code></td>
+<td>不变</td>
+<td>认证事件没有重新发生</td>
+</tr>
+<tr>
+<td><code>sub</code>、<code>email</code>、<code>role</code></td>
+<td>不变</td>
+<td>用户身份不变</td>
+</tr>
+</tbody></table>
+<p>因此：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">登录时: Authorization: <span class="keyword">Bearer </span>A</span><br><span class="line"><span class="number">1</span> 小时后刷新: Authorization: <span class="keyword">Bearer </span><span class="keyword">B</span></span><br><span class="line"><span class="keyword"></span>再 <span class="number">1</span> 小时后刷新: Authorization: <span class="keyword">Bearer </span>C</span><br></pre></td></tr></table></figure>
+
+<p>Authorization 头的值一直在变，但代表的还是同一个用户、同一个会话。</p>
+<h3 id="6-3-每次请求都是动态取当前-Token"><a href="#6-3-每次请求都是动态取当前-Token" class="headerlink" title="6.3 每次请求都是动态取当前 Token"></a>6.3 每次请求都是动态取当前 Token</h3><p><code>supabase-js</code> 会自动：</p>
+<ol>
+<li>检查 token 是否快过期。</li>
+<li>如果快过期，先用 <code>refresh_token</code> 刷新。</li>
+<li>把最新的 <code>access_token</code> 返回。</li>
+</ol>
+<p>所以 Authorization 头不是登录时写死的一个字符串，而是每次请求前根据当前会话状态动态生成的。</p>
+<h3 id="6-4-什么时候会真正”重新确定”"><a href="#6-4-什么时候会真正”重新确定”" class="headerlink" title="6.4 什么时候会真正”重新确定”"></a>6.4 什么时候会真正”重新确定”</h3><p>以下情况会生成全新的会话和 token：</p>
+<ul>
+<li>用户重新登录（重新输入 OTP）。</li>
+<li>用户登出后再登录。</li>
+<li>会话被服务端撤销。</li>
+<li><code>refresh_token</code> 失效或过期。</li>
+</ul>
+<p>这时：</p>
+<ul>
+<li>新的 <code>session_id</code> 生成。</li>
+<li>新的 <code>amr.timestamp</code>。</li>
+<li>新的 <code>refresh_token</code>。</li>
+<li>新的 <code>access_token</code> 序列。</li>
+</ul>
+<h3 id="6-5-时间线示例"><a href="#6-5-时间线示例" class="headerlink" title="6.5 时间线示例"></a>6.5 时间线示例</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">10:00 用户 OTP 登录成功</span><br><span class="line"><span class="code">      → access_token A, refresh_token R</span></span><br><span class="line"><span class="code">      → session_id = S1</span></span><br><span class="line"><span class="code">      → amr.timestamp = 10:00</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">10:05 请求 TryBox</span><br><span class="line"><span class="code">      → Authorization: Bearer A</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">10:55 access<span class="emphasis">_token A 快过期</span></span><br><span class="line"><span class="emphasis">      → 用 R 刷新</span></span><br><span class="line"><span class="emphasis">      → 得到 access_</span>token B, refresh<span class="emphasis">_token R&#x27;</span></span><br><span class="line"><span class="emphasis">      → session_</span>id 仍为 S1</span><br><span class="line"><span class="code">      → amr.timestamp 仍为 10:00</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">11:00 请求 TryBox</span><br><span class="line"><span class="code">      → Authorization: Bearer B</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">12:00 再次刷新</span><br><span class="line"><span class="code">      → access_token C</span></span><br><span class="line"><span class="code">      → session_id 仍为 S1</span></span><br><span class="line"><span class="code"></span></span><br><span class="line">次日 用户重新登录</span><br><span class="line"><span class="code">      → 新 session_id = S2</span></span><br><span class="line"><span class="code">      → 新 amr.timestamp</span></span><br><span class="line"><span class="code">      → 新 access_token D</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="七、access-token-与完整-JWT-的关系"><a href="#七、access-token-与完整-JWT-的关系" class="headerlink" title="七、access_token 与完整 JWT 的关系"></a>七、access_token 与完整 JWT 的关系</h2><h3 id="7-1-access-token-就是完整-JWT"><a href="#7-1-access-token-就是完整-JWT" class="headerlink" title="7.1 access_token 就是完整 JWT"></a>7.1 access_token 就是完整 JWT</h3><p>登录成功后拿到的 <code>access_token</code> 本身就是一个完整的 JWT，不需要再”进一步获取”。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;eyJhbGciOiJFUzI1NiIs...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;token_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;bearer&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span> <span class="number">3600</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;v1.Mr...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> ... <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><code>access_token</code>：完整的 JWT，格式为 <code>header.payload.signature</code>。</li>
+<li><code>refresh_token</code>：不是 JWT，是普通字符串，用于刷新。</li>
+</ul>
+<h4 id="7-1-1-id-token-与-access-token-的区别"><a href="#7-1-1-id-token-与-access-token-的区别" class="headerlink" title="7.1.1 id_token 与 access_token 的区别"></a>7.1.1 id_token 与 access_token 的区别</h4><p>在 Supabase 的 OIDC（OpenID Connect）模式下，登录成功后可能同时返回 <code>id_token</code> 和 <code>access_token</code>。两者都是 JWT，但用途和内容有本质区别：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>access_token</th>
+<th>id_token</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用途</td>
+<td><strong>调用 API</strong>（授权）</td>
+<td><strong>标识用户身份</strong>（认证）</td>
+</tr>
+<tr>
+<td>受众 <code>aud</code></td>
+<td>资源服务器（如 TryBox）</td>
+<td>客户端应用（如 TryBox 前端）</td>
+</tr>
+<tr>
+<td>使用位置</td>
+<td><code>Authorization: Bearer &lt;access_token&gt;</code></td>
+<td>通常只在前端解析，不发给业务服务</td>
+</tr>
+<tr>
+<td>是否发给第三方</td>
+<td>✅ 发给资源服务器</td>
+<td>❌ 不发给资源服务器</td>
+</tr>
+<tr>
+<td>有效期</td>
+<td>短（默认 1 小时）</td>
+<td>短（通常与 access_token 一致）</td>
+</tr>
+<tr>
+<td>是否可刷新</td>
+<td>✅ 用 refresh_token 刷新</td>
+<td>✅ 随 access_token 一起刷新</td>
+</tr>
+<tr>
+<td>包含用户信息</td>
+<td>部分（<code>sub</code>、<code>email</code> 等）</td>
+<td>完整（<code>name</code>、<code>picture</code>、<code>email_verified</code> 等）</td>
+</tr>
+<tr>
+<td>标准</td>
+<td>OAuth 2.0</td>
+<td>OIDC</td>
+</tr>
+<tr>
+<td>Supabase 默认返回</td>
+<td>✅ 总是返回</td>
+<td>⚠️ 仅在 OIDC 流程中返回</td>
+</tr>
+</tbody></table>
+<p><strong>在 TryBox 案例中：</strong></p>
+<ul>
+<li>你贴的 <code>Authorization: Bearer eyJhbGci...</code> 里的 token 是 <strong>access_token</strong>。</li>
+<li>它用于调用 TryBox 的 Server Function，TryBox 服务端验证它来确认用户身份。</li>
+<li><code>id_token</code> 如果存在，通常只用于前端显示用户信息（如头像、昵称），<strong>不会</strong>发给 TryBox 服务端。</li>
+</ul>
+<p><strong>两者的 JWT 结构对比：</strong></p>
+<p><strong>access_token 的 Payload（案例中的）：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;iss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://saichcuwzbncuqnqhuul.supabase.co/auth/v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;b5640d62-...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;aud&quot;</span><span class="punctuation">:</span> <span class="string">&quot;authenticated&quot;</span><span class="punctuation">,</span>          <span class="comment">// ← 受众是资源服务器</span></span><br><span class="line">  <span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1791710467</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;iat&quot;</span><span class="punctuation">:</span> <span class="number">1791706867</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;wang_zi_mo@163.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;authenticated&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;session_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;is_anonymous&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>id_token 的 Payload（典型）：</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;iss&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://saichcuwzbncuqnqhuul.supabase.co/auth/v1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span> <span class="string">&quot;b5640d62-...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;aud&quot;</span><span class="punctuation">:</span> <span class="string">&quot;your-client-id&quot;</span><span class="punctuation">,</span>         <span class="comment">// ← 受众是客户端应用</span></span><br><span class="line">  <span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1791710467</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;iat&quot;</span><span class="punctuation">:</span> <span class="number">1791706867</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span> <span class="string">&quot;wang_zi_mo@163.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;email_verified&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;王梓墨&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;picture&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://...&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;nonce&quot;</span><span class="punctuation">:</span> <span class="string">&quot;...&quot;</span>                   <span class="comment">// ← OIDC 防重放</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>关键区别：</strong></p>
+<ol>
+<li><p><strong><code>aud</code> 不同</strong>：</p>
+<ul>
+<li>access_token 的 <code>aud</code> 是 <code>authenticated</code>（资源服务器受众）。</li>
+<li>id_token 的 <code>aud</code> 是客户端应用 ID（client_id）。</li>
+</ul>
+</li>
+<li><p><strong>用途不同</strong>：</p>
+<ul>
+<li>access_token 用于<strong>授权</strong>：证明”你有权访问 TryBox”。</li>
+<li>id_token 用于<strong>认证</strong>：证明”你是谁”。</li>
+</ul>
+</li>
+<li><p><strong>接收方不同</strong>：</p>
+<ul>
+<li>access_token 发给 TryBox 服务端。</li>
+<li>id_token 只在前端使用，不发给服务端。</li>
+</ul>
+</li>
+<li><p><strong>包含信息不同</strong>：</p>
+<ul>
+<li>id_token 通常包含更完整的用户资料（姓名、头像等）。</li>
+<li>access_token 只包含必要的授权信息。</li>
+</ul>
+</li>
+</ol>
+<p><strong>Supabase 中的实际行为：</strong></p>
+<ul>
+<li>使用 <code>supabase.auth.signInWithOtp</code> 或 <code>verifyOtp</code> 时，返回的 <code>session</code> 中：<ul>
+<li>一定有 <code>access_token</code>。</li>
+<li>如果启用了 OIDC，可能也有 <code>id_token</code>（在 <code>session.id_token</code> 或 <code>data.id_token</code> 中）。</li>
+</ul>
+</li>
+<li>使用 <code>supabase.auth.getSession()</code> 获取的 session 通常只含 <code>access_token</code>。</li>
+<li>使用 <code>supabase.auth.getUser()</code> 可以获取完整用户信息（通过 access_token 调用 <code>/auth/v1/user</code> 端点）。</li>
+</ul>
+<p><strong>为什么容易混淆？</strong></p>
+<ul>
+<li>两者都是 JWT，都有三段结构。</li>
+<li>两者都由 Supabase 签发，<code>iss</code> 相同。</li>
+<li>两者的 <code>sub</code> 相同（都是同一个用户）。</li>
+<li>但 <code>aud</code> 不同，用途不同，接收方不同。</li>
+</ul>
+<p><strong>安全提醒：</strong></p>
+<ul>
+<li><strong>access_token 不能给第三方</strong>：它等同于登录态。</li>
+<li><strong>id_token 也不能随意公开</strong>：虽然用途不同，但它也包含用户身份信息，泄露可能导致隐私问题。</li>
+<li><strong>不要混用</strong>：不要把 id_token 当 access_token 用，反之亦然。TryBox 服务端只认 access_token。</li>
+</ul>
+<p><strong>如何区分你拿到的是哪个？</strong></p>
+<ol>
+<li><p>看 <code>aud</code> 字段：</p>
+<ul>
+<li><code>authenticated</code> → access_token。</li>
+<li>客户端 ID → id_token。</li>
+</ul>
+</li>
+<li><p>看使用位置：</p>
+<ul>
+<li><code>Authorization: Bearer</code> 头 → access_token。</li>
+<li>前端解析显示用户信息 → id_token。</li>
+</ul>
+</li>
+<li><p>看返回来源：</p>
+<ul>
+<li><code>session.access_token</code> → access_token。</li>
+<li><code>session.id_token</code> 或 <code>data.id_token</code> → id_token。</li>
+</ul>
+</li>
+</ol>
+<p><strong>结论：</strong></p>
+<ul>
+<li><code>access_token</code> 用于<strong>调用 API</strong>，受众是资源服务器，必须发给 TryBox。</li>
+<li><code>id_token</code> 用于<strong>标识用户</strong>，受众是客户端应用，只在前端使用。</li>
+<li>两者都是 JWT，但<strong>用途、受众、接收方</strong>不同，不能混用。</li>
+<li>TryBox 案例中，<code>Authorization: Bearer</code> 里的是 <code>access_token</code>，不是 <code>id_token</code>。</li>
+</ul>
+<h3 id="7-2-refresh-token-不是-JWT"><a href="#7-2-refresh-token-不是-JWT" class="headerlink" title="7.2 refresh_token 不是 JWT"></a>7.2 refresh_token 不是 JWT</h3><p><code>refresh_token</code> 通常长这样：</p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">v1.Mr...</span><br></pre></td></tr></table></figure>
+
+<p>它不是 JWT，不能直接放在 <code>Authorization: Bearer</code> 里。它的唯一用途是：当 <code>access_token</code> 过期后，向 Supabase 换取新的 <code>access_token</code>。</p>
+<h3 id="7-3-通过-access-token-还能做什么"><a href="#7-3-通过-access-token-还能做什么" class="headerlink" title="7.3 通过 access_token 还能做什么"></a>7.3 通过 access_token 还能做什么</h3><p>虽然 JWT 本身已经完整，但可以用 <code>access_token</code> 做更多事：</p>
+<p><strong>调用 Supabase 获取用户信息：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET https://saichcuwzbncuqnqhuul.supabase.co/auth/v1/user</span><br><span class="line"><span class="attribute">Authorization</span><span class="punctuation">: </span>Bearer &lt;access_token&gt;</span><br><span class="line"><span class="attribute">apikey</span><span class="punctuation">: </span>&lt;anon key&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>调用 TryBox 业务接口：</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POST https://trybox.app/_serverFn/...</span><br><span class="line"><span class="attribute">Authorization</span><span class="punctuation">: </span>Bearer &lt;access_token&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="八、Token-过期机制与-refresh-token-续期"><a href="#八、Token-过期机制与-refresh-token-续期" class="headerlink" title="八、Token 过期机制与 refresh_token 续期"></a>八、Token 过期机制与 refresh_token 续期</h2><h3 id="8-1-access-token-会过期"><a href="#8-1-access-token-会过期" class="headerlink" title="8.1 access_token 会过期"></a>8.1 access_token 会过期</h3><p><code>access_token</code> 会过期，这是 JWT 的固有设计，也是安全机制的一部分。案例中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;iat&quot;</span><span class="punctuation">:</span> <span class="number">1791706867</span></span><br><span class="line"><span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span> <span class="number">1791710467</span></span><br></pre></td></tr></table></figure>
+
+<p>差值正好是 3600 秒（1 小时），所以它 1 小时后就会失效。失效后，服务端会拒绝请求，通常返回 <strong>401 Unauthorized</strong>。</p>
+<h3 id="8-2-refresh-token-是一次性的（重要修正）"><a href="#8-2-refresh-token-是一次性的（重要修正）" class="headerlink" title="8.2 refresh_token 是一次性的（重要修正）"></a>8.2 refresh_token 是<strong>一次性</strong>的（重要修正）</h3><p><strong>这是全文最容易被误解、也最关键的修正点。</strong></p>
+<p>你的油猴脚本里有一条极其重要的注释：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// refresh 为一次性token,使用一次及失效，使用端在使用时会获取并推送新的值，</span></span><br><span class="line"><span class="comment">// 这里不能推送的原因是会把失效的token覆盖其他服务推送的新refreshtoken</span></span><br><span class="line"><span class="comment">// [&#x27;SET&#x27;, `$&#123;APP_PREFIX&#125;:token:refresh`, refreshToken],</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这是 Supabase 的 refresh token rotation（轮换）机制</strong>：</p>
+<ul>
+<li>每次用 refresh_token 换新 token 时，<strong>旧的 refresh_token 立即失效</strong>，Supabase 返回一个<strong>全新的 refresh_token</strong>。</li>
+<li>如果客户端推送的是”当前页面 localStorage 里的旧 refresh_token”，可能会覆盖掉其他服务&#x2F;其他标签页刚刚推送的<strong>新</strong> refresh_token，导致整个系统 refresh_token 失效。</li>
+<li>所以油猴脚本<strong>只推送 access_token，不推送 refresh_token</strong>。refresh_token 的更新由服务端脚本（<code>#!binbash.txt</code>）负责。</li>
+</ul>
+<p>**这解释了为什么系统要设计成”服务端集中管理 refresh_token”**：refresh_token 是单点的、一次性的、易失效的，必须由唯一权威来源管理。</p>
+<h3 id="8-3-refresh-token-生命周期对照表"><a href="#8-3-refresh-token-生命周期对照表" class="headerlink" title="8.3 refresh_token 生命周期对照表"></a>8.3 refresh_token 生命周期对照表</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否 JWT</td>
+<td>❌ 不是，是普通字符串（如 <code>v1.Mr...</code> 或 <code>axmnt7pfwkrx</code>）</td>
+</tr>
+<tr>
+<td>是否一次性</td>
+<td>✅ 是，Supabase 默认启用 rotation，用一次即失效</td>
+</tr>
+<tr>
+<td>谁管理</td>
+<td>服务端（<code>#!binbash.txt</code> 脚本），不由前端直接推送</td>
+</tr>
+<tr>
+<td>失效后</td>
+<td>必须重新登录，生成全新 session_id</td>
+</tr>
+<tr>
+<td>存储位置</td>
+<td>Redis + 本地 .env.local（双写）</td>
+</tr>
+</tbody></table>
+<h3 id="8-4-用-refresh-token-续期"><a href="#8-4-用-refresh-token-续期" class="headerlink" title="8.4 用 refresh_token 续期"></a>8.4 用 refresh_token 续期</h3><p>过期后，客户端需要拿 <code>refresh_token</code> 向 Supabase 换新的 <code>access_token</code>：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST https://saichcuwzbncuqnqhuul.supabase.co/auth/v1/token?grant_type=refresh_token</span><br><span class="line"><span class="attribute">apikey</span><span class="punctuation">: </span>&lt;anon key&gt;</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;refresh_token&quot;: &quot;v1.Mr...&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Supabase 返回新的 session：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;access_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;新的JWT&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;refresh_token&quot;</span><span class="punctuation">:</span> <span class="string">&quot;新的refresh_token&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;expires_in&quot;</span><span class="punctuation">:</span> <span class="number">3600</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;user&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> ... <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后客户端用新的 <code>access_token</code> 继续请求。</p>
+<h3 id="8-5-refresh-token-也会过期吗"><a href="#8-5-refresh-token-也会过期吗" class="headerlink" title="8.5 refresh_token 也会过期吗"></a>8.5 refresh_token 也会过期吗</h3><p>会。<code>refresh_token</code> 也有有效期，并且可以被撤销。具体时长取决于 Supabase 项目的配置，通常比 <code>access_token</code> 长很多。</p>
+<p>以下情况会让 <code>refresh_token</code> 失效：</p>
+<ul>
+<li>超过配置的有效期。</li>
+<li>用户主动登出。</li>
+<li>管理员撤销会话。</li>
+<li>检测到 refresh token 重用（如果启用了 rotation 和 reuse detection）。</li>
+<li>用户修改密码等安全事件。</li>
+</ul>
+<p>如果 <code>refresh_token</code> 也失效了，就无法再自动刷新，必须重新登录。</p>
+<h3 id="8-6-为什么设计成会过期"><a href="#8-6-为什么设计成会过期" class="headerlink" title="8.6 为什么设计成会过期"></a>8.6 为什么设计成会过期</h3><ul>
+<li><strong>限制泄露风险</strong>：<code>access_token</code> 一旦泄露，最多只能用 1 小时。</li>
+<li><strong>可撤销会话</strong>：服务端可以通过 <code>refresh_token</code> 撤销长期访问。</li>
+<li><strong>最小权限</strong>：短期凭证减少被滥用窗口。</li>
+<li><strong>符合 OAuth 2.0 &#x2F; OIDC 最佳实践</strong>。</li>
+</ul>
+<hr>
+<h2 id="九、Token-消费的六层降级链（核心设计）"><a href="#九、Token-消费的六层降级链（核心设计）" class="headerlink" title="九、Token 消费的六层降级链（核心设计）"></a>九、Token 消费的六层降级链（核心设计）</h2><p><code>#!binbash.txt</code> 开头有一段极其关键的注释，描述了 token 的完整消费流程。这是整个系统的核心设计，也是分布式系统中非常经典的”多级缓存 + 降级”模式。</p>
+<h3 id="9-1-完整流程图"><a href="#9-1-完整流程图" class="headerlink" title="9.1 完整流程图"></a>9.1 完整流程图</h3><figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">请求到达</span><br><span class="line">  │</span><br><span class="line">  ├─ <span class="number">1</span>. 内存缓存 → <span class="keyword">access</span> 有效？</span><br><span class="line">  │    ├─ 是 → 直接用</span><br><span class="line">  │    └─ 否 → 往下</span><br><span class="line">  │</span><br><span class="line">  ├─ <span class="number">2</span>. 用户配置的 access_token → 有效？</span><br><span class="line">  │    ├─ 是 → 缓存到内存 + 用</span><br><span class="line">  │    └─ 否 → 往下</span><br><span class="line">  │</span><br><span class="line">  ├─ <span class="number">3</span>. 读 Redis → <span class="keyword">access</span> 有效？</span><br><span class="line">  │    ├─ 是 → 缓存到内存 + 用</span><br><span class="line">  │    └─ 否 → 往下</span><br><span class="line">  │</span><br><span class="line">  ├─ <span class="number">4</span>. 用 refresh_token 刷新 Supabase</span><br><span class="line">  │    ├─ 成功 → 写内存 + 写 Redis + 用</span><br><span class="line">  │    └─ 失败 → 往下</span><br><span class="line">  │</span><br><span class="line">  ├─ <span class="number">5</span>. 用旧 access_token 刷新（降级）</span><br><span class="line">  │    ├─ 成功 → 写内存 + 写 Redis + 用</span><br><span class="line">  │    └─ 失败 → 往下</span><br><span class="line">  │</span><br><span class="line">  └─ <span class="number">6</span>. Bark 告警 → 返回空 token → 触发诊断 stream</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2-逐层剖析"><a href="#9-2-逐层剖析" class="headerlink" title="9.2 逐层剖析"></a>9.2 逐层剖析</h3><table>
+<thead>
+<tr>
+<th>层</th>
+<th>来源</th>
+<th>职责</th>
+<th>写回策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>内存缓存</td>
+<td>最快路径，命中即零延迟</td>
+<td>无需写回</td>
+</tr>
+<tr>
+<td>2</td>
+<td>用户配置</td>
+<td>允许用户手动覆盖（调试&#x2F;应急）</td>
+<td>命中后写内存</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Redis</td>
+<td>跨进程&#x2F;跨实例共享的持久化缓存</td>
+<td>命中后写内存</td>
+</tr>
+<tr>
+<td>4</td>
+<td>refresh_token 刷新</td>
+<td>标准续期路径</td>
+<td>写内存 + 写 Redis</td>
+</tr>
+<tr>
+<td>5</td>
+<td>旧 access_token 刷新（降级）</td>
+<td>refresh 失效时的兜底续期</td>
+<td>写内存 + 写 Redis</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Bark 告警 + 诊断 stream</td>
+<td>全部失败后通知运维</td>
+<td>返回空 token</td>
+</tr>
+</tbody></table>
+<p><strong>设计哲学</strong>：每一层都在”更快”和”更可靠”之间权衡。前 3 层是读取优化，第 4-5 层是写入&#x2F;续期，第 6 层是兜底告警。这比单纯用 <code>supabase-js</code> 自动刷新要健壮得多，适用于<strong>服务端多实例共享 token</strong> 的场景。</p>
+<h3 id="9-3-第-5-层”用旧-access-token-刷新”的特殊性"><a href="#9-3-第-5-层”用旧-access-token-刷新”的特殊性" class="headerlink" title="9.3 第 5 层”用旧 access_token 刷新”的特殊性"></a>9.3 第 5 层”用旧 access_token 刷新”的特殊性</h3><p>这是整个降级链中最容易被忽略、也最精妙的一层：</p>
+<ul>
+<li>标准路径是”refresh_token → 新的 access_token + 新的 refresh_token”。</li>
+<li>但如果 refresh_token 已经失效（比如被其他实例用过一次），标准路径就走不通。</li>
+<li>此时尝试用<strong>旧的 access_token</strong> 去换新的 token。Supabase 在某些场景下允许尚未过期的 access_token 触发刷新（具体取决于配置），这是最后的续期机会。</li>
+<li>成功则恢复；失败则进入告警层。</li>
+</ul>
+<h3 id="9-4-第-6-层：Bark-告警与诊断-stream"><a href="#9-4-第-6-层：Bark-告警与诊断-stream" class="headerlink" title="9.4 第 6 层：Bark 告警与诊断 stream"></a>9.4 第 6 层：Bark 告警与诊断 stream</h3><p><strong>Bark</strong> 是 iOS 上的一个开源推送工具（通过 HTTP API 推送到 iPhone）。这说明系统设计者：</p>
+<ul>
+<li>把 token 获取失败视为<strong>需要立即人工介入的严重事件</strong>。</li>
+<li>失败时推送手机通知，同时返回空 token。</li>
+<li>“诊断 stream” 可能是返回给客户端的一个特殊响应，用于排查问题。</li>
+</ul>
+<p><strong>这是可观测性（Observability）的良好实践</strong>：不是静默失败，而是主动告警 + 提供诊断入口。</p>
+<hr>
+<h2 id="十、双写策略：Redis-env-local-内存"><a href="#十、双写策略：Redis-env-local-内存" class="headerlink" title="十、双写策略：Redis + .env.local + 内存"></a>十、双写策略：Redis + .env.local + 内存</h2><h3 id="10-1-服务端脚本的双写逻辑"><a href="#10-1-服务端脚本的双写逻辑" class="headerlink" title="10.1 服务端脚本的双写逻辑"></a>10.1 服务端脚本的双写逻辑</h3><p><code>#!binbash.txt</code> 脚本中有两处关键更新：</p>
+<p><strong>更新 .env.local：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">awk -v ac=<span class="string">&quot;<span class="variable">$NEW_ACCESS</span>&quot;</span> -v re=<span class="string">&quot;<span class="variable">$REFRESH</span>&quot;</span> <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  /^ACCESS_TOKEN=/  &#123; print &quot;ACCESS_TOKEN=\&quot;&quot; ac&quot;\&quot;&quot;&#125;</span></span><br><span class="line"><span class="string">  /^REFRESH_TOKEN=/ &#123; print &quot;REFRESH_TOKEN=\&quot;&quot; re&quot;\&quot;&quot;; next &#125;</span></span><br><span class="line"><span class="string">  &#123; print &#125;</span></span><br><span class="line"><span class="string">&#x27;</span> .env.local &gt; .env.local.tmp &amp;&amp; <span class="built_in">mv</span> .env.local.tmp .env.local</span><br></pre></td></tr></table></figure>
+
+<p><strong>更新 Redis：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">WRITE_RESULT=$(curl -s <span class="string">&quot;<span class="variable">$UPSTASH_REDIS_REST_URL</span>/pipeline&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;Authorization: Bearer <span class="variable">$UPSTASH_REDIS_REST_TOKEN</span>&quot;</span> \</span><br><span class="line">  -H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span><br><span class="line">  -d <span class="string">&quot;[</span></span><br><span class="line"><span class="string">    [\&quot;SET\&quot;,\&quot;<span class="variable">$APP_PREFIX</span>:token:refresh\&quot;,\&quot;<span class="variable">$NEW_REFRESH</span>\&quot;],</span></span><br><span class="line"><span class="string">    [\&quot;SET\&quot;,\&quot;<span class="variable">$APP_PREFIX</span>:token:access\&quot;,\&quot;<span class="variable">$NEW_ACCESS</span>\&quot;]</span></span><br><span class="line"><span class="string">  ]&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-发现一个潜在-bug"><a href="#10-2-发现一个潜在-bug" class="headerlink" title="10.2 发现一个潜在 bug"></a>10.2 发现一个潜在 bug</h3><p><strong>注意这里的一个细节（也可能是 bug）</strong>：</p>
+<ul>
+<li><code>access_token</code> 写入的是 <code>$NEW_ACCESS</code>（刷新后的新值）✅</li>
+<li><code>refresh_token</code> 写入的是 <code>$REFRESH</code>（<strong>刷新前的旧值</strong>）❌</li>
+</ul>
+<p>这看起来是个<strong>潜在 bug</strong>：因为 Supabase 返回了 <code>NEW_REFRESH</code>，但 <code>.env.local</code> 写入的是旧的 <code>$REFRESH</code>。而 Redis 写入的是正确的 <code>$NEW_REFRESH</code>。</p>
+<p><strong>可能的原因</strong>：</p>
+<ol>
+<li>作者有意为之：<code>.env.local</code> 只作为本地参考，真实 refresh_token 以 Redis 为准。</li>
+<li>疏忽：忘记改成 <code>$NEW_REFRESH</code>。</li>
+</ol>
+<p><strong>建议修正</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">awk -v ac=<span class="string">&quot;<span class="variable">$NEW_ACCESS</span>&quot;</span> -v re=<span class="string">&quot;<span class="variable">$NEW_REFRESH</span>&quot;</span> <span class="string">&#x27;</span></span><br><span class="line"><span class="string">  /^ACCESS_TOKEN=/  &#123; print &quot;ACCESS_TOKEN=\&quot;&quot; ac&quot;\&quot;&quot;&#125;</span></span><br><span class="line"><span class="string">  /^REFRESH_TOKEN=/ &#123; print &quot;REFRESH_TOKEN=\&quot;&quot; re&quot;\&quot;&quot;; next &#125;</span></span><br><span class="line"><span class="string">  &#123; print &#125;</span></span><br><span class="line"><span class="string">&#x27;</span> .env.local &gt; .env.local.tmp &amp;&amp; <span class="built_in">mv</span> .env.local.tmp .env.local</span><br></pre></td></tr></table></figure>
+
+<p>同时，脚本中 Redis 写入用 <code>$NEW_REFRESH</code> 是<strong>正确的</strong>。</p>
+<h3 id="10-3-另一处健壮性问题"><a href="#10-3-另一处健壮性问题" class="headerlink" title="10.3 另一处健壮性问题"></a>10.3 另一处健壮性问题</h3><p>脚本对 <code>READ_RESULT</code> 的判断有 bug：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$READ_RESULT</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;❌ Redis 中没有 refresh_token&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这个判断不充分</strong>。<code>READ_RESULT</code> 即使 Redis 里没值也会是 <code>[&#123;&quot;result&quot;:null&#125;]</code>，不是空字符串。正确判断应该是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">REFRESH=$(<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$READ_RESULT</span>&quot;</span> | python3 -c <span class="string">&quot;</span></span><br><span class="line"><span class="string">import json, sys</span></span><br><span class="line"><span class="string">d = json.load(sys.stdin)</span></span><br><span class="line"><span class="string">v = d[0][&#x27;result&#x27;]</span></span><br><span class="line"><span class="string">if v is None:</span></span><br><span class="line"><span class="string">    print(&#x27;&#x27;)</span></span><br><span class="line"><span class="string">else:</span></span><br><span class="line"><span class="string">    try:</span></span><br><span class="line"><span class="string">        print(json.loads(v))</span></span><br><span class="line"><span class="string">    except:</span></span><br><span class="line"><span class="string">        print(v)</span></span><br><span class="line"><span class="string">&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ -z <span class="string">&quot;<span class="variable">$REFRESH</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;❌ Redis 中没有 refresh_token&quot;</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>即：应该判断解析后的 <code>$REFRESH</code> 是否为空，而不是原始的 <code>$READ_RESULT</code>。</strong></p>
+<h3 id="10-4-建议增加备份"><a href="#10-4-建议增加备份" class="headerlink" title="10.4 建议增加备份"></a>10.4 建议增加备份</h3><p><code>.env.local</code> 覆盖前建议先备份：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> .env.local .env.local.bak.$(<span class="built_in">date</span> +%s)</span><br></pre></td></tr></table></figure>
+
+<p>否则一旦脚本出错，会永久丢失旧 token。</p>
+<h3 id="10-5-双写策略总结"><a href="#10-5-双写策略总结" class="headerlink" title="10.5 双写策略总结"></a>10.5 双写策略总结</h3><table>
+<thead>
+<tr>
+<th>存储</th>
+<th>写什么</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Redis</td>
+<td>新的 access + 新的 refresh</td>
+<td>权威来源，多实例共享</td>
+</tr>
+<tr>
+<td>.env.local</td>
+<td>新的 access + 旧 refresh（疑似 bug）</td>
+<td>本地备份&#x2F;调试</td>
+</tr>
+<tr>
+<td>内存缓存</td>
+<td>新的 access</td>
+<td>最快路径</td>
+</tr>
+<tr>
+<td>油猴脚本</td>
+<td>只写 access</td>
+<td>避免覆盖 refresh</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十一、油猴脚本：前端侧-Token-捕获"><a href="#十一、油猴脚本：前端侧-Token-捕获" class="headerlink" title="十一、油猴脚本：前端侧 Token 捕获"></a>十一、油猴脚本：前端侧 Token 捕获</h2><h3 id="11-1-脚本核心思路：重写-localStorage-setItem"><a href="#11-1-脚本核心思路：重写-localStorage-setItem" class="headerlink" title="11.1 脚本核心思路：重写 localStorage.setItem"></a>11.1 脚本核心思路：重写 localStorage.setItem</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> originalSetItem = <span class="variable language_">localStorage</span>.<span class="property">setItem</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">localStorage</span>.<span class="property">setItem</span> = <span class="keyword">function</span> (<span class="params">key, value</span>) &#123;</span><br><span class="line">  originalSetItem.<span class="title function_">call</span>(<span class="variable language_">localStorage</span>, key, value);  <span class="comment">// 先执行原逻辑</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (key === <span class="variable constant_">TARGET_KEY</span>) &#123;  <span class="comment">// &#x27;sb-trybox-auth-token&#x27;</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;🔔 捕获到 sb-trybox-auth-token 更新！&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> authObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(value);</span><br><span class="line">    <span class="keyword">const</span> &#123; access_token, refresh_token &#125; = authObj;</span><br><span class="line">    <span class="title function_">handleToken</span>(access_token, refresh_token, <span class="string">&#x27;auto&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-2-设计意图"><a href="#11-2-设计意图" class="headerlink" title="11.2 设计意图"></a>11.2 设计意图</h3><ol>
+<li><strong>被动捕获</strong>：Supabase JS SDK 每次登录&#x2F;刷新都会调用 <code>localStorage.setItem(&#39;sb-trybox-auth-token&#39;, JSON)</code>，钩子自动捕获。</li>
+<li><strong>自动推送</strong>：<code>AUTO_PUSH = true</code> 时，捕获后立即推送到 Upstash。</li>
+<li><strong>绕过 CORS</strong>：用 <code>GM_xmlhttpRequest</code> 而非 <code>fetch</code>，因为油猴脚本的跨域权限更宽松。</li>
+<li><strong>兜底手动按钮</strong>：悬浮按钮 <code>Get Trybox Tokens</code>，用户可以手动触发一次读取。</li>
+<li><strong>不推 refresh</strong>：避免覆盖其他服务推送的新 refresh_token。</li>
+</ol>
+<h3 id="11-3-关键代码：只推送-access-token"><a href="#11-3-关键代码：只推送-access-token" class="headerlink" title="11.3 关键代码：只推送 access_token"></a>11.3 关键代码：只推送 access_token</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> body = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>([</span><br><span class="line">  [<span class="string">&#x27;SET&#x27;</span>, <span class="string">`<span class="subst">$&#123;APP_PREFIX&#125;</span>:token:access`</span>, accessToken],</span><br><span class="line">  <span class="comment">// refresh 为一次性token,使用一次及失效，使用端在使用时会获取并推送新的值，</span></span><br><span class="line">  <span class="comment">// 这里不能推送的原因是会把失效的token覆盖其他服务推送的新refreshtoken</span></span><br><span class="line">  <span class="comment">// [&#x27;SET&#x27;, `$&#123;APP_PREFIX&#125;:token:refresh`, refreshToken],</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<p><strong>这是一个”客户端采集 + 服务端集中管理”的经典架构</strong>。适合：</p>
+<ul>
+<li>用户端不方便长期运行服务进程。</li>
+<li>想让多个后端服务共享同一份 token。</li>
+<li>需要”借用户浏览器”作为 token 获取渠道。</li>
+</ul>
+<h3 id="11-4-手动兜底读取"><a href="#11-4-手动兜底读取" class="headerlink" title="11.4 手动兜底读取"></a>11.4 手动兜底读取</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getCurrentToken</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> rawStr = <span class="variable language_">localStorage</span>.<span class="title function_">getItem</span>(<span class="variable constant_">TARGET_KEY</span>);</span><br><span class="line">  <span class="keyword">if</span> (!rawStr) &#123;</span><br><span class="line">    <span class="title function_">showToast</span>(<span class="string">&#x27;❌ 当前 localStorage 无 &#x27;</span> + <span class="variable constant_">TARGET_KEY</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> authObj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(rawStr);</span><br><span class="line">  <span class="keyword">const</span> &#123; access_token, refresh_token &#125; = authObj;</span><br><span class="line">  <span class="title function_">handleToken</span>(access_token, refresh_token, <span class="string">&#x27;manual&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配合悬浮按钮：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> btn = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;button&#x27;</span>);</span><br><span class="line">btn.<span class="property">innerText</span> = <span class="string">&#x27;Get Trybox Tokens&#x27;</span>;</span><br><span class="line"><span class="comment">// ...样式...</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(btn);</span><br><span class="line">btn.<span class="property">onclick</span> = getCurrentToken;</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-5-安全注意"><a href="#11-5-安全注意" class="headerlink" title="11.5 安全注意"></a>11.5 安全注意</h3><p>油猴脚本能读取 localStorage，意味着它能读取所有同源数据，需谨慎授予权限。建议只在可信环境安装，并定期审查脚本内容。</p>
+<hr>
+<h2 id="十二、Bark-告警与可观测性"><a href="#十二、Bark-告警与可观测性" class="headerlink" title="十二、Bark 告警与可观测性"></a>十二、Bark 告警与可观测性</h2><h3 id="12-1-告警触发点"><a href="#12-1-告警触发点" class="headerlink" title="12.1 告警触发点"></a>12.1 告警触发点</h3><p>如第九章所述，当六层降级链全部失败时，触发 Bark 告警：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">└─ <span class="number">6.</span> Bark 告警 → 返回空 <span class="built_in">token</span> → 触发诊断 stream</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-2-设计意义"><a href="#12-2-设计意义" class="headerlink" title="12.2 设计意义"></a>12.2 设计意义</h3><ul>
+<li><strong>主动通知</strong>：不是静默失败，而是立即推送到运维人员手机。</li>
+<li><strong>提供诊断入口</strong>：返回空 token 并触发诊断 stream，便于排查具体是哪一层出了问题。</li>
+<li><strong>P0 事件定位</strong>：token 失效意味着整个业务链路中断，必须最高优先级处理。</li>
+</ul>
+<h3 id="12-3-可观测性实践建议"><a href="#12-3-可观测性实践建议" class="headerlink" title="12.3 可观测性实践建议"></a>12.3 可观测性实践建议</h3><table>
+<thead>
+<tr>
+<th>实践</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分层打点</td>
+<td>每一层命中&#x2F;未命中都记录日志，便于定位</td>
+</tr>
+<tr>
+<td>告警分级</td>
+<td>token 刷新失败 &#x3D; P0；缓存未命中 &#x3D; P3</td>
+</tr>
+<tr>
+<td>诊断 stream</td>
+<td>返回结构化的失败原因，而非只有空 token</td>
+</tr>
+<tr>
+<td>环境区分</td>
+<td>本地开发时避免触发生产告警</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十三、工程实践：Node-js-supabase-js-实现自动刷新与持续获取-Stream"><a href="#十三、工程实践：Node-js-supabase-js-实现自动刷新与持续获取-Stream" class="headerlink" title="十三、工程实践：Node.js + supabase-js 实现自动刷新与持续获取 Stream"></a>十三、工程实践：Node.js + supabase-js 实现自动刷新与持续获取 Stream</h2><h3 id="13-1-场景说明"><a href="#13-1-场景说明" class="headerlink" title="13.1 场景说明"></a>13.1 场景说明</h3><p>用户提供了一个完整的 Supabase session JSON，包含 <code>access_token</code>、<code>refresh_token</code>、<code>user</code> 等信息，希望：</p>
+<ol>
+<li>使用 <code>@supabase/supabase-js</code> 初始化客户端。</li>
+<li>将已有的 session 导入。</li>
+<li>实现自动刷新 Token。</li>
+<li>持续获取 TryBox 的 stream 数据。</li>
+</ol>
+<h3 id="13-2-安装依赖"><a href="#13-2-安装依赖" class="headerlink" title="13.2 安装依赖"></a>13.2 安装依赖</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @supabase/supabase-js</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>package.json</code> 中添加 <code>&quot;type&quot;: &quot;module&quot;</code> 以消除 ESM 警告：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;trybox&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;module&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;@supabase/supabase-js&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^2.x&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>或者</strong>把文件重命名为 <code>author.mjs</code>，显式声明 ESM。</p>
+<h3 id="13-3-完整实现代码"><a href="#13-3-完整实现代码" class="headerlink" title="13.3 完整实现代码"></a>13.3 完整实现代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// author.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; createClient &#125; <span class="keyword">from</span> <span class="string">&#x27;@supabase/supabase-js&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 配置区 ==========</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">SUPABASE_URL</span> = <span class="string">&#x27;https://saichcuwzbncuqnqhuul.supabase.co&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">SUPABASE_ANON_KEY</span> = <span class="string">&#x27;你的Supabase anon key&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 已有的 session JSON</span></span><br><span class="line"><span class="keyword">const</span> sessionJson = &#123;</span><br><span class="line">  <span class="string">&quot;access_token&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  <span class="string">&quot;token_type&quot;</span>: <span class="string">&quot;bearer&quot;</span>,</span><br><span class="line">  <span class="string">&quot;expires_in&quot;</span>: <span class="number">3600</span>,</span><br><span class="line">  <span class="string">&quot;expires_at&quot;</span>: <span class="number">1791716034</span>,</span><br><span class="line">  <span class="string">&quot;refresh_token&quot;</span>: <span class="string">&quot;axmnt7pfwkrx&quot;</span>,</span><br><span class="line">  <span class="string">&quot;user&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;id&quot;</span>: <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span>,</span><br><span class="line">    <span class="string">&quot;aud&quot;</span>: <span class="string">&quot;authenticated&quot;</span>,</span><br><span class="line">    <span class="string">&quot;role&quot;</span>: <span class="string">&quot;authenticated&quot;</span>,</span><br><span class="line">    <span class="string">&quot;email&quot;</span>: <span class="string">&quot;wang_zi_mo@163.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;email_confirmed_at&quot;</span>: <span class="string">&quot;2026-10-10T04:29:48.976394Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;phone&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;confirmed_at&quot;</span>: <span class="string">&quot;2026-10-10T04:29:48.976394Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;recovery_sent_at&quot;</span>: <span class="string">&quot;2026-10-11T09:53:37.334373Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;last_sign_in_at&quot;</span>: <span class="string">&quot;2026-10-11T09:53:54.292465767Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;app_metadata&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;provider&quot;</span>: <span class="string">&quot;email&quot;</span>,</span><br><span class="line">      <span class="string">&quot;providers&quot;</span>: [<span class="string">&quot;email&quot;</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;user_metadata&quot;</span>: &#123;</span><br><span class="line">      <span class="string">&quot;email&quot;</span>: <span class="string">&quot;wang_zi_mo@163.com&quot;</span>,</span><br><span class="line">      <span class="string">&quot;email_verified&quot;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&quot;phone_verified&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="string">&quot;sub&quot;</span>: <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;identities&quot;</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">&quot;identity_id&quot;</span>: <span class="string">&quot;bfcd2acd-4262-439e-8b1c-58955a5c535d&quot;</span>,</span><br><span class="line">        <span class="string">&quot;id&quot;</span>: <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span>,</span><br><span class="line">        <span class="string">&quot;user_id&quot;</span>: <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span>,</span><br><span class="line">        <span class="string">&quot;identity_data&quot;</span>: &#123;</span><br><span class="line">          <span class="string">&quot;email&quot;</span>: <span class="string">&quot;wang_zi_mo@163.com&quot;</span>,</span><br><span class="line">          <span class="string">&quot;email_verified&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="string">&quot;phone_verified&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">          <span class="string">&quot;sub&quot;</span>: <span class="string">&quot;b5640d62-f7a3-4d2a-b520-dbf28ec417b0&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&quot;provider&quot;</span>: <span class="string">&quot;email&quot;</span>,</span><br><span class="line">        <span class="string">&quot;last_sign_in_at&quot;</span>: <span class="string">&quot;2026-10-10T04:29:48.970701Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;created_at&quot;</span>: <span class="string">&quot;2026-10-10T04:29:48.97076Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;updated_at&quot;</span>: <span class="string">&quot;2026-10-10T04:29:48.97076Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;email&quot;</span>: <span class="string">&quot;wang_zi_mo@163.com&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;created_at&quot;</span>: <span class="string">&quot;2026-10-10T04:29:48.96366Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;updated_at&quot;</span>: <span class="string">&quot;2026-10-11T09:53:54.300029Z&quot;</span>,</span><br><span class="line">    <span class="string">&quot;is_anonymous&quot;</span>: <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 初始化 Supabase ==========</span></span><br><span class="line"><span class="keyword">const</span> supabase = <span class="title function_">createClient</span>(<span class="variable constant_">SUPABASE_URL</span>, <span class="variable constant_">SUPABASE_ANON_KEY</span>, &#123;</span><br><span class="line">  <span class="attr">auth</span>: &#123;</span><br><span class="line">    <span class="attr">autoRefreshToken</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">persistSession</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">detectSessionInUrl</span>: <span class="literal">false</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 导入已有 session ==========</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">loadSession</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; data, error &#125; = <span class="keyword">await</span> supabase.<span class="property">auth</span>.<span class="title function_">setSession</span>(&#123;</span><br><span class="line">    <span class="attr">access_token</span>: sessionJson.<span class="property">access_token</span>,</span><br><span class="line">    <span class="attr">refresh_token</span>: sessionJson.<span class="property">refresh_token</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;❌ 导入 session 失败:&#x27;</span>, error.<span class="property">message</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;✅ Session 导入成功&#x27;</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;用户:&#x27;</span>, data.<span class="property">user</span>?.<span class="property">email</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;access_token 前 60 字符:&#x27;</span>, data.<span class="property">session</span>?.<span class="property">access_token</span>?.<span class="title function_">slice</span>(<span class="number">0</span>, <span class="number">60</span>) + <span class="string">&#x27;...&#x27;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 获取当前有效 token（带单例锁） ==========</span></span><br><span class="line"><span class="keyword">let</span> refreshPromise = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getValidAccessToken</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; <span class="attr">data</span>: &#123; session &#125;, error &#125; = <span class="keyword">await</span> supabase.<span class="property">auth</span>.<span class="title function_">getSession</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (error || !session) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;❌ 无有效 session:&#x27;</span>, error?.<span class="property">message</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 用 expires_at 判断，更稳定</span></span><br><span class="line">  <span class="keyword">const</span> expiresAtMs = session.<span class="property">expires_at</span> * <span class="number">1000</span>;</span><br><span class="line">  <span class="keyword">const</span> remaining = expiresAtMs - <span class="title class_">Date</span>.<span class="title function_">now</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (remaining &gt; <span class="number">60_000</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> session.<span class="property">access_token</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 已有刷新在进行中，复用同一个 Promise</span></span><br><span class="line">  <span class="keyword">if</span> (!refreshPromise) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;⏳ Token 即将过期，主动刷新...&#x27;</span>);</span><br><span class="line">    refreshPromise = supabase.<span class="property">auth</span>.<span class="title function_">refreshSession</span>()</span><br><span class="line">      .<span class="title function_">finally</span>(<span class="function">() =&gt;</span> &#123; refreshPromise = <span class="literal">null</span>; &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> &#123; data, <span class="attr">error</span>: refreshError &#125; = <span class="keyword">await</span> refreshPromise;</span><br><span class="line">  <span class="keyword">if</span> (refreshError) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;❌ 刷新失败:&#x27;</span>, refreshError.<span class="property">message</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> data.<span class="property">session</span>.<span class="property">access_token</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 调用 TryBox 接口 ==========</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">fetchStream</span>(<span class="params">tmdbId, kind, season, episode</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> accessToken = <span class="keyword">await</span> <span class="title function_">getValidAccessToken</span>();</span><br><span class="line">  <span class="keyword">if</span> (!accessToken) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;❌ 无法获取有效 token&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> body = &#123;</span><br><span class="line">    <span class="attr">t</span>: &#123;</span><br><span class="line">      <span class="attr">t</span>: <span class="number">10</span>,</span><br><span class="line">      <span class="attr">i</span>: <span class="number">0</span>,</span><br><span class="line">      <span class="attr">p</span>: &#123;</span><br><span class="line">        <span class="attr">k</span>: [<span class="string">&quot;data&quot;</span>],</span><br><span class="line">        <span class="attr">v</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">t</span>: <span class="number">10</span>,</span><br><span class="line">            <span class="attr">i</span>: <span class="number">1</span>,</span><br><span class="line">            <span class="attr">p</span>: &#123;</span><br><span class="line">              <span class="attr">k</span>: [<span class="string">&quot;tmdb_id&quot;</span>, <span class="string">&quot;kind&quot;</span>, <span class="string">&quot;season&quot;</span>, <span class="string">&quot;episode&quot;</span>],</span><br><span class="line">              <span class="attr">v</span>: [</span><br><span class="line">                &#123; <span class="attr">t</span>: <span class="number">0</span>, <span class="attr">s</span>: tmdbId &#125;,</span><br><span class="line">                &#123; <span class="attr">t</span>: <span class="number">1</span>, <span class="attr">s</span>: kind &#125;,</span><br><span class="line">                &#123; <span class="attr">t</span>: <span class="number">0</span>, <span class="attr">s</span>: season &#125;,</span><br><span class="line">                &#123; <span class="attr">t</span>: <span class="number">0</span>, <span class="attr">s</span>: episode &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">o</span>: <span class="number">0</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">o</span>: <span class="number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">f</span>: <span class="number">127</span>,</span><br><span class="line">    <span class="attr">m</span>: []</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://trybox.app/_serverFn/5a020077e9367d29abeab1946108104517a066628ad6d94609eea11918105012&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;Authorization&#x27;</span>: <span class="string">`Bearer <span class="subst">$&#123;accessToken&#125;</span>`</span>,</span><br><span class="line">      <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;x-trybox-lang&#x27;</span>: <span class="string">&#x27;zh-CN&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(body),</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!res.<span class="property">ok</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`❌ 请求失败: HTTP <span class="subst">$&#123;res.status&#125;</span>`</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="keyword">await</span> res.<span class="title function_">text</span>());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> res.<span class="title function_">json</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 持续获取 Stream ==========</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">startStreamLoop</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> ok = <span class="keyword">await</span> <span class="title function_">loadSession</span>();</span><br><span class="line">  <span class="keyword">if</span> (!ok) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 示例：获取剧集 S1E5</span></span><br><span class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetchStream</span>(<span class="number">299167</span>, <span class="string">&#x27;tv&#x27;</span>, <span class="number">1</span>, <span class="number">5</span>);</span><br><span class="line">  <span class="keyword">if</span> (data) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;✅ 获取 stream 成功:&#x27;</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data, <span class="literal">null</span>, <span class="number">2</span>));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时刷新示例：每 50 分钟刷新一次</span></span><br><span class="line">  <span class="built_in">setInterval</span>(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;🔄 定时刷新 token...&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> &#123; data, error &#125; = <span class="keyword">await</span> supabase.<span class="property">auth</span>.<span class="title function_">refreshSession</span>();</span><br><span class="line">    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;❌ 定时刷新失败:&#x27;</span>, error.<span class="property">message</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;✅ Token 已刷新，新 expires_at:&#x27;</span>, data.<span class="property">session</span>.<span class="property">expires_at</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="number">50</span> * <span class="number">60</span> * <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========== 启动 ==========</span></span><br><span class="line"><span class="title function_">startStreamLoop</span>().<span class="title function_">catch</span>(<span class="variable language_">console</span>.<span class="property">error</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="13-4-关键点说明"><a href="#13-4-关键点说明" class="headerlink" title="13.4 关键点说明"></a>13.4 关键点说明</h3><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>实现方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>导入已有 session</td>
+<td><code>supabase.auth.setSession(&#123; access_token, refresh_token &#125;)</code></td>
+</tr>
+<tr>
+<td>自动刷新</td>
+<td><code>createClient</code> 时设置 <code>autoRefreshToken: true</code></td>
+</tr>
+<tr>
+<td>手动刷新</td>
+<td><code>supabase.auth.refreshSession()</code></td>
+</tr>
+<tr>
+<td>获取当前 token</td>
+<td><code>supabase.auth.getSession()</code></td>
+</tr>
+<tr>
+<td>过期判断</td>
+<td>用 <code>session.expires_at * 1000</code> 与 <code>Date.now()</code> 比较</td>
+</tr>
+<tr>
+<td>并发刷新保护</td>
+<td><code>refreshPromise</code> 单例锁，复用进行中的刷新</td>
+</tr>
+<tr>
+<td>调用 TryBox</td>
+<td><code>fetch</code> + <code>Authorization: Bearer &lt;token&gt;</code></td>
+</tr>
+<tr>
+<td>持续获取 stream</td>
+<td>定时器 + 每次请求前检查 token 有效性</td>
+</tr>
+</tbody></table>
+<h3 id="13-5-常见错误处理"><a href="#13-5-常见错误处理" class="headerlink" title="13.5 常见错误处理"></a>13.5 常见错误处理</h3><p><strong>错误：<code>Cannot find package &#39;@supabase/supabase-js&#39;</code></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @supabase/supabase-js</span><br></pre></td></tr></table></figure>
+
+<p><strong>错误：<code>MODULE_TYPELESS_PACKAGE_JSON</code></strong></p>
+<p>在 <code>package.json</code> 中添加：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;module&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>错误：<code>access_token</code> 为空</strong></p>
+<p>检查 <code>setSession</code> 时传入的 <code>access_token</code> 和 <code>refresh_token</code> 是否完整。如果 <code>access_token</code> 为空，Supabase 会尝试用 <code>refresh_token</code> 刷新，但如果 <code>refresh_token</code> 也无效，则会失败。</p>
+<hr>
+<h2 id="十四、难点剖析与思考"><a href="#十四、难点剖析与思考" class="headerlink" title="十四、难点剖析与思考"></a>十四、难点剖析与思考</h2><h3 id="14-1-JWT-的无状态性与撤销难题"><a href="#14-1-JWT-的无状态性与撤销难题" class="headerlink" title="14.1 JWT 的无状态性与撤销难题"></a>14.1 JWT 的无状态性与撤销难题</h3><p>JWT 是自包含的，服务端验证时不需要查询数据库。但这带来了一个难题：<strong>如何撤销一个尚未过期的 JWT？</strong></p>
+<p>Supabase 的解决方案是：</p>
+<ul>
+<li><code>access_token</code> 短期有效（1 小时），减少撤销需求。</li>
+<li><code>refresh_token</code> 长期有效但可撤销，登出时服务端使 <code>session_id</code> 失效。</li>
+<li>如果强制下线，服务端可以撤销 <code>refresh_token</code>，但已签发的 <code>access_token</code> 在过期前仍然有效。</li>
+</ul>
+<p>这是一个权衡：无状态带来性能优势，但有状态才能精确控制撤销。</p>
+<h3 id="14-2-时间戳的服务器权威性"><a href="#14-2-时间戳的服务器权威性" class="headerlink" title="14.2 时间戳的服务器权威性"></a>14.2 时间戳的服务器权威性</h3><p>JWT 中的 <code>iat</code>、<code>exp</code>、<code>amr.timestamp</code> 全部由服务器生成，客户端无法篡改。这保证了：</p>
+<ul>
+<li>即使用户本地时间不准，Token 的有效期判断仍然准确。</li>
+<li>认证事件的时间记录可信，可用于审计。</li>
+<li>防止客户端通过修改时间戳来延长 Token 有效期。</li>
+</ul>
+<h3 id="14-3-Token-刷新与并发请求"><a href="#14-3-Token-刷新与并发请求" class="headerlink" title="14.3 Token 刷新与并发请求"></a>14.3 Token 刷新与并发请求</h3><p>在高并发场景下，多个请求可能同时发现 Token 即将过期，然后同时发起刷新请求。这可能导致：</p>
+<ul>
+<li>多个刷新请求同时到达 Supabase。</li>
+<li>由于 <strong>refresh_token 是一次性的</strong>，第一次刷新后旧的 refresh_token 失效，导致后续刷新失败。</li>
+<li>整个系统 refresh_token 失效，必须重新登录。</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li><strong>单例锁</strong>：使用 Promise 单例，确保同一时间只有一个刷新请求。</li>
+<li><strong>分布式锁</strong>：多实例场景下，用 Redis 的 <code>SET NX EX</code> 实现分布式锁。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET tryboxStream:refresh:lock <span class="string">&quot;1&quot;</span> NX EX 10</span><br></pre></td></tr></table></figure>
+
+<p>谁拿到锁，谁负责刷新；拿不到锁的实例等待并读取刷新后的新 token。</p>
+<ul>
+<li><code>supabase-js</code> 内部已经处理了单进程内的这个问题，它会复用正在进行的刷新 Promise。</li>
+</ul>
+<h3 id="14-4-安全性思考"><a href="#14-4-安全性思考" class="headerlink" title="14.4 安全性思考"></a>14.4 安全性思考</h3><ul>
+<li><strong>access_token 是 Bearer Token</strong>：谁拿到它，谁就能在有效期内冒充用户。因此绝不能泄露。</li>
+<li><strong>refresh_token 更敏感</strong>：泄露后可以长期换取新的 <code>access_token</code>，危害更大。且它是一次性的，管理不当会导致整个系统失效。</li>
+<li><strong>anon key 可以公开</strong>：它只是项目标识，不能用于冒充用户。</li>
+<li><strong>JWT 只能解码查看，不能篡改</strong>：签名会校验，修改 Payload 会导致验签失败。</li>
+<li><strong>HTTPS 必不可少</strong>：防止 Token 在传输中被窃取。</li>
+</ul>
+<h3 id="14-5-工程实践中的最佳做法"><a href="#14-5-工程实践中的最佳做法" class="headerlink" title="14.5 工程实践中的最佳做法"></a>14.5 工程实践中的最佳做法</h3><table>
+<thead>
+<tr>
+<th>实践</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>使用 <code>supabase-js</code></td>
+<td>自动处理存储、刷新、并发</td>
+</tr>
+<tr>
+<td>启用 <code>autoRefreshToken</code></td>
+<td>避免手动管理刷新逻辑</td>
+</tr>
+<tr>
+<td>设置合理的 JWT 有效期</td>
+<td>默认 1 小时通常足够，可根据安全需求调整</td>
+</tr>
+<tr>
+<td>启用 refresh token rotation</td>
+<td>每次刷新生成新的 <code>refresh_token</code>，旧的失效</td>
+</tr>
+<tr>
+<td>监控 Token 刷新失败</td>
+<td>及时提示用户重新登录</td>
+</tr>
+<tr>
+<td>不要在前端日志中打印完整 Token</td>
+<td>避免泄露</td>
+</tr>
+<tr>
+<td>refresh_token 只由服务端管理</td>
+<td>前端只持有短期 access_token</td>
+</tr>
+<tr>
+<td>分布式刷新加锁</td>
+<td>Redis <code>SET NX EX</code> 避免多实例竞争</td>
+</tr>
+<tr>
+<td>使用 <code>expires_at</code> 判断过期</td>
+<td>比 <code>expires_in</code> 更稳定</td>
+</tr>
+</tbody></table>
+<h3 id="14-6-这套设计的精妙之处"><a href="#14-6-这套设计的精妙之处" class="headerlink" title="14.6 这套设计的精妙之处"></a>14.6 这套设计的精妙之处</h3><ol>
+<li><strong>分层降级</strong>：六层链每一层都有明确职责，从最快到最可靠，最后兜底告警，是分布式系统的教科书式设计。</li>
+<li><strong>refresh_token 单点管理</strong>：利用 refresh_token 的”一次性”特性，反推必须由单一权威来源管理，天然避免了多端竞争。</li>
+<li><strong>前端只推 access</strong>：油猴脚本不推 refresh 的决策，体现了对 Supabase rotation 机制的深刻理解。</li>
+<li><strong>可观测性</strong>：Bark 告警不是可有可无的装饰，而是把”token 失效”视为 P0 事件。</li>
+</ol>
+<h3 id="14-7-风险与改进建议"><a href="#14-7-风险与改进建议" class="headerlink" title="14.7 风险与改进建议"></a>14.7 风险与改进建议</h3><ol>
+<li><strong><code>.env.local</code> 写入 bug</strong>：建议立即修正为 <code>$NEW_REFRESH</code>。</li>
+<li><strong>Redis 读取判断 bug</strong>：应判断解析后的 <code>$REFRESH</code>，而非 <code>$READ_RESULT</code>。</li>
+<li><strong>缺分布式锁</strong>：多实例并发刷新会导致 refresh_token 失效，建议加 Redis 锁。</li>
+<li><strong>本地调试体验</strong>：六层链在本地开发时可能触发不必要的告警，建议加环境判断。</li>
+<li><strong>安全边界</strong>：油猴脚本权限较大，应确保只在可信环境安装。</li>
+<li><strong>备份策略</strong>：<code>.env.local</code> 覆盖前应先备份。</li>
+</ol>
+<hr>
+<h2 id="十五、总结"><a href="#十五、总结" class="headerlink" title="十五、总结"></a>十五、总结</h2><p>本文以 TryBox 应用为案例，系统性地梳理了 JWT 与 Supabase 认证机制的核心知识点：</p>
+<ol>
+<li><strong>JWT 结构</strong>：<code>header.payload.signature</code>，Base64URL 编码，非加密，可解码查看但不可篡改。</li>
+<li><strong>Supabase 签发证据</strong>：<code>iss</code> 指向 Supabase 项目，字段符合 Supabase Auth 规范。</li>
+<li><strong>关键字段</strong>：<code>exp</code>、<code>iat</code>、<code>amr.timestamp</code>、<code>session_id</code> 均由服务器生成，使用 Unix UTC 时间戳。</li>
+<li><strong>认证流程</strong>：客户端向 Supabase Auth 发起 OTP 登录，获取 <code>access_token</code> 和 <code>refresh_token</code>。</li>
+<li><strong>Token 动态性</strong>：登录时确定会话，但 <code>access_token</code> 会定期刷新，<code>session_id</code> 通常不变。</li>
+<li><strong>access_token 即完整 JWT</strong>：拿到 <code>access_token</code> 就等于拿到完整 JWT。</li>
+<li><strong>过期与续期</strong>：<code>access_token</code> 默认 1 小时过期，用 <code>refresh_token</code> 刷新；<strong>refresh_token 是一次性的（rotation）</strong>。</li>
+<li><strong>六层降级链</strong>：内存 → 用户配置 → Redis → refresh 刷新 → 旧 access 刷新 → Bark 告警，是分布式系统的核心设计。</li>
+<li><strong>双写策略</strong>：Redis（权威）+ .env.local（备份）+ 内存（缓存），并发现潜在 bug。</li>
+<li><strong>前端采集</strong>：油猴脚本重写 <code>localStorage.setItem</code> 钩子，<strong>只推 access 不推 refresh</strong>。</li>
+<li><strong>可观测性</strong>：Bark 告警 + 诊断 stream，失败时主动通知而非静默。</li>
+<li><strong>工程实践</strong>：使用 <code>supabase-js</code> 导入 session，启用自动刷新，用单例锁保护并发刷新，实现持续获取 stream。</li>
+<li><strong>难点思考</strong>：无状态与撤销的权衡、并发刷新、refresh_token 单点问题、分布式锁、安全性最佳实践。</li>
+</ol>
+<hr>
+<p><img src="https://visitor-badge.laobi.icu/badge?page_id=fqw000.%3C!--swig%EF%BF%BC59--%3E&left_text=Visitors" alt="Visitors"></p>
+</p></div><div class="pagination"><p class="clearfix"><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2026/10/13/TryBox-Stremio-Addon-%E5%BC%80%E5%8F%91%E5%85%A8%E8%AE%B0%E5%BD%95/" title="TryBox Stremio Addon 开发全记录">下一篇: TryBox Stremio Addon 开发全记录&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>
