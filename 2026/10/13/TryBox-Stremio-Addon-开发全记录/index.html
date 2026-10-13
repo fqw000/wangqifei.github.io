@@ -1,48 +1,816 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>TryBox Stremio Addon 开发全记录 · 栖息地</title><meta name="description" content="TryBox Stremio Addon 开发全记录
+一篇从探针到生产部署的完整技术复盘。包含协议逆向、架构设计、缓存分层、ID 兼容、踩坑与技巧。既是本项目的技术沉淀，也可作为 Stremio Addon 开发的参考。
 
-include mixins
+一、项目背景与目标1.1 缘起TryBox（trybox.app）是一个影视"><meta name="og:description" content="TryBox Stremio Addon 开发全记录
+一篇从探针到生产部署的完整技术复盘。包含协议逆向、架构设计、缓存分层、ID 兼容、踩坑与技巧。既是本项目的技术沉淀，也可作为 Stremio Addon 开发的参考。
 
-block site_title
-    != page.title + " · " + config.title
+一、项目背景与目标1.1 缘起TryBox（trybox.app）是一个影视"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="TryBox Stremio Addon 开发全记录"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>TryBox Stremio Addon 开发全记录</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2026-10-13 01:10</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/stremio/" title="stremio">stremio</a><span>&nbsp;</span></span></p><p class="post-abstract"><h1 id="TryBox-Stremio-Addon-开发全记录"><a href="#TryBox-Stremio-Addon-开发全记录" class="headerlink" title="TryBox Stremio Addon 开发全记录"></a>TryBox Stremio Addon 开发全记录</h1><blockquote>
+<p>一篇从探针到生产部署的完整技术复盘。包含协议逆向、架构设计、缓存分层、ID 兼容、踩坑与技巧。既是本项目的技术沉淀，也可作为 Stremio Addon 开发的参考。</p>
+</blockquote>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="https://visitor-badge.laobi.icu/badge?page_id=hexotrybox&left_text=Visitors" alt="Visitors"></h2><h2 id="一、项目背景与目标"><a href="#一、项目背景与目标" class="headerlink" title="一、项目背景与目标"></a>一、项目背景与目标</h2><h3 id="1-1-缘起"><a href="#1-1-缘起" class="headerlink" title="1.1 缘起"></a>1.1 缘起</h3><p>TryBox（<code>trybox.app</code>）是一个影视聚合站点，提供影视元数据、多源播放链接、中英文字幕。它没有公开 API，所有请求走 <code>/_serverFn/</code> 下的加密端点，payload 是自定义的 <code>t/p/k/v/a</code> 结构。</p>
+<p><strong>目标</strong>：把 TryBox 的数据封装成 Stremio Addon，让用户能在 Stremio 客户端里浏览、搜索、看详情、加载字幕、播放流。同时开发一个独立的 Nuvio Provider，让 Nuvio 用户也能访问 TryBox 的流。</p>
+<h3 id="1-2-约束"><a href="#1-2-约束" class="headerlink" title="1.2 约束"></a>1.2 约束</h3><table>
+<thead>
+<tr>
+<th>约束</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>国内访问</strong></td>
+<td>用户主要在国内，必须考虑网络可达性</td>
+</tr>
+<tr>
+<td><strong>Vercel 部署</strong></td>
+<td>选择 Vercel 而非 Cloudflare Workers</td>
+</tr>
+<tr>
+<td><strong>Edge Runtime</strong></td>
+<td>必须使用 Vercel Edge Function，零第三方运行时依赖</td>
+</tr>
+<tr>
+<td><strong>Upstash 共享</strong></td>
+<td>多个项目共用一个 Upstash Redis，必须用 <code>APP_PREFIX</code> 隔离</td>
+</tr>
+<tr>
+<td><strong>成本</strong></td>
+<td>免费层额度内运行</td>
+</tr>
+<tr>
+<td><strong>规范</strong></td>
+<td>遵守已有的项目开发规范（配置分层、缓存 TTL、日志分级等）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、协议逆向：探针的设计与实施"><a href="#二、协议逆向：探针的设计与实施" class="headerlink" title="二、协议逆向：探针的设计与实施"></a>二、协议逆向：探针的设计与实施</h2><h3 id="2-1-为什么先写探针"><a href="#2-1-为什么先写探针" class="headerlink" title="2.1 为什么先写探针"></a>2.1 为什么先写探针</h3><p>TryBox 的 API 是<strong>自定义协议</strong>。直接写 addon 会面临：</p>
+<ul>
+<li><strong>不知道请求 payload 的确切结构</strong></li>
+<li><strong>不知道响应的数据字段和类型</strong></li>
+<li><strong>不知道 stream 链接是否带鉴权</strong></li>
+<li><strong>不知道字幕接口的参数组合</strong></li>
+</ul>
+<p><strong>探针的本质</strong>：一个独立的诊断脚本，**只做”发请求 + 打印结果”**，不参与业务逻辑。它的职责是：</p>
+<ol>
+<li><strong>验证 API 可用性</strong></li>
+<li><strong>探明请求&#x2F;响应结构</strong></li>
+<li><strong>评估数据完整性和响应时间</strong></li>
+<li><strong>为后续开发提供”事实依据”</strong></li>
+</ol>
+<p><strong>探针原则</strong>：<strong>不猜、不想当然、以实际返回为准</strong>。</p>
+<h3 id="2-2-探针的整体设计"><a href="#2-2-探针的整体设计" class="headerlink" title="2.2 探针的整体设计"></a>2.2 探针的整体设计</h3><p>我实现的探针脚本（<code>probe.js</code>）覆盖 5 个核心接口：</p>
+<table>
+<thead>
+<tr>
+<th>探针</th>
+<th>用途</th>
+<th>关键发现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>catalog</strong></td>
+<td>首页各板块数据</td>
+<td>一次请求返回全部板块（713KB），可复用</td>
+</tr>
+<tr>
+<td><strong>search</strong></td>
+<td>关键词搜索</td>
+<td>支持 <code>multi</code> &#x2F; <code>movie</code> &#x2F; <code>tv</code> 三种类型</td>
+</tr>
+<tr>
+<td><strong>meta</strong></td>
+<td>影片详情</td>
+<td>TV 类型只返回 seasons 列表，不含 episodes</td>
+</tr>
+<tr>
+<td><strong>subtitle</strong></td>
+<td>字幕列表</td>
+<td>需要 <code>imdb_id</code>，支持语言过滤</td>
+</tr>
+<tr>
+<td><strong>stream</strong></td>
+<td>播放链接</td>
+<td><strong>POST</strong> 请求（不是 GET），需要 Bearer Token</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-探针的核心技术：decodeNode"><a href="#2-3-探针的核心技术：decodeNode" class="headerlink" title="2.3 探针的核心技术：decodeNode"></a>2.3 探针的核心技术：<code>decodeNode</code></h3><p>TryBox 的响应是<strong>加密的 <code>t/p/k/v/a</code> 结构</strong>，需要解码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">decodeNode</span>(<span class="params">node</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (node === <span class="literal">null</span> || node === <span class="literal">undefined</span>) <span class="keyword">return</span> node;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> node !== <span class="string">&#x27;object&#x27;</span>) <span class="keyword">return</span> node;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">switch</span> (node.<span class="property">t</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>: <span class="comment">// 数字</span></span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>: <span class="comment">// 字符串</span></span><br><span class="line">      <span class="keyword">return</span> node.<span class="property">s</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">2</span>: <span class="comment">// null</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">9</span>: <span class="comment">// 数组</span></span><br><span class="line">      <span class="keyword">return</span> (node.<span class="property">a</span> || []).<span class="title function_">map</span>(decodeNode);</span><br><span class="line">    <span class="keyword">case</span> <span class="number">10</span>: &#123; <span class="comment">// 对象</span></span><br><span class="line">      <span class="keyword">const</span> obj = &#123;&#125;;</span><br><span class="line">      <span class="keyword">const</span> keys = node.<span class="property">p</span>?.<span class="property">k</span> || [];</span><br><span class="line">      <span class="keyword">const</span> values = node.<span class="property">p</span>?.<span class="property">v</span> || [];</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keys.<span class="property">length</span>; i++) &#123;</span><br><span class="line">        obj[keys[i]] = <span class="title function_">decodeNode</span>(values[i]);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">11</span>: <span class="comment">// context 等特殊节点</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> node.<span class="property">s</span> !== <span class="literal">undefined</span> ? node.<span class="property">s</span> : node;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+<p><strong>关键洞察</strong>：</p>
+<ul>
+<li><code>t: 0</code> 表示数字，<code>t: 1</code> 表示字符串，值在 <code>s</code> 字段</li>
+<li><code>t: 10</code> 表示对象，键在 <code>p.k</code>，值在 <code>p.v</code>，<strong>需要递归解码</strong></li>
+<li><code>t: 9</code> 表示数组，元素在 <code>a</code></li>
+</ul>
+<p><strong>这个解码器是后续所有 handler 的基础</strong>。</p>
+<h3 id="2-4-探针的三大产出"><a href="#2-4-探针的三大产出" class="headerlink" title="2.4 探针的三大产出"></a>2.4 探针的三大产出</h3><p><strong>产出 1：请求 payload 模板</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Catalog 请求</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">t</span>: &#123; <span class="attr">t</span>: <span class="number">10</span>, <span class="attr">i</span>: <span class="number">0</span>, <span class="attr">p</span>: &#123; <span class="attr">k</span>: [<span class="string">&#x27;data&#x27;</span>], <span class="attr">v</span>: [</span><br><span class="line">    &#123; <span class="attr">t</span>: <span class="number">10</span>, <span class="attr">i</span>: <span class="number">1</span>, <span class="attr">p</span>: &#123; <span class="attr">k</span>: [<span class="string">&#x27;page&#x27;</span>], <span class="attr">v</span>: [&#123; <span class="attr">t</span>: <span class="number">1</span>, <span class="attr">s</span>: <span class="string">&#x27;home&#x27;</span> &#125;] &#125;, <span class="attr">o</span>: <span class="number">0</span> &#125;</span><br><span class="line">  ]&#125;, <span class="attr">o</span>: <span class="number">0</span> &#125;,</span><br><span class="line">  <span class="attr">f</span>: <span class="number">127</span>, <span class="attr">m</span>: []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<p><strong>产出 2：响应结构地图</strong></p>
+<table>
+<thead>
+<tr>
+<th>接口</th>
+<th>顶层字段</th>
+<th>数组板块</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Catalog</td>
+<td><code>trending</code>, <code>popular</code>, <code>topRated</code>, <code>secondary</code>, <code>tertiary</code>, <code>presets.*</code></td>
+<td>12 个数组</td>
+</tr>
+<tr>
+<td>Meta</td>
+<td><code>id</code>, <code>imdb_id</code>, <code>seasons</code>, <code>cast</code>, <code>videos</code>, …</td>
+<td>5 个数组</td>
+</tr>
+<tr>
+<td>Stream</td>
+<td><code>meta</code>, <code>links</code>, <code>mbp_links</code>, <code>beta_links</code></td>
+<td>3 个数组</td>
+</tr>
+</tbody></table>
+<p><strong>产出 3：关键事实</strong></p>
+<ol>
+<li><strong>Catalog 一次请求返回全部板块</strong>（713KB），所有 catalog 可共享同一份缓存</li>
+<li><strong>Meta 的 TV 类型需要额外请求 episodes 接口</strong>（每季一次）</li>
+<li><strong>Stream 是 POST 请求</strong>，必须带 <code>Authorization: Bearer</code> header</li>
+<li><strong>Stream 链接部分带 <code>IP</code> 查询参数</strong>（IP 校验），部分不带</li>
+<li><strong>字幕接口用 <code>imdb_id</code>，不用 <code>tmdb_id</code></strong></li>
+</ol>
+<h3 id="2-5-探针的补充：episodes-探针"><a href="#2-5-探针的补充：episodes-探针" class="headerlink" title="2.5 探针的补充：episodes 探针"></a>2.5 探针的补充：episodes 探针</h3><p>第一轮探针没覆盖 episodes（剧集列表），导致后面写 meta 时遇到问题。补充探针后确认：</p>
+<ul>
+<li><strong>episodes 接口独立于 meta</strong></li>
+<li><strong>每季一次请求</strong>（不能一次拿全部季）</li>
+<li><strong>响应包含 <code>episode_number</code>、<code>name</code>、<code>air_date</code>、<code>still_path</code> 等</strong></li>
+</ul>
+<p><strong>教训</strong>：探针要覆盖<strong>所有下游接口</strong>，不能只测主接口。</p>
+<h3 id="2-6-探针的最大价值"><a href="#2-6-探针的最大价值" class="headerlink" title="2.6 探针的最大价值"></a>2.6 探针的最大价值</h3><p>**避免”想当然”**。举例：</p>
+<ul>
+<li>如果没跑探针，会以为 stream 是 GET 请求 → <strong>405 错误</strong></li>
+<li>如果没跑探针，会以为 catalog 每个板块需要单独请求 → <strong>浪费 11 倍请求</strong></li>
+<li>如果没跑探针，会以为 stream 链接都能用 → <strong>用户播放失败率极高</strong></li>
+<li>如果没跑探针，会以为 subtitle 用 tmdb_id → <strong>永远查不到字幕</strong></li>
+</ul>
+<p><strong>探针是事实来源，代码是对事实的翻译</strong>。</p>
+<hr>
+<h2 id="三、架构设计"><a href="#三、架构设计" class="headerlink" title="三、架构设计"></a>三、架构设计</h2><h3 id="3-1-分层架构"><a href="#3-1-分层架构" class="headerlink" title="3.1 分层架构"></a>3.1 分层架构</h3><figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────┐</span><br><span class="line">│  客户端 (Stremio / Nuvio)                            │</span><br><span class="line">└────────────────────┬────────────────────────────────┘</span><br><span class="line">                     │ HTTP</span><br><span class="line">                     ▼</span><br><span class="line">┌─────────────────────────────────────────────────────┐</span><br><span class="line">│  Vercel Edge <span class="function"><span class="keyword">Function</span> <span class="params">(api/<span class="keyword">index</span>.js)</span>                │</span></span><br><span class="line"><span class="function">│  ├─ 路由分发 <span class="params">(handler.js)</span>                            │</span></span><br><span class="line"><span class="function">│  └─ 响应构造 <span class="params">(jsonResponse + Cache-Control)</span>          │</span></span><br><span class="line"><span class="function">└────────────────────┬────────────────────────────────┘</span></span><br><span class="line"><span class="function">                     │</span></span><br><span class="line"><span class="function">        ┌────────────┼────────────┬────────────┐</span></span><br><span class="line"><span class="function">        ▼            ▼            ▼            ▼</span></span><br><span class="line"><span class="function">   ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐</span></span><br><span class="line"><span class="function">   │<span class="title">catalog</span> │  │ <span class="title">meta</span>   │  │<span class="title">subtitle</span>│  │ <span class="title">stream</span> │</span></span><br><span class="line"><span class="function">   └───┬────┘  └───┬────┘  └───┬────┘  └───┬────┘</span></span><br><span class="line"><span class="function">       │           │            │            │</span></span><br><span class="line"><span class="function">       └───────────┴────────────┴────────────┘</span></span><br><span class="line"><span class="function">                     │</span></span><br><span class="line"><span class="function">        ┌────────────┼────────────┬────────────┐</span></span><br><span class="line"><span class="function">        ▼            ▼            ▼            ▼</span></span><br><span class="line"><span class="function">   ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐</span></span><br><span class="line"><span class="function">   │ <span class="title">decode</span> │  │<span class="title">payload</span> │  │<span class="title">headers</span> │  │ <span class="title">http</span>   │</span></span><br><span class="line"><span class="function">   └────────┘  └────────┘  └────────┘  └────────┘</span></span><br><span class="line"><span class="function">                     │</span></span><br><span class="line"><span class="function">        ┌────────────┼────────────┬────────────┐</span></span><br><span class="line"><span class="function">        ▼            ▼            ▼            ▼</span></span><br><span class="line"><span class="function">   ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐</span></span><br><span class="line"><span class="function">   │<span class="title">cache</span>   │  │ <span class="title">token</span>  │  │ <span class="title">tmdb</span>   │  │<span class="title">config</span>  │</span></span><br><span class="line"><span class="function">   └────────┘  └────────┘  └────────┘  └────────┘</span></span><br><span class="line"><span class="function">                     │</span></span><br><span class="line"><span class="function">                     ▼</span></span><br><span class="line"><span class="function">   ┌─────────────────────────────────────┐</span></span><br><span class="line"><span class="function">   │  <span class="title">Upstash</span> <span class="title">Redis</span> <span class="params">(L2 持久化)</span>          │</span></span><br><span class="line"><span class="function">   │  <span class="title">TryBox</span> <span class="title">API</span> <span class="params">(上游数据源)</span>             │</span></span><br><span class="line"><span class="function">   │  <span class="title">TMDB</span> <span class="title">API</span> <span class="params">(ID 转换)</span>                  │</span></span><br><span class="line"><span class="function">   │  <span class="title">Supabase</span> <span class="params">(Token 刷新)</span>               │</span></span><br><span class="line"><span class="function">   └─────────────────────────────────────┘</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-模块职责"><a href="#3-2-模块职责" class="headerlink" title="3.2 模块职责"></a>3.2 模块职责</h3><table>
+<thead>
+<tr>
+<th>模块</th>
+<th>职责</th>
+<th>是否纯函数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>decode.js</code></td>
+<td>TryBox 协议解码</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>payload.js</code></td>
+<td>请求 payload 构建</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>headers.js</code></td>
+<td>请求头构建（API &#x2F; Stream 分离）</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>http.js</code></td>
+<td>HTTP 客户端（4xx 不重试、5xx 重试）</td>
+<td>否（有网络）</td>
+</tr>
+<tr>
+<td><code>cache.js</code></td>
+<td>三级缓存 + 冷却降级</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>token.js</code></td>
+<td>Token 三级刷新 + Bark 告警</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>tmdb.js</code></td>
+<td>tt → tmdb 转换</td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>config.js</code></td>
+<td>配置合并（默认 + env + user）</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>logger.js</code></td>
+<td>分级日志</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>manifest.js</code></td>
+<td>Manifest 动态生成</td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>handler/*.js</code></td>
+<td>各资源处理逻辑</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<h3 id="3-3-关键设计决策"><a href="#3-3-关键设计决策" class="headerlink" title="3.3 关键设计决策"></a>3.3 关键设计决策</h3><p><strong>决策 1：为什么用 <code>trybox_&#123;tmdbId&#125;</code> 而不是 <code>tt&#123;imdbId&#125;</code></strong></p>
+<ul>
+<li><strong>Catalog 返回的 id 必须是 TryBox 能直接用的 id</strong></li>
+<li>TryBox 的 catalog 只返回 TMDB ID</li>
+<li><strong>如果 catalog 用 tt ID，就需要把 125 个 TMDB ID 都转成 IMDb ID</strong>（要么批量查 TMDB，要么逐条查 meta，都很慢）</li>
+<li><strong>保留 <code>trybox_</code> 前缀做内部链路，额外支持 <code>tt</code> 做外部联动</strong>，两全其美</li>
+</ul>
+<p><strong>决策 2：为什么单独设计 token 管理</strong></p>
+<ul>
+<li>TryBox 的 stream 接口需要 Bearer Token</li>
+<li>Token 来自 Supabase，<strong>refresh_token 是一次性的</strong>（用一次就失效）</li>
+<li><strong>必须持久化</strong>（内存 + Redis），否则每次请求都拿旧 token → 报 <code>refresh_token_already_used</code></li>
+<li><strong>三级刷新</strong>：内存 → 用户配置 → Redis → refresh 刷新 → access 刷新 → Bark 告警</li>
+</ul>
+<p><strong>决策 3：为什么 Token 要同时存内存和 Redis</strong></p>
+<ul>
+<li><strong>内存</strong>：同一 isolate 内快速复用，省 Upstash 请求</li>
+<li><strong>Redis</strong>：跨 isolate、跨请求持久化</li>
+<li><strong>写入时同时写两份</strong>，读取时先查内存、再查 Redis</li>
+<li>**access_token 检查 JWT <code>exp</code>**，未过期直接用，避免浪费 refresh_token</li>
+</ul>
+<hr>
+<h2 id="四、ID-兼容与联动：Stremio-生态的关键技巧"><a href="#四、ID-兼容与联动：Stremio-生态的关键技巧" class="headerlink" title="四、ID 兼容与联动：Stremio 生态的关键技巧"></a>四、ID 兼容与联动：Stremio 生态的关键技巧</h2><h3 id="4-1-Stremio-的-ID-机制"><a href="#4-1-Stremio-的-ID-机制" class="headerlink" title="4.1 Stremio 的 ID 机制"></a>4.1 Stremio 的 ID 机制</h3><p>Stremio 的资源请求格式是 <code>/&#123;resource&#125;/&#123;type&#125;/&#123;id&#125;.json</code>。</p>
+<p><strong>请求链</strong>：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Catalog 返回 <span class="built_in">id</span> → Stremio 用这个 <span class="built_in">id</span> 请求 Meta → Stremio 用 Meta 的 <span class="built_in">id</span> 请求 Stream</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>idPrefixes</code> 的作用</strong>：manifest 中声明 <code>idPrefixes</code> 后，Stremio <strong>只会把匹配前缀的请求发给你的 addon</strong>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">resources</span>: [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;stream&#x27;</span>, <span class="attr">types</span>: [<span class="string">&#x27;movie&#x27;</span>, <span class="string">&#x27;series&#x27;</span>], <span class="attr">idPrefixes</span>: [<span class="string">&#x27;trybox_&#x27;</span>, <span class="string">&#x27;tt&#x27;</span>] &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键规则</strong>：</p>
+<ul>
+<li><strong><code>idPrefixes</code> 对 catalog 无效</strong>（catalog 是特例）</li>
+<li><strong>同一个资源可以声明多个前缀</strong></li>
+<li><strong>不同资源可以有不同的 <code>idPrefixes</code></strong></li>
+</ul>
+<h3 id="4-2-双-ID-兼容的实现"><a href="#4-2-双-ID-兼容的实现" class="headerlink" title="4.2 双 ID 兼容的实现"></a>4.2 双 ID 兼容的实现</h3><p><strong>链路 1：站内 ID（<code>trybox_</code>）</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Catalog → 返回 trybox_76331</span><br><span class="line">Meta → 收到 trybox_76331，返回 trybox_76331 + imdb_id</span><br><span class="line">Stream → 收到 trybox_76331，直接提取 <span class="attribute">tmdbId</span>=76331，调 TryBox stream</span><br></pre></td></tr></table></figure>
+
+<p><strong>链路 2：外部 IMDb ID（<code>tt</code>）</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cinemeta → 返回 tt7660850</span><br><span class="line">Stream → 收到 tt7660850，调 TMDB <span class="built_in">find</span> API 转成 <span class="attribute">tmdbId</span>=76331，调 TryBox stream</span><br><span class="line">Subtitle → 收到 tt7660850，直接用 <span class="attribute">imdbId</span>=tt7660850 调 TryBox subtitle</span><br></pre></td></tr></table></figure>
+
+<p><strong>统一入口</strong>：<code>parseAnyId(env, id, type, tmdbKey)</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">parseAnyId</span>(<span class="params">env, id, type, tmdbKey</span>) &#123;</span><br><span class="line">  <span class="comment">// 1. trybox_&#123;tmdbId&#125;[:season:episode]</span></span><br><span class="line">  <span class="keyword">const</span> tryboxMatch = id.<span class="title function_">match</span>(<span class="regexp">/^trybox_(\d+)(?::(\d+):(\d+))?$/</span>);</span><br><span class="line">  <span class="keyword">if</span> (tryboxMatch) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; tmdbId, <span class="attr">kind</span>: type === <span class="string">&#x27;series&#x27;</span> ? <span class="string">&#x27;tv&#x27;</span> : <span class="string">&#x27;movie&#x27;</span>, season, episode &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 2. tt&#123;imdbId&#125;[:season:episode]</span></span><br><span class="line">  <span class="keyword">const</span> imdbMatch = id.<span class="title function_">match</span>(<span class="regexp">/^(tt\d+)(?::(\d+):(\d+))?$/</span>);</span><br><span class="line">  <span class="keyword">if</span> (imdbMatch) &#123;</span><br><span class="line">    <span class="keyword">const</span> resolved = <span class="keyword">await</span> <span class="title function_">resolveImdbId</span>(env, ttId, tmdbKey);</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">tmdbId</span>: <span class="title class_">String</span>(resolved.<span class="property">tmdbId</span>), <span class="attr">kind</span>: resolved.<span class="property">type</span>, season, episode &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-联动效果"><a href="#4-3-联动效果" class="headerlink" title="4.3 联动效果"></a>4.3 联动效果</h3><p><strong>当用户从 Cinemeta 进入播放页面时</strong>，Stremio 会用 <code>tt7660850</code> 请求所有支持 <code>tt</code> 前缀的 addon。<strong>你的 addon 也是其中之一</strong>。用户能看到你的流，和其他 addon 的流一起展示。</p>
+<p><strong>这就实现了 addon 生态的联动</strong>。</p>
+<h3 id="4-4-tt-→-tmdb-转换的缓存"><a href="#4-4-tt-→-tmdb-转换的缓存" class="headerlink" title="4.4 tt → tmdb 转换的缓存"></a>4.4 tt → tmdb 转换的缓存</h3><p><strong>转换结果缓存 7 天</strong>（规范里 IMDb 映射的 TTL）：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">resolveImdbId</span>(<span class="params">env, ttId, tmdbKey</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> cacheKey = <span class="string">`imdb_to_tmdb:<span class="subst">$&#123;ttId&#125;</span>`</span>;</span><br><span class="line">  <span class="keyword">const</span> &#123; value, fromCache &#125; = <span class="keyword">await</span> <span class="title function_">withCache</span>(&#123;</span><br><span class="line">    env,</span><br><span class="line">    <span class="attr">key</span>: cacheKey,</span><br><span class="line">    <span class="attr">l1Ttl</span>: <span class="number">86400</span>,     <span class="comment">// 1 天（内存）</span></span><br><span class="line">    <span class="attr">redisTtl</span>: <span class="number">604800</span>, <span class="comment">// 7 天（Redis）</span></span><br><span class="line">    <span class="attr">fetcher</span>: <span class="function">() =&gt;</span> <span class="title function_">fetchTmdbFind</span>(ttId, tmdbKey),</span><br><span class="line">    <span class="attr">shouldCache</span>: <span class="function">(<span class="params">v</span>) =&gt;</span> v !== <span class="literal">null</span>,  <span class="comment">// null 不缓存</span></span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>收益</strong>：第二次请求同一个 tt ID 时，0 次 TMDB 请求。</p>
+<hr>
+<h2 id="五、缓存分层：三级缓存的工程实践"><a href="#五、缓存分层：三级缓存的工程实践" class="headerlink" title="五、缓存分层：三级缓存的工程实践"></a>五、缓存分层：三级缓存的工程实践</h2><h3 id="5-1-缓存分层设计"><a href="#5-1-缓存分层设计" class="headerlink" title="5.1 缓存分层设计"></a>5.1 缓存分层设计</h3><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>存储</th>
+<th>生命周期</th>
+<th>命中耗时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>L1</strong></td>
+<td>内存 Map</td>
+<td>isolate 生命周期</td>
+<td>&lt;1ms</td>
+</tr>
+<tr>
+<td><strong>L2</strong></td>
+<td>Upstash Redis</td>
+<td>TTL 控制</td>
+<td>200-1500ms</td>
+</tr>
+<tr>
+<td><strong>CDN</strong></td>
+<td>Vercel 边缘</td>
+<td>TTL 控制</td>
+<td>100-400ms</td>
+</tr>
+</tbody></table>
+<p><strong>缓存 key 结构</strong>：<code>&#123;APP_PREFIX&#125;:cache:&#123;业务key&#125;</code></p>
+<p><strong>统一的 <code>withCache</code> 包装器</strong>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">withCache</span>(<span class="params">&#123; env, key, l1Ttl, redisTtl, fetcher, shouldCache &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> cached = <span class="keyword">await</span> <span class="title function_">getCache</span>(env, key, &#123; l1Ttl &#125;);</span><br><span class="line">  <span class="keyword">if</span> (cached !== <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">value</span>: cached, <span class="attr">fromCache</span>: <span class="literal">true</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> value = <span class="keyword">await</span> <span class="title function_">fetcher</span>();</span><br><span class="line">  <span class="keyword">const</span> allow = shouldCache ? <span class="title function_">shouldCache</span>(value) : <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">if</span> (allow) &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="title function_">setCache</span>(env, key, value, &#123; l1Ttl, redisTtl &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123; value, <span class="attr">fromCache</span>: <span class="literal">false</span> &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-各资源的缓存-TTL"><a href="#5-2-各资源的缓存-TTL" class="headerlink" title="5.2 各资源的缓存 TTL"></a>5.2 各资源的缓存 TTL</h3><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>L1</th>
+<th>Redis</th>
+<th>CDN</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Catalog</td>
+<td>60s</td>
+<td>5 分钟</td>
+<td>5 分钟</td>
+</tr>
+<tr>
+<td>Meta</td>
+<td>60s</td>
+<td>30 分钟</td>
+<td>30 分钟</td>
+</tr>
+<tr>
+<td>Episodes</td>
+<td>60s</td>
+<td>30 分钟</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>60s</td>
+<td>10 分钟</td>
+<td>5 分钟</td>
+</tr>
+<tr>
+<td>Subtitle</td>
+<td>60s</td>
+<td>10 分钟</td>
+<td>5 分钟</td>
+</tr>
+<tr>
+<td>Stream（成功）</td>
+<td>60s</td>
+<td>3 分钟</td>
+<td>1 分钟</td>
+</tr>
+<tr>
+<td>Stream（负面）</td>
+<td>—</td>
+<td>5 分钟</td>
+<td>—</td>
+</tr>
+<tr>
+<td>IMDb 映射</td>
+<td>1 天</td>
+<td>7 天</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3 id="5-3-缓存-key-设计"><a href="#5-3-缓存-key-设计" class="headerlink" title="5.3 缓存 key 设计"></a>5.3 缓存 key 设计</h3><p><strong>关键决策</strong>：</p>
+<ul>
+<li>**Catalog 用同一个 key <code>catalog:home</code>**：因为 TryBox 一次返回全部板块，所有 catalog 共享</li>
+<li>**Episodes 用单个 key <code>episodes:&#123;tvId&#125;</code>**：包含全部季，而不是每季一个 key</li>
+<li>**tt 转换用 <code>imdb_to_tmdb:&#123;ttId&#125;</code>**：全站共享</li>
+</ul>
+<p><strong>收益对比</strong>（Meta series）：</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>冷启动请求</th>
+<th>热启动请求</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>每季一个 key</td>
+<td>1 次 meta + N 次 episodes + 2(N+1) 次 Upstash</td>
+<td>1 + N 次 Upstash</td>
+</tr>
+<tr>
+<td><strong>单个 key</strong></td>
+<td>1 次 meta + N 次 episodes + 4 次 Upstash</td>
+<td><strong>2 次 Upstash</strong></td>
+</tr>
+</tbody></table>
+<p><strong>继承之战 4 季</strong>：从 5 次 Upstash 降到 2 次。</p>
+<h3 id="5-4-Redis-冷却降级"><a href="#5-4-Redis-冷却降级" class="headerlink" title="5.4 Redis 冷却降级"></a>5.4 Redis 冷却降级</h3><p><strong>问题</strong>：Redis 挂掉时，每次请求都等超时，用户体验极差。</p>
+<p><strong>方案</strong>：<strong>连续 3 次失败进入 60 秒冷却</strong>，期间只用 L1：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> redisFailCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">let</span> redisCooldownUntil = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">recordRedisFail</span>(<span class="params"></span>) &#123;</span><br><span class="line">  redisFailCount++;</span><br><span class="line">  <span class="keyword">if</span> (redisFailCount &gt;= <span class="number">3</span>) &#123;</span><br><span class="line">    redisCooldownUntil = <span class="title class_">Date</span>.<span class="title function_">now</span>() + <span class="number">60000</span>;</span><br><span class="line">    redisFailCount = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">isRedisAvailable</span>(<span class="params">env</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!env?.<span class="property">UPSTASH_REDIS_REST_URL</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (<span class="title class_">Date</span>.<span class="title function_">now</span>() &lt; redisCooldownUntil) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-5-Upstash-REST-API-的正确用法"><a href="#5-5-Upstash-REST-API-的正确用法" class="headerlink" title="5.5 Upstash REST API 的正确用法"></a>5.5 Upstash REST API 的正确用法</h3><p><strong>踩坑</strong>：我一开始用 URL 路径拼接多参数命令：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ❌ 错误</span></span><br><span class="line"><span class="keyword">const</span> url = <span class="string">`<span class="subst">$&#123;UPSTASH_URL&#125;</span>/SET/<span class="subst">$&#123;key&#125;</span>/<span class="subst">$&#123;value&#125;</span>/EX/3600`</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Upstash 不识别这种格式</strong>，会静默失败（返回空值，但 HTTP 200）。</p>
+<p><strong>正确做法</strong>：用 <code>/pipeline</code> 端点，发送 JSON 数组：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 正确</span></span><br><span class="line"><span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">`<span class="subst">$&#123;UPSTASH_URL&#125;</span>/pipeline`</span>, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;</span><br><span class="line">    <span class="title class_">Authorization</span>: <span class="string">`Bearer <span class="subst">$&#123;TOKEN&#125;</span>`</span>,</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">body</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>([[<span class="string">&#x27;SET&#x27;</span>, key, value, <span class="string">&#x27;EX&#x27;</span>, <span class="string">&#x27;3600&#x27;</span>]]),</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 返回 [&#123; result: &#x27;OK&#x27; &#125;, ...]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>教训</strong>：<strong>第三方 API 必须核对官方文档的调用格式，不能凭直觉拼 URL</strong>。</p>
+<h3 id="5-6-生产环境-CDN-缓存"><a href="#5-6-生产环境-CDN-缓存" class="headerlink" title="5.6 生产环境 CDN 缓存"></a>5.6 生产环境 CDN 缓存</h3><p><strong>Vercel Edge Function 的响应</strong>可以加 <code>Cache-Control</code> 头，让 Vercel CDN 缓存：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">jsonResponse</span>(<span class="params">data, status = <span class="number">200</span>, &#123; cacheControl &#125; = &#123;&#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> headers = &#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;application/json; charset=utf-8&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">if</span> (cacheControl) headers[<span class="string">&#x27;Cache-Control&#x27;</span>] = cacheControl;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(data), &#123; status, headers &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Catalog 返回</span></span><br><span class="line"><span class="keyword">return</span> <span class="title function_">jsonResponse</span>(result, <span class="number">200</span>, &#123;</span><br><span class="line">  <span class="attr">cacheControl</span>: <span class="string">&#x27;public, s-maxage=300, stale-while-revalidate=60&#x27;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>效果</strong>：</p>
+<ul>
+<li>第一次请求：<code>x-vercel-cache: MISS</code></li>
+<li>第二次请求：<code>x-vercel-cache: HIT</code>（<strong>不触发 Edge Function</strong>）</li>
+</ul>
+<p><strong>注意</strong>：Vercel 会把响应头的 <code>Cache-Control</code> 重写为 <code>public</code>，但内部的 <code>s-maxage</code> 仍然生效。</p>
+<hr>
+<h2 id="六、Token-管理的完整方案"><a href="#六、Token-管理的完整方案" class="headerlink" title="六、Token 管理的完整方案"></a>六、Token 管理的完整方案</h2><h3 id="6-1-需求分析"><a href="#6-1-需求分析" class="headerlink" title="6.1 需求分析"></a>6.1 需求分析</h3><p>TryBox 的 stream 接口需要 Bearer Token：</p>
+<ul>
+<li>Token 来自 Supabase Auth</li>
+<li><strong><code>refresh_token</code> 是一次性的</strong>（用一次就返回新的，旧的立即失效）</li>
+<li><strong><code>access_token</code> 有效期 1 小时</strong></li>
+<li><strong>必须持久化</strong>，否则每次请求都拿旧 token 撞 <code>already_used</code></li>
+<li><strong>失效时要告警</strong>给管理员</li>
+</ul>
+<h3 id="6-2-三级刷新流程"><a href="#6-2-三级刷新流程" class="headerlink" title="6.2 三级刷新流程"></a>6.2 三级刷新流程</h3><figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">请求</span><br><span class="line">  ├─ <span class="number">1.</span> 读内存 access_token → 检查 JWT <span class="built_in">exp</span></span><br><span class="line">  │    ├─ 有效 → 直接用</span><br><span class="line">  │    └─ 无效 → 往下</span><br><span class="line">  ├─ <span class="number">2.</span> 读用户配置的 access_token → 检查 JWT <span class="built_in">exp</span></span><br><span class="line">  │    ├─ 有效 → 缓存到内存 + 用</span><br><span class="line">  │    └─ 无效 → 往下</span><br><span class="line">  ├─ <span class="number">3.</span> 读 Redis access_token → 检查 JWT <span class="built_in">exp</span></span><br><span class="line">  │    ├─ 有效 → 缓存到内存 + 用</span><br><span class="line">  │    └─ 无效 → 往下</span><br><span class="line">  ├─ <span class="number">4.</span> 用 refresh_token 刷新 → 检查响应</span><br><span class="line">  │    ├─ 成功 → 写内存 + 写 Redis + 用</span><br><span class="line">  │    └─ 失败 → 往下</span><br><span class="line">  ├─ <span class="number">5.</span> 用旧 access_token 刷新（降级）</span><br><span class="line">  │    ├─ 成功 → 写内存 + 写 Redis + 用</span><br><span class="line">  │    └─ 失败 → 往下</span><br><span class="line">  └─ <span class="number">6.</span> Bark 告警 → 返回空 <span class="built_in">token</span> → 触发诊断 stream</span><br></pre></td></tr></table></figure>
+
+<p><strong>关键设计</strong>：</p>
+<ul>
+<li>**先检查 JWT <code>exp</code>**，未过期就用，避免浪费 refresh_token</li>
+<li><strong>同时写内存和 Redis</strong>，跨请求持久化</li>
+<li><strong>Bark 告警</strong>：token 全失效时通知管理员</li>
+</ul>
+<h3 id="6-3-JWT-过期检查"><a href="#6-3-JWT-过期检查" class="headerlink" title="6.3 JWT 过期检查"></a>6.3 JWT 过期检查</h3><p><strong>access_token 是 JWT</strong>，可以 base64 解码 payload 拿 <code>exp</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">decodeJwtExpiry</span>(<span class="params">token</span>) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> [, payload] = token.<span class="title function_">split</span>(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">    <span class="keyword">let</span> b64 = payload.<span class="title function_">replace</span>(<span class="regexp">/-/g</span>, <span class="string">&#x27;+&#x27;</span>).<span class="title function_">replace</span>(<span class="regexp">/_/g</span>, <span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    <span class="keyword">while</span> (b64.<span class="property">length</span> % <span class="number">4</span>) b64 += <span class="string">&#x27;=&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> json = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="title function_">atob</span>(b64));</span><br><span class="line">    <span class="keyword">return</span> json.<span class="property">exp</span> ? json.<span class="property">exp</span> * <span class="number">1000</span> : <span class="literal">null</span>;</span><br><span class="line">  &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">isAccessValid</span>(<span class="params">accessToken</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> exp = <span class="title function_">decodeJwtExpiry</span>(accessToken);</span><br><span class="line">  <span class="keyword">if</span> (!exp) <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 解析失败假设有效</span></span><br><span class="line">  <span class="keyword">return</span> exp &gt; <span class="title class_">Date</span>.<span class="title function_">now</span>() + <span class="number">60_000</span>; <span class="comment">// 留 60s 余量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-环境隔离"><a href="#6-4-环境隔离" class="headerlink" title="6.4 环境隔离"></a>6.4 环境隔离</h3><p><strong>用 <code>APP_PREFIX</code> 区分环境</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>环境</th>
+<th>APP_PREFIX</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Production</td>
+<td><code>tryboxStream:prod</code></td>
+</tr>
+<tr>
+<td>Preview</td>
+<td><code>tryboxStream:preview</code></td>
+</tr>
+<tr>
+<td>Development</td>
+<td><code>tryboxStream:dev</code></td>
+</tr>
+</tbody></table>
+<p><strong>收益</strong>：本地&#x2F;预览的脏数据不会污染生产缓存。</p>
+<hr>
+<h2 id="七、部署与运维"><a href="#七、部署与运维" class="headerlink" title="七、部署与运维"></a>七、部署与运维</h2><h3 id="7-1-Vercel-部署"><a href="#7-1-Vercel-部署" class="headerlink" title="7.1 Vercel 部署"></a>7.1 Vercel 部署</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx vercel --prod</span><br></pre></td></tr></table></figure>
+
+<p><strong>环境变量</strong>（Vercel Dashboard）：</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>必填</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>UPSTASH_REDIS_REST_URL</code></td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>UPSTASH_REDIS_REST_TOKEN</code></td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>APP_PREFIX</code></td>
+<td>是</td>
+</tr>
+<tr>
+<td><code>BARK_KEY</code></td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>TMDB_KEY</code></td>
+<td>否</td>
+</tr>
+<tr>
+<td><code>LOG_LEVEL</code></td>
+<td>否</td>
+</tr>
+</tbody></table>
+<p><strong>注意</strong>：<code>*.vercel.app</code> 在国内访问不稳定，<strong>必须绑定自定义域名</strong>。</p>
+<h3 id="7-2-国内访问优化"><a href="#7-2-国内访问优化" class="headerlink" title="7.2 国内访问优化"></a>7.2 国内访问优化</h3><p><strong>问题</strong>：<code>*.vercel.app</code> 国内访问延迟 1-4 秒。</p>
+<p><strong>方案</strong>：</p>
+<ol>
+<li>绑定自定义域名（必须）</li>
+<li><strong>优选 CNAME</strong>：<code>vercel-cname.xingpingcn.top</code>（社区维护的优选 IP）</li>
+<li><strong>Cloudflare 代理不推荐</strong>（会剥掉 <code>x-vercel-cache</code> 头）</li>
+</ol>
+<p><strong>效果</strong>：国内延迟从 1-4 秒降到 200-500ms。</p>
+<h3 id="7-3-health-js-健康检测"><a href="#7-3-health-js-健康检测" class="headerlink" title="7.3 health.js 健康检测"></a>7.3 health.js 健康检测</h3><p><strong>34 项测试</strong>，覆盖：</p>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th>测试项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>manifest</td>
+<td>5</td>
+<td>默认配置、资源完整性、功能开关</td>
+</tr>
+<tr>
+<td>catalog</td>
+<td>10</td>
+<td>8 个 catalog × 各自的 type</td>
+</tr>
+<tr>
+<td>search</td>
+<td>3</td>
+<td>中文关键词</td>
+</tr>
+<tr>
+<td>genre</td>
+<td>4</td>
+<td>movie&#x2F;series × 各 genre</td>
+</tr>
+<tr>
+<td>meta</td>
+<td>2</td>
+<td>movie + series</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>2</td>
+<td>movie + series</td>
+</tr>
+<tr>
+<td>stream</td>
+<td>2</td>
+<td>movie + series</td>
+</tr>
+<tr>
+<td>tt-id</td>
+<td>5</td>
+<td>tt 格式 + manifest 声明</td>
+</tr>
+<tr>
+<td>debug</td>
+<td>1</td>
+<td>健康端点</td>
+</tr>
+</tbody></table>
+<p><strong>关键设计</strong>：</p>
+<ul>
+<li><strong>上游波动不判失败</strong>：<code>no_valid_url</code> 视为 warning（TryBox 上游偶发返回空）</li>
+<li><strong>真实失败才判失败</strong>：<code>token_failed</code>、<code>http_failed</code>、<code>decode_failed</code></li>
+<li><strong>支持跳过慢测试</strong>：<code>SKIP_SLOW=1</code></li>
+</ul>
+<h3 id="7-4-日志系统"><a href="#7-4-日志系统" class="headerlink" title="7.4 日志系统"></a>7.4 日志系统</h3><p><strong>分级</strong>：<code>debug</code> &#x2F; <code>info</code> &#x2F; <code>warn</code> &#x2F; <code>error</code></p>
+<p><strong>格式</strong>：<code>[HH:mm:ss.SSS][模块][级别] 消息</code></p>
+<p><strong>示例</strong>：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">22</span>:<span class="number">54</span>:<span class="number">08.157</span>][<span class="symbol">TMDB</span>] [<span class="symbol">INFO</span>] <span class="symbol">TMDB</span> find: tt0109830</span><br><span class="line">[<span class="number">22</span>:<span class="number">54</span>:<span class="number">08.893</span>][<span class="symbol">Cache</span>] [<span class="symbol">DEBUG</span>] [<span class="symbol">L1</span> <span class="symbol">SET</span>] imdb_to_tmdb:tt0109830 ttl=<span class="number">86400</span>s</span><br><span class="line">[<span class="number">22</span>:<span class="number">54</span>:<span class="number">09.275</span>][<span class="symbol">TMDB</span>] [<span class="symbol">INFO</span>] resolveImdbId 回源: tt0109830 → &#123;<span class="string">&quot;tmdbId&quot;</span>:<span class="number">13</span>,<span class="string">&quot;type&quot;</span>:<span class="string">&quot;movie&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>模块前缀</strong>：<code>Edge</code> &#x2F; <code>Router</code> &#x2F; <code>Catalog</code> &#x2F; <code>Meta</code> &#x2F; <code>Subtitle</code> &#x2F; <code>Stream</code> &#x2F; <code>Token</code> &#x2F; <code>Cache</code> &#x2F; <code>TMDB</code></p>
+<hr>
+<h2 id="八、踩坑与技巧"><a href="#八、踩坑与技巧" class="headerlink" title="八、踩坑与技巧"></a>八、踩坑与技巧</h2><h3 id="8-1-探针阶段"><a href="#8-1-探针阶段" class="headerlink" title="8.1 探针阶段"></a>8.1 探针阶段</h3><p><strong>坑 1：以为 stream 是 GET</strong></p>
+<ul>
+<li>实际是 <strong>POST</strong>，且必须带 <code>Content-Type: application/json</code> + Bearer Token</li>
+<li><strong>教训</strong>：探针必须打印实际请求方法</li>
+</ul>
+<p><strong>坑 2：以为 catalog 每个板块单独请求</strong></p>
+<ul>
+<li>实际一次请求返回全部（713KB）</li>
+<li><strong>教训</strong>：探针要打印响应的完整结构，不能只看长度</li>
+</ul>
+<p><strong>坑 3：以为 meta 就够用</strong></p>
+<ul>
+<li>TV 类型需要额外请求 episodes</li>
+<li><strong>教训</strong>：探针要覆盖所有下游接口</li>
+</ul>
+<h3 id="8-2-开发阶段"><a href="#8-2-开发阶段" class="headerlink" title="8.2 开发阶段"></a>8.2 开发阶段</h3><p><strong>坑 4：<code>idPrefixes</code> 混用</strong></p>
+<p>Stremio 允许<strong>顶层声明</strong>和<strong>资源级声明</strong>两种方式。<strong>资源级覆盖顶层</strong>。</p>
+<p><strong>正确配置</strong>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">resources</span>: [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;catalog&#x27;</span>, <span class="attr">types</span>: [...], <span class="attr">idPrefixes</span>: [<span class="string">&#x27;trybox_&#x27;</span>] &#125;,  <span class="comment">// catalog 的 idPrefixes 无效</span></span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;meta&#x27;</span>, <span class="attr">types</span>: [...], <span class="attr">idPrefixes</span>: [<span class="string">&#x27;trybox_&#x27;</span>] &#125;,     <span class="comment">// meta 只用站内 ID</span></span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;subtitles&#x27;</span>, <span class="attr">types</span>: [...], <span class="attr">idPrefixes</span>: [<span class="string">&#x27;trybox_&#x27;</span>, <span class="string">&#x27;tt&#x27;</span>] &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;stream&#x27;</span>, <span class="attr">types</span>: [...], <span class="attr">idPrefixes</span>: [<span class="string">&#x27;trybox_&#x27;</span>, <span class="string">&#x27;tt&#x27;</span>] &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><strong>坑 5：<code>vercel dev</code> 和生产的差异</strong></p>
+<table>
+<thead>
+<tr>
+<th>差异</th>
+<th>本地 <code>vercel dev</code></th>
+<th>生产 Vercel</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>L1 缓存</td>
+<td>每次新 isolate</td>
+<td>热 isolate 保留</td>
+</tr>
+<tr>
+<td>CDN 缓存</td>
+<td>不生效</td>
+<td>生效</td>
+</tr>
+<tr>
+<td><code>fetch</code> 走代理</td>
+<td>不走系统代理</td>
+<td>不需要（直连）</td>
+</tr>
+<tr>
+<td>Cache-Control</td>
+<td>不重写</td>
+<td>重写为 <code>public</code></td>
+</tr>
+</tbody></table>
+<p><strong>教训</strong>：<strong>本地能跑 ≠ 生产能跑</strong>。<strong>关键功能必须在生产验证</strong>。</p>
+<p><strong>坑 6：Upstash URL 路径拼接多参数命令失败</strong></p>
+<p><code>SET key value EX 3600</code> 用 URL 路径拼<strong>静默失败</strong>。**必须用 <code>/pipeline</code>**。</p>
+<p><strong>坑 7：诊断 stream 的可读性</strong></p>
+<p><strong>错误做法</strong>：诊断信息放 <code>title</code> 字段，会被 Stremio 截断。</p>
+<p><strong>正确做法</strong>：诊断信息放 <code>url</code> 字段，中文原文不编码，用户长按可复制。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ✅ 正确</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;TryBox · 诊断&#x27;</span>,</span><br><span class="line">  <span class="attr">url</span>: <span class="string">`trybox|no_valid_url|原始 0 条，全部含 IP 校验或无 URL`</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-技巧与妙用"><a href="#8-3-技巧与妙用" class="headerlink" title="8.3 技巧与妙用"></a>8.3 技巧与妙用</h3><p><strong>技巧 1：用 <code>bingeGroup</code> 提升剧集体验</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&#x27;...&#x27;</span>,</span><br><span class="line">  <span class="attr">bingeGroup</span>: <span class="string">`trybox-<span class="subst">$&#123;quality&#125;</span>`</span>,  <span class="comment">// 如 &#x27;trybox-1080p&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Stremio 会记住用户在同一 <code>bingeGroup</code> 里选择的质量，<strong>下一集自动匹配相同质量</strong>。</p>
+<p><strong>技巧 2：<code>stremio://</code> 协议安装</strong></p>
+<p>配置页面的安装按钮用 <code>stremio://</code> 协议：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span> = <span class="string">&#x27;stremio://&#x27;</span> + url.<span class="title function_">replace</span>(<span class="regexp">/^https?:\/\//</span>, <span class="string">&#x27;&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>比让用户手动复制粘贴 URL 更友好。</p>
+<p><strong>技巧 3：Catalog 支持 Search + Genre</strong></p>
+<p><strong>不需要单独的 search handler</strong>。在 catalog 的 <code>extra</code> 里声明：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">extra</span>: [</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;search&#x27;</span>, <span class="attr">isRequired</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;genre&#x27;</span>, <span class="attr">isRequired</span>: <span class="literal">false</span>, <span class="attr">options</span>: [<span class="string">&#x27;动作&#x27;</span>, <span class="string">&#x27;喜剧&#x27;</span>, ...] &#125;,</span><br><span class="line">  &#123; <span class="attr">name</span>: <span class="string">&#x27;skip&#x27;</span>, <span class="attr">isRequired</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>Catalog handler 里根据 <code>extra.search</code> 和 <code>extra.genre</code> 分流。</p>
+<p><strong>技巧 4：Negative cache 避免反复回源</strong></p>
+<p>上游返回空结果时，<strong>缓存 5 分钟</strong>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!validLinks.<span class="property">length</span>) &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">setCache</span>(env, negKey, &#123; <span class="attr">detail</span>: <span class="string">&#x27;...&#x27;</span> &#125;, &#123; <span class="attr">redisTtl</span>: <span class="number">300</span> &#125;);</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">streams</span>: [<span class="title function_">buildDiagnostic</span>(<span class="string">&#x27;no_valid_url&#x27;</span>, detail)] &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>收益</strong>：同一失败请求在 5 分钟内不再回源。</p>
+<p><strong>技巧 5：<code>?cfg=</code> 纯前端编码</strong></p>
+<p>配置参数用 <strong>base64url 编码的 JSON</strong> 传递，<strong>addon 后端直接解码，无需服务端参与</strong>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 前端</span></span><br><span class="line"><span class="keyword">const</span> cfg = &#123; <span class="attr">rt</span>: <span class="string">&#x27;...&#x27;</span>, <span class="attr">cats</span>: [<span class="string">&#x27;movie&#x27;</span>], <span class="attr">feats</span>: [<span class="string">&#x27;catalog&#x27;</span>, <span class="string">&#x27;meta&#x27;</span>] &#125;;</span><br><span class="line"><span class="keyword">const</span> encoded = <span class="title function_">base64urlEncode</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(cfg));</span><br><span class="line"><span class="keyword">const</span> url = <span class="string">`/manifest.json?cfg=<span class="subst">$&#123;encoded&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 后端</span></span><br><span class="line"><span class="keyword">const</span> cfgParam = url.<span class="property">searchParams</span>.<span class="title function_">get</span>(<span class="string">&#x27;cfg&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> user = <span class="title function_">decodeCfg</span>(cfgParam);</span><br></pre></td></tr></table></figure>
+
+<p><strong>技巧 6：Stremio 客户端缓存</strong></p>
+<p>Stremio 客户端会<strong>缓存 catalog 和 meta 数据</strong>。如果你在开发时改了代码，客户端可能仍显示旧数据。<strong>解决办法</strong>：</p>
+<ul>
+<li><strong>重启 Stremio 客户端</strong></li>
+<li><strong>清除缓存</strong>（设置里）</li>
+<li><strong>换一个新的 manifest URL</strong>（加随机 query 参数）</li>
+</ul>
+<hr>
+<h2 id="九、项目总结与展望"><a href="#九、项目总结与展望" class="headerlink" title="九、项目总结与展望"></a>九、项目总结与展望</h2><h3 id="9-1-关键成果"><a href="#9-1-关键成果" class="headerlink" title="9.1 关键成果"></a>9.1 关键成果</h3><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>本地 health.js</strong></td>
+<td>34&#x2F;34 通过</td>
+</tr>
+<tr>
+<td><strong>生产 health.js</strong></td>
+<td>34&#x2F;34 通过</td>
+</tr>
+<tr>
+<td><strong>Catalog 缓存命中</strong></td>
+<td>~430ms（本地 1.3s）</td>
+</tr>
+<tr>
+<td><strong>Meta series 缓存命中</strong></td>
+<td>~800ms（原 7.9s）</td>
+</tr>
+<tr>
+<td><strong>tt 路径</strong></td>
+<td>完整支持 movie + series + subtitle</td>
+</tr>
+<tr>
+<td><strong>CDN 缓存</strong></td>
+<td><code>x-vercel-cache: HIT</code></td>
+</tr>
+<tr>
+<td><strong>第三方依赖</strong></td>
+<td>零（纯 Web 标准 API）</td>
+</tr>
+</tbody></table>
+<h3 id="9-2-架构亮点"><a href="#9-2-架构亮点" class="headerlink" title="9.2 架构亮点"></a>9.2 架构亮点</h3><ol>
+<li><strong>三级缓存</strong>：L1 内存 + Upstash Redis + Vercel CDN，<strong>每层独立降级</strong></li>
+<li><strong>双 ID 兼容</strong>：<code>trybox_</code> 站内链路 + <code>tt</code> 外部联动，<strong>统一入口 <code>parseAnyId</code></strong></li>
+<li><strong>Token 三级刷新</strong>：内存 + 用户配置 + Redis，<strong>滚动刷新 + Bark 告警</strong></li>
+<li><strong>Episodes 单 key 合并</strong>：从 N 次 Upstash 请求降到 1 次</li>
+<li><strong>Negative cache</strong>：上游失败不反复回源</li>
+</ol>
+<h3 id="9-3-后续优化方向"><a href="#9-3-后续优化方向" class="headerlink" title="9.3 后续优化方向"></a>9.3 后续优化方向</h3><table>
+<thead>
+<tr>
+<th>方向</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nuvio Provider</strong></td>
+<td>独立项目，Promise 链式写法，不剔除 IP 校验链接</td>
+</tr>
+<tr>
+<td><strong>Catalog 按 section 拆分</strong></td>
+<td>单 catalog 用户拉取量从 713KB 降到 60KB</td>
+</tr>
+<tr>
+<td><strong>TMDB 备用 API</strong></td>
+<td>主 API 失败时切换备用（如 <code>api.tmdb.org</code> 镜像）</td>
+</tr>
+<tr>
+<td><strong>BingeGroup 优化</strong></td>
+<td>剧集播放时自动匹配质量</td>
+</tr>
+<tr>
+<td><strong>自定义域名</strong></td>
+<td>国内访问优化（优选 CNAME）</td>
+</tr>
+<tr>
+<td><strong>监控告警</strong></td>
+<td>Vercel 用量告警 + Bark 推送</td>
+</tr>
+</tbody></table>
+<h3 id="9-4-经验教训"><a href="#9-4-经验教训" class="headerlink" title="9.4 经验教训"></a>9.4 经验教训</h3><p><strong>关于探针</strong>：</p>
+<ul>
+<li><strong>探针是事实来源</strong>，不是可选步骤</li>
+<li><strong>探针要覆盖所有下游接口</strong></li>
+<li><strong>探针的输出要保留</strong>（作为后续开发的参考）</li>
+</ul>
+<p><strong>关于协议</strong>：</p>
+<ul>
+<li><strong>第三方 API 必须核对官方文档</strong></li>
+<li><strong>不能凭直觉拼 URL &#x2F; 猜请求方法</strong></li>
+</ul>
+<p><strong>关于缓存</strong>：</p>
+<ul>
+<li><strong>缓存分层要明确 TTL</strong></li>
+<li><strong>缓存 key 要统一前缀</strong></li>
+<li><strong>Redis 挂掉要降级</strong></li>
+</ul>
+<p><strong>关于 Stremio</strong>：</p>
+<ul>
+<li><strong><code>idPrefixes</code> 是资源级配置，不是全局</strong></li>
+<li><strong>Catalog 是特例，<code>idPrefixes</code> 无效</strong></li>
+<li><strong>诊断信息放 <code>url</code>，不放 <code>title</code></strong></li>
+<li><strong><code>bingeGroup</code> 提升剧集体验</strong></li>
+</ul>
+<p><strong>关于部署</strong>：</p>
+<ul>
+<li><strong>本地能跑 ≠ 生产能跑</strong></li>
+<li><strong><code>*.vercel.app</code> 国内访问不稳定</strong></li>
+<li><strong>关键功能必须在生产验证</strong></li>
+</ul>
+<hr>
+<h2 id="十、附录：Stremio-Addon-开发注意事项清单"><a href="#十、附录：Stremio-Addon-开发注意事项清单" class="headerlink" title="十、附录：Stremio Addon 开发注意事项清单"></a>十、附录：Stremio Addon 开发注意事项清单</h2><h3 id="10-1-Manifest-规范"><a href="#10-1-Manifest-规范" class="headerlink" title="10.1 Manifest 规范"></a>10.1 Manifest 规范</h3><ul>
+<li><input disabled="" type="checkbox"> <code>id</code> 必须全局唯一，建议用反向域名（如 <code>community.trybox</code>）</li>
+<li><input disabled="" type="checkbox"> <code>version</code> 语义化版本</li>
+<li><input disabled="" type="checkbox"> <code>resources</code> 用对象数组声明，每个资源单独配 <code>types</code> 和 <code>idPrefixes</code></li>
+<li><input disabled="" type="checkbox"> <code>catalogs</code> 里的 <code>extra</code> 声明 search &#x2F; genre &#x2F; skip</li>
+<li><input disabled="" type="checkbox"> <code>idPrefixes</code> 不能包含冒号（Stremio 用 <code>:</code> 分隔 season&#x2F;episode）</li>
+<li><input disabled="" type="checkbox"> <code>behaviorHints.configurable: true</code> 开启配置页</li>
+</ul>
+<h3 id="10-2-Catalog-规范"><a href="#10-2-Catalog-规范" class="headerlink" title="10.2 Catalog 规范"></a>10.2 Catalog 规范</h3><ul>
+<li><input disabled="" type="checkbox"> <code>metas</code> 数组里的每一项必须有 <code>id</code>、<code>type</code>、<code>name</code></li>
+<li><input disabled="" type="checkbox"> <code>poster</code> 用 <code>https://image.tmdb.org/t/p/w500&#123;path&#125;</code></li>
+<li><input disabled="" type="checkbox"> <code>background</code> 用 <code>https://image.tmdb.org/t/p/original&#123;path&#125;</code></li>
+<li><input disabled="" type="checkbox"> <code>releaseInfo</code> 建议只放年份</li>
+<li><input disabled="" type="checkbox"> <code>imdbRating</code> 是字符串（不是数字）</li>
+<li><input disabled="" type="checkbox"> <strong>一个 catalog 可以同时支持 movie 和 series</strong>（在 manifest 里声明两次）</li>
+</ul>
+<h3 id="10-3-Meta-规范"><a href="#10-3-Meta-规范" class="headerlink" title="10.3 Meta 规范"></a>10.3 Meta 规范</h3><ul>
+<li><input disabled="" type="checkbox"> <code>meta.id</code> 必须与请求的 <code>id</code> 一致（<strong>关键</strong>）</li>
+<li><input disabled="" type="checkbox"> <code>meta.type</code> 是 <code>movie</code> 或 <code>series</code></li>
+<li><input disabled="" type="checkbox"> <code>series</code> 类型必须有 <code>videos</code> 数组</li>
+<li><input disabled="" type="checkbox"> <code>videos[].id</code> 格式：<code>&#123;metaId&#125;:&#123;season&#125;:&#123;episode&#125;</code></li>
+<li><input disabled="" type="checkbox"> <code>videos[].season</code> 和 <code>videos[].episode</code> 是数字</li>
+<li><input disabled="" type="checkbox"> <code>meta</code> 失败时返回 <code>&#123; meta: null &#125;</code>，不要返回 debug 信息</li>
+</ul>
+<h3 id="10-4-Stream-规范"><a href="#10-4-Stream-规范" class="headerlink" title="10.4 Stream 规范"></a>10.4 Stream 规范</h3><ul>
+<li><input disabled="" type="checkbox"> 每个 stream 必须有 <code>url</code> &#x2F; <code>externalUrl</code> &#x2F; <code>infoHash</code> &#x2F; <code>ytId</code> 之一</li>
+<li><input disabled="" type="checkbox"> <code>name</code> 是分类名（如 “TryBox · MovieBox”）</li>
+<li><input disabled="" type="checkbox"> <code>title</code> 是流描述（如 “1080P · 文件名”）</li>
+<li><input disabled="" type="checkbox"> <code>quality</code> 是清晰度（<code>1080p</code> &#x2F; <code>720p</code> &#x2F; <code>4K</code> &#x2F; <code>ORG</code>）</li>
+<li><input disabled="" type="checkbox"> <code>bingeGroup</code> 用于剧集质量记忆</li>
+<li><input disabled="" type="checkbox"> <strong>诊断信息放 <code>url</code>，中文原文不编码</strong></li>
+</ul>
+<h3 id="10-5-Subtitle-规范"><a href="#10-5-Subtitle-规范" class="headerlink" title="10.5 Subtitle 规范"></a>10.5 Subtitle 规范</h3><ul>
+<li><input disabled="" type="checkbox"> <code>subtitles[].id</code> 必须唯一</li>
+<li><input disabled="" type="checkbox"> <code>subtitles[].url</code> 是字幕下载地址</li>
+<li><input disabled="" type="checkbox"> <code>subtitles[].lang</code> 是 <strong>ISO 639-1 两位码</strong>（如 <code>zh</code>、<code>en</code>）</li>
+<li><input disabled="" type="checkbox"> 不要返回没有 <code>lang</code> 的字幕</li>
+</ul>
+<h3 id="10-6-ID-规范"><a href="#10-6-ID-规范" class="headerlink" title="10.6 ID 规范"></a>10.6 ID 规范</h3><ul>
+<li><input disabled="" type="checkbox"> ID 前缀不含冒号</li>
+<li><input disabled="" type="checkbox"> ID 前缀短、小写、有意义</li>
+<li><input disabled="" type="checkbox"> Catalog &#x2F; Meta &#x2F; Stream 的 ID <strong>必须一致</strong></li>
+<li><input disabled="" type="checkbox"> <code>tt</code> 前缀保留给 IMDb ID</li>
+</ul>
+<h3 id="10-7-部署规范"><a href="#10-7-部署规范" class="headerlink" title="10.7 部署规范"></a>10.7 部署规范</h3><ul>
+<li><input disabled="" type="checkbox"> Edge Runtime 零第三方运行时依赖</li>
+<li><input disabled="" type="checkbox"> 用 <code>APP_PREFIX</code> 隔离环境</li>
+<li><input disabled="" type="checkbox"> 缓存 key 统一前缀</li>
+<li><input disabled="" type="checkbox"> 绑定自定义域名（国内）</li>
+<li><input disabled="" type="checkbox"> 加 <code>Cache-Control</code> 响应头（CDN 缓存）</li>
+</ul>
+<hr>
+<p><em>本文档最后更新于 2026-10-13，项目地址：<a target="_blank" rel="noopener" href="https://github.com/fqw000/tryboxStremio">fqw000&#x2F;tryboxStremio</a></em></p>
+</p></div><div class="pagination"><p class="clearfix"><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/10/25/sed-awk-%E7%94%A8%E6%B3%95/" title="sed awk 用法">下一篇: sed awk 用法&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

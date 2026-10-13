@@ -1,48 +1,39 @@
-extends partial/layout
-
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>使用ipad作为macmini唯一屏幕的解决方案 · 栖息地</title><meta name="description" content="考虑macmini的使用频率越来越低，又觉得拿ipad来当屏幕使用也很酷关键也很方便，也能减掉一块屏幕，又不影响macmini当作旁路由和服务器的日常维护。网上到的一些方案，大多数都是 随航 功能的包装，解决不了根本的问题，找到这个项目，解决了大部分问题，能稳定连接，可以当作第二屏幕，但是不能当作唯"><meta name="og:description" content="考虑macmini的使用频率越来越低，又觉得拿ipad来当屏幕使用也很酷关键也很方便，也能减掉一块屏幕，又不影响macmini当作旁路由和服务器的日常维护。网上到的一些方案，大多数都是 随航 功能的包装，解决不了根本的问题，找到这个项目，解决了大部分问题，能稳定连接，可以当作第二屏幕，但是不能当作唯"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="使用ipad作为macmini唯一屏幕的解决方案"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>使用ipad作为macmini唯一屏幕的解决方案</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2024-07-08 13:07</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/mac/" title="mac">mac</a><span>&nbsp;</span></span></p><p class="post-abstract"><p> 考虑macmini的使用频率越来越低，又觉得拿ipad来当屏幕使用也很酷关键也很方便，也能减掉一块屏幕，又不影响macmini当作旁路由和服务器的日常维护。网上到的一些方案，大多数都是 随航 功能的包装，解决不了根本的问题，找到<a target="_blank" rel="noopener" href="https://github.com/coreylam/macmini2ipad">这个项目</a>，解决了大部分问题，能稳定连接，可以当作第二屏幕，但是不能当作唯一屏幕使用。自己需求自己解决，抽时间优化了一部分代码，同时使用better display虚拟一块屏幕。</p>
+<h2 id="实现效果"><a href="#实现效果" class="headerlink" title="实现效果"></a>实现效果</h2><ul>
+<li>macmini必须的接线只有一根电源线；</li>
+<li>开机后通过局域网管理macmini与ipad的屏幕连接，支持连接、断开、停止服务</li>
+<li>屏幕连接中断以后支持自动重连</li>
+</ul>
+<h2 id="软件及环境"><a href="#软件及环境" class="headerlink" title="软件及环境"></a>软件及环境</h2><ul>
+<li>python</li>
+<li>PyWebIO</li>
+<li>baselib</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/fqw000/ipadUAM/releases/download/betterdisplay/BetterDisplay.2.2.6.MacKed.dmg">betterdisplay</a> (来源于网络)</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/fqw000/ipadUAM/releases/download/betterdisplay/ipadUAM.zip">ipadUAM.zip</a><br>我这里使用了虚拟环境<br> 示例参考，：</li>
+</ul>
+<ol>
+<li>解压ipadUAM.zip 进入文件主目录以后执行<code>python -m venv venv</code>创建了虚拟环境；</li>
+<li>执行<code>source venv/bin/activate</code>激活虚拟环境；</li>
+<li>安装依赖：<code>pip install -r requirements.txt</code></li>
+</ol>
+<h2 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h2><ol>
+<li>替换ipad名称和文件路径<ul>
+<li>&#x2F;sidecar&#x2F;sidecar.applescript : 27行处替换为ipad的设备名称；</li>
+<li>*.sh 和 *.py文件中的 <code>/Users/wangqifei/Documents/ipadUAM</code>需要替换为自己的路径</li>
+<li>sidecar.app : 使用 脚本编辑 对&#x2F;sidecar&#x2F;sidecar.applescript进行导出成<code>应用程序</code>保存至<code>应用程序</code>目录</li>
+<li>ipadUAM.app :自动化操作 - 新建 应用程序 - 搜索 运行shell脚本 粘贴以下内容，并导出成<code>应用程序</code>保存至<code>应用程序</code>目录 ： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># 激活虚拟环境</span></span><br><span class="line"><span class="built_in">source</span> /Users/wangqifei/Documents/ipadUAM/venv/bin/activate</span><br><span class="line"><span class="comment"># 执行 Python 脚本</span></span><br><span class="line">python3 /Users/wangqifei/Documents/ipadUAM/main.py</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>设置 - 隐私与安全 - 辅助功能 给以下app开启权限： 脚本编辑器、sidecar.app、ipadUAM.app、batterdisplsy</li>
+<li>设置 - 通用 - 登录项 给以下软件开启登录自启动权限： sidecar.app、ipadUAM.app、batterdisplsy</li>
+<li>安装并打开betterdisplay - 设置 - 显示器 - 概述 - 创建一个虚拟屏幕（根据你ipad型号选择即可）</li>
+<li>设置 - 显示器 - 添加ipad并用作<code>主屏幕</code> ，虚拟屏幕用作 <code>ipad镜像</code> （需要按此配置一次）</li>
+<li>配置账号<code>自动登录</code>。很多教程是取消了账号的密码，其实配置自动登录更有好一些。另外关于自动锁屏以后解锁的问题，你可以盲输密码解锁，我这里是配合了watch解锁设备，登录的问题也能完美解决。</li>
+<li>这样mac的声音是不能投到ipad上的，我这里采用了air pod来解决，后来发现连上蓝牙音箱效果其实更好。</li>
+</ol>
+<p>配置完成。<br>关机重启测试下能否自动连接ipad作为唯一屏幕使用：<br>开机后在ipad端（局域网内任何设备都可以）浏览器访问 <code>ipad ip:80</code>这里使用的是80端口，如果出现端口被占用，可以查看并停用相应服务或者在<code>main.py</code>末尾修改端口号。在页面就可以管理连接情况了</p>
+<blockquote>
+<p>个人测试使用体验还算完美，折腾 &gt;实用 。按需选择！</p>
+</blockquote>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2024/08/06/Docker%E5%AE%89%E8%A3%85pixman%E6%90%AD%E5%BB%BA%E7%9B%B4%E6%92%AD%E6%BA%90/" title="Docker安装pixman搭建直播源"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: Docker安装pixman搭建直播源</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/07/02/ip-cidr%E7%9A%84%E8%AE%A1%E7%AE%97%E8%BF%87%E7%A8%8B/" title="ip-cidr的计算过程">下一篇: ip-cidr的计算过程&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

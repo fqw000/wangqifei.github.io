@@ -1,48 +1,99 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>2023 · 栖息地</title><meta name="description" content="2023
+读过的书
 
-include mixins
+黑客与画家 (Paul Graham)
+当我们不再理解世界 (Benjamin Labatut)
+悉达多 (Hermann Hesse)
+八次危机 (温铁军)
+晚熟的人 （莫言）
+饥饿的盛世 (张宏杰)
+艽野尘梦 （陈渠珍）
+埃隆·马斯克传 (Walter Isaacson)
+"><meta name="og:description" content="2023
+读过的书
 
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+黑客与画家 (Paul Graham)
+当我们不再理解世界 (Benjamin Labatut)
+悉达多 (Hermann Hesse)
+八次危机 (温铁军)
+晚熟的人 （莫言）
+饥饿的盛世 (张宏杰)
+艽野尘梦 （陈渠珍）
+埃隆·马斯克传 (Walter Isaacson)
+"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="2023"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>2023</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2024-01-02 13:01</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/年度/" title="年度">年度</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="2023"><a href="#2023" class="headerlink" title="2023"></a>2023</h2><blockquote>
+<h3 id="读过的书"><a href="#读过的书" class="headerlink" title="读过的书"></a>读过的书</h3></blockquote>
+<ul>
+<li>黑客与画家 (Paul Graham)</li>
+<li>当我们不再理解世界 (Benjamin Labatut)</li>
+<li>悉达多 (Hermann Hesse)</li>
+<li>八次危机 (温铁军)</li>
+<li>晚熟的人 （莫言）</li>
+<li>饥饿的盛世 (张宏杰)</li>
+<li>艽野尘梦 （陈渠珍）</li>
+<li>埃隆·马斯克传 (Walter Isaacson)</li>
+<li>克莱因壶 (冈岛二人)</li>
+<li>乌合之众 (Gustave Le Bon)<br>搭建了 zlibot(书虫)机器人解决了图书下载的问题，又借助 epubhv(yihong0618)、Immersive Translate 实现了书籍内容的整理（横竖版排版、翻译、中英双语生成、日语注音）。</li>
+</ul>
+<p>&lt; 在这个信息过载的当下，还是要抗得住短视频这精神毒药的铁拳。 &gt;</p>
+<blockquote>
+<h3 id="开过的坑"><a href="#开过的坑" class="headerlink" title="开过的坑"></a>开过的坑</h3></blockquote>
+<ul>
+<li>lemon</li>
+<li>Tools</li>
+<li>Zerphyus</li>
+<li>Zlibot</li>
+<li>wangqifei.eu.org (需外网访问)</li>
+<li>维护着几个自用的列表和两台服务器</li>
+<li>2023 年 3984 contributions</li>
+<li>彻底解决了日常所有场景流畅、稳定的网络环境问题</li>
+<li>很大程度上实现了各场景网络环境下的广告屏蔽</li>
+<li>重拾编程技能的过程中不再关注技术本身转开始关注问题解决</li>
+<li>保持个站尽可能的更新</li>
+<li>维护一些 ios、tv 端以及 mac 端的影音脚本和模块，主要解决广告、会员以及部分增强功能(主要是翻译)需求</li>
+</ul>
+<p>&lt; 温故知新，旧梦重拾 &gt;  </p>
+<blockquote>
+<h3 id="听过的歌"><a href="#听过的歌" class="headerlink" title="听过的歌"></a>听过的歌</h3></blockquote>
+<p>&lt;数据来源：Spotify 账户, 其他平台数据不具备统计价值。&gt;</p>
+<ul>
+<li>播放 1289 首</li>
+<li>共收听 20040 分钟</li>
+<li>聆听 824 位艺人</li>
+<li>最常听的艺人<ol>
+<li>老狼</li>
+<li>好妹妹</li>
+<li>赵照</li>
+<li>陈一发儿</li>
+<li>程碧</li>
+</ol>
+</li>
+<li>热听排行：<h4 id="年度歌曲"><a href="#年度歌曲" class="headerlink" title="年度歌曲"></a>年度歌曲</h4><ol>
+<li>雨巷</li>
+<li>凤凰花开的路口</li>
+<li>普通人</li>
+<li>儿时</li>
+<li>别处的夕阳</li>
+</ol>
+<h4 id="年度博客"><a href="#年度博客" class="headerlink" title="年度博客"></a>年度博客</h4><ol>
+<li>半拿铁</li>
+<li>商业就是这样</li>
+<li>老高与小茉</li>
+<li>忽左忽右</li>
+<li>人类简史</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<h3 id="看过的影视"><a href="#看过的影视" class="headerlink" title="看过的影视"></a>看过的影视</h3></blockquote>
+<ul>
+<li>See</li>
+<li>曼达洛人</li>
+<li>Scavengers Reign</li>
+<li>euqalizer</li>
+<li>铁轨的尽头</li>
+</ul>
+<blockquote>
+<p>2023 已经过去，我们也终将失去它。<br>但是太阳，它每时每刻都是夕阳也都是旭日，当它熄灭着走下山去收尽苍凉残照之际，正是它在另一面燃烧着爬上山巅布散朝晖之时。 – 史铁生 《我与地坛》</p>
+</blockquote>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2024/02/24/%E5%9F%BA%E4%BA%8Etelegram%E7%9A%84%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA-tgstate/" title="基于telegram的图床搭建-tgstate"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 基于telegram的图床搭建-tgstate</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/12/14/iphone%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96/" title="iphone使用体验优化">下一篇: iphone使用体验优化&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

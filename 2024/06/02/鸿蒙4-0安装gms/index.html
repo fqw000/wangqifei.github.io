@@ -1,48 +1,79 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>鸿蒙4.0安装gms · 栖息地</title><meta name="description" content="方式一： 原生gms以下操作的基础：
 
-include mixins
+应用双开关闭
 
-block site_title
-    != page.title + " · " + config.title
+隐私空间关闭
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+开发者模式打开
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+usb调试打开
+
+谷歌服务助手  借助恢复备份来实现安装谷歌服务助手：  
+
+调整系统日期为2019年；
+将备份文件放在根目录 &amp;#x2F;huawei&amp;#x2F;backup&amp;#x2F; 下
+从内部空间恢复，"><meta name="og:description" content="方式一： 原生gms以下操作的基础：
+
+应用双开关闭
+
+隐私空间关闭
+
+开发者模式打开
+
+usb调试打开
+
+谷歌服务助手  借助恢复备份来实现安装谷歌服务助手：  
+
+调整系统日期为2019年；
+将备份文件放在根目录 &amp;#x2F;huawei&amp;#x2F;backup&amp;#x2F; 下
+从内部空间恢复，"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="鸿蒙4.0安装gms"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>鸿蒙4.0安装gms</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2024-06-02 18:06</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/gms/" title="gms">gms</a><span>&nbsp;</span><a class="a-tag" href="/tags/鸿蒙/" title="鸿蒙">鸿蒙</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="方式一：-原生gms"><a href="#方式一：-原生gms" class="headerlink" title="方式一： 原生gms"></a>方式一： 原生gms</h2><p>以下操作的基础：</p>
+<ul>
+<li><p>应用双开关闭</p>
+</li>
+<li><p>隐私空间关闭</p>
+</li>
+<li><p>开发者模式打开</p>
+</li>
+<li><p>usb调试打开</p>
+</li>
+<li><p>谷歌服务助手<br>  借助恢复备份来实现安装谷歌服务助手：  </p>
+<ol>
+<li>调整系统日期为2019年；</li>
+<li>将备份文件放在根目录 &#x2F;huawei&#x2F;backup&#x2F; 下</li>
+<li>从内部空间恢复，恢复备份文件</li>
+<li>日期调正常</li>
+<li>打开谷歌服务助手，确保是七项权限-激活-下载并更新，后台保持</li>
+</ol>
+</li>
+<li><p>MicroG<br>  安装MicroG以后登录google账号</p>
+</li>
+<li><p>google框架<br> 依次完成以下安装步骤：    </p>
+<ol>
+<li>GAM fixed.apk</li>
+<li>contacts sync.apk</li>
+<li>sv.Policy sidecar app.apk</li>
+<li>shared librany.apk</li>
+<li>google services framework.apk</li>
+</ol>
+<ul>
+<li>卸载MicroG</li>
+</ul>
+<ol start="6">
+<li>google play 服务.apk，等报错通知弹出以后才能继续</li>
+<li>google play 商店.apk（可以去<a target="_blank" rel="noopener" href="https://apkcombo.com/tw/google-play-store/com.android.vending/">apkcombo下载最新版</a>）<br>&lt;这一步可以使用googlefier&gt;<br><a target="_blank" rel="noopener" href="https://blog.shmilye.com/archives/harmony-google.html">googlefier使用步骤</a></li>
+</ol>
+</li>
+<li><p>注册设备</p>
+<ol>
+<li>安装deviceid,复制FMS</li>
+<li>网站注册设备</li>
+</ol>
+</li>
+<li><p>禁用com.google.android.gsf<br>  禁用之后重启，可以实现屏蔽报错。    &#x2F;&#x2F; 这是处理报错的关键</p>
+<p>  <code>*#*#426#*#*</code>可查看GSF连接状态</p>
+</li>
+</ul>
+<h2 id="方式二：-Micro-G"><a href="#方式二：-Micro-G" class="headerlink" title="方式二： Micro G"></a>方式二： Micro G</h2><p>不太推荐，主要是没有play商店，需要伪装商店，<a target="_blank" rel="noopener" href="https://gitlab.com/AuroraOSS/AuroraStore">Aurora Store</a></p>
+<h2 id="方式三：-Gbox"><a href="#方式三：-Gbox" class="headerlink" title="方式三： Gbox"></a>方式三： Gbox</h2><p>应急可以，最便捷</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2024/06/04/%E5%9F%BA%E4%BA%8EHarmonyOS-sans-sc%E4%BF%AE%E6%94%B9%E7%9A%84pixel-ttf%E5%AD%97%E4%BD%93/" title="基于HarmonyOS sans sc修改的pixel ttf字体"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: 基于HarmonyOS sans sc修改的pixel ttf字体</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/05/25/%E5%80%9F%E7%94%A8coze%E6%90%AD%E5%BB%BAtelegram-gpt-4o%E6%9C%BA%E5%99%A8%E4%BA%BA/" title="借用coze搭建telegram gpt-4o机器人">下一篇: 借用coze搭建telegram gpt-4o机器人&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

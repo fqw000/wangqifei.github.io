@@ -1,48 +1,162 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>360T7升级openwert · 栖息地</title><meta name="description" content="360T7 写入 openwrt 360T7 配置MT7981(filogic 820)
 
-include mixins
+CPU：MT7981B 双核 A53 1.3GHz ，架构 aarch64_cortex-a53
+RAM：256M DDR3
+FLASH：128M SPI NAND
+无线 phy：MT7976CN AX300"><meta name="og:description" content="360T7 写入 openwrt 360T7 配置MT7981(filogic 820)
 
-block site_title
-    != page.title + " · " + config.title
+CPU：MT7981B 双核 A53 1.3GHz ，架构 aarch64_cortex-a53
+RAM：256M DDR3
+FLASH：128M SPI NAND
+无线 phy：MT7976CN AX300"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="360T7升级openwert"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>360T7升级openwert</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-10-27 11:10</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/OpenWrt/" title="OpenWrt">OpenWrt</a><span>&nbsp;</span></span></p><p class="post-abstract"><h1 id="360T7-写入-openwrt"><a href="#360T7-写入-openwrt" class="headerlink" title=" 360T7 写入 openwrt "></a><center> 360T7 写入 openwrt </center></h1><h2 id="360T7-配置"><a href="#360T7-配置" class="headerlink" title="360T7 配置"></a>360T7 配置</h2><p>MT7981(filogic 820)</p>
+<ul>
+<li>CPU：MT7981B 双核 A53 1.3GHz ，架构 aarch64_cortex-a53</li>
+<li>RAM：256M DDR3</li>
+<li>FLASH：128M SPI NAND</li>
+<li>无线 phy：MT7976CN AX3000</li>
+<li>交换机：MT7531A 2xHSGMII</li>
+</ul>
+<p>原厂 UBoot 启动时，只能使用一个 ubi 分区存放固件，固件总体积（含 kernel+rootfs+rootfs_data）将限制在 36M 内，但仍然可以使用 plugin 分区（36M）存放其它数据。因此，原厂的 UBoot 只能使用小于 36M 的固件，较大的固件超过了存放 ubi 的分区就不能使用。</p>
+<h2 id="分区信息"><a href="#分区信息" class="headerlink" title="分区信息"></a>分区信息</h2><ul>
+<li>Factory 为无线 EEPROM 分区</li>
+<li>fip 为 uboot 分区</li>
+<li>ubi 为固件分区，36M，ubi 格式</li>
+<li>firmware-1 为固件分区，36M，ubi 格式</li>
+<li>plugin 为原厂插件分区，36M，ubi 格式</li>
+<li>factory 为原厂固件信息分区，保存有机器编号，MAC 地址等信息</li>
+</ul>
+<h2 id="开启-telnet"><a href="#开启-telnet" class="headerlink" title="开启 telnet"></a>开启 telnet</h2><ol>
+<li>拆机。<br>用卡片撬动，可以无损开机。<br>从底部中间部位插入翘片，需要注意卡扣方向，卡扣的结构为外壳扣在底座里的，使用翘片使底座向外正面外壳向内方向撬动，沿边缘走。<br>注意四个角的卡扣。</li>
+<li>找到 UART 串口。<br>拆机后找到，主板正面（贴芯片的一面），左上方侧边三个圆孔，线序从上到下一次为 RXD,TXD,GND，分别对应读、写、地。波特率为&#96;115200</li>
+<li>使用串口工具，连接路由器，串口工具的读对应路由器 UART 的写，地对地。不要接错！</li>
+<li>使用串口助手，路由器通电，等待启动，不断按 <code>F</code>和回车键，直到出现以下提示进入 failsafe 模式。</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Press the <span class="selector-attr">[f]</span> key and hit <span class="selector-attr">[enter]</span> <span class="selector-tag">to</span> enter failsafe mode</span><br><span class="line">Press the <span class="selector-attr">[1]</span>, <span class="selector-attr">[2]</span>, <span class="selector-attr">[3]</span> or <span class="selector-attr">[4]</span> key and hit <span class="selector-attr">[enter]</span> <span class="selector-tag">to</span> select the debug level</span><br></pre></td></tr></table></figure>
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+<ol start="5">
+<li>failsafe 下执行以下操作</li>
+</ol>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启uboot控制台菜单</span></span><br><span class="line">fw_setenv bootmenu_delay <span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 挂载rootfs并开启telnet</span></span><br><span class="line">mount_root</span><br><span class="line">sed -i <span class="string">&#x27;s/.*local debug=.*/\tlocal debug=1/&#x27;</span> <span class="regexp">/etc/i</span>nit.d/telnet</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改root密码</span></span><br><span class="line">passwd root</span><br></pre></td></tr></table></figure>
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<ol start="5">
+<li>重启。 <code>reboot</code></li>
+</ol>
+<ul>
+<li>Putty 串口操作<br>putty 可替代替代 串口助手 ，具体用法如下：<ol>
+<li>session<br>Serical Line:选择设备使用的串口，speed:115200,connection type:serical</li>
+<li>Connection-Serical<br>Flow control: none 。流控制基本不再使用了</li>
+<li>Teminal<br>Teminal-Imolcit CR in every IF \ Imolcit LF in every CR 勾选<br>Local echo: force on<br>Local line editing:force on</li>
+<li>Opne 运行即可。</li>
+</ol>
+</li>
+</ul>
+<h2 id="telnet-连接"><a href="#telnet-连接" class="headerlink" title="telnet 连接"></a>telnet 连接</h2><p>在 failsafe 模式下打开 telnet 以后，重启路由器，使用 telnet 连接路由器，ip 地址为路由器的后台管理页面地址，密码为在 failsafe 下设置的密码（也就是路由器的𭙃密码）。</p>
+<p>windws</p>
+<ul>
+<li>开启 telent<br>win+R 运行 ctrol-程序-程序和功能-启动和关闭 windows 功能-Telnet 客户端勾选。<br>xin+R 运行 cmd,运行 telent 即可</li>
+</ul>
+<p>也可使用 termius 等工具。</p>
+<h2 id="uboot"><a href="#uboot" class="headerlink" title="uboot"></a>uboot</h2><p>基于 bl-mt798x 项目<br><a target="_blank" rel="noopener" href="https://github.com/hanwckf/bl-mt798x/tree/20230902">mt798x uboot</a></p>
+<ul>
+<li>CPU : mt798</li>
+<li>BOARD : 360t7</li>
+<li>默认地址 ：192.168.1.1</li>
+<li>固件分区 108M，原厂固件分区 36M</li>
+<li>带有 webui 恢复页面<br>UBoot 升级：<a target="_blank" rel="noopener" href="http://192.168.1.1/uboot.html">192.168.1.1&#x2F;uboot.html</a><br>FirmwareUpdate:<a target="_blank" rel="noopener" href="http://192.168.1.1/uboot.html">192.168.1.1&#x2F;uboot.html</a><br>可以在 webui 刷 uboot 或者固件。</li>
+<li>支持多种 Flash 分区布局切换</li>
+</ul>
+<h3 id="刷入-UBoot"><a href="#刷入-UBoot" class="headerlink" title="刷入 UBoot"></a>刷入 UBoot</h3><ol>
+<li>下载该修改版 UBoot:mt798x-uboot-202206-fip.tar.xz,解压缩出 bin 文件。</li>
+<li>将 Uboot bin 文件上传到路由器,并写进 fip。<br>使用 telnet 将文件上传到&#x2F;tmp,直接使用 wegt 下载到&#x2F;tmp 也可以。上传文件以后，执行 <code>mtd write mt7981_360t7-fip-fixed-parts.bin fip</code>写入 UBoot 文件，刷 UBoot 完成。</li>
+</ol>
+<h2 id="刷入固件"><a href="#刷入固件" class="headerlink" title="刷入固件"></a>刷入固件</h2><ol>
+<li>完成 UBoot 写入以后，断电，修改电脑 IP 为 192.168.1.2，子网掩码 255.255.255.0，网关 192.168.1.1，dns 192.168.1.1.按住路由器 RESET 按键，通电，等待 8s 后使用访问 192.168.1.1 进入 uboot 恢复页面。</li>
+<li>选择固件，写入。</li>
+<li>重启完成。</li>
+</ol>
+<h2 id="failsafe-webui-使用方法"><a href="#failsafe-webui-使用方法" class="headerlink" title="failsafe webui 使用方法"></a>failsafe webui 使用方法</h2><ol>
+<li>按住路由器 RESET 键孔后通电，保持 10-15 秒后松开按键，路由器自动进入 failsafe 模式。</li>
+<li>uboot 不支持 DHCP,需要电脑网线接路由期 lan 口，配置电脑 ip 为固定 IP 设置 <code>192.168.1.100</code>。</li>
+<li>使用浏览器的 隐身模式 访问路由器 ip <code>192.168.1.1</code></li>
+<li>选择固件上传，支持 sysupgrade 和 factory 格式的固件，上传完毕后点击开始刷机。</li>
+<li>固件写入后，路由器会自动撑起，请将电脑 ip 地址重新设置成 DHCP 自动获取。</li>
+<li>要使用 webui 更新 uboot,可以访问 <code>http：//&lt;路由ip&gt;/uboot.html</code> ,选择 FIP 格式的 uboot 二进制文件并上传刷如即可。</li>
+</ol>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><h2 id="openwrt-固件"><a href="#openwrt-固件" class="headerlink" title="openwrt 固件"></a>openwrt 固件</h2><h3 id="官方-openwrt"><a href="#官方-openwrt" class="headerlink" title="官方 openwrt"></a>官方 openwrt</h3><blockquote>
+<p>⚠️ 注意： 这里仅限原厂分区即 36M UBoot 使用的，修改版的 Uboot 运行情况没测试。<br>因为没有 NMBM,所以需要刷机前在 failsafe mode 备份所有 mtd 分区。</p>
+</blockquote>
+<h4 id="需要文件"><a href="#需要文件" class="headerlink" title="需要文件"></a><a target="_blank" rel="noopener" href="https://downloads.openwrt.org/snapshots/targets/mediatek/filogic/">需要文件</a></h4><ul>
+<li><p>openwrt-23.05.0-mediatek-filogic-qihoo_360t7-bl31-uboot.fip<br>ATF uboot 文件，不支持 108M Uboot。</p>
+</li>
+<li><p>openwrt-23.05.0-mediatek-filogic-qihoo_360t7-initramfs-recovery.itb</p>
+</li>
+<li><p>openwrt-23.05.0-mediatek-filogic-qihoo_360t7-preloader.bin<br>ATF BL2 文件</p>
+</li>
+<li><p>openwrt-23.05.0-mediatek-filogic-qihoo_360t7-squashfs-sysupgrade.itb</p>
+</li>
+</ul>
+<h3 id="hanwckf-版"><a href="#hanwckf-版" class="headerlink" title="hanwckf 版"></a>hanwckf 版</h3><h4 id="hanwckf-编译版"><a href="#hanwckf-编译版" class="headerlink" title="hanwckf 编译版"></a>hanwckf 编译版</h4><p><a target="_blank" rel="noopener" href="https://www.right.com.cn/forum/thread-8290125-1-1.html">恩山论坛</a></p>
+<p>在 github 上有个一个基于 hanwckf 的编译版，<a target="_blank" rel="noopener" href="https://github.com/weigefenxiang/360T7/releases/tag/latest">在这里可以找到</a>。<br>基于修改的 108M 的 Uboot,比较纯净。</p>
+<h3 id="潘多拉版"><a href="#潘多拉版" class="headerlink" title="潘多拉版"></a>潘多拉版</h3><h3 id="immortaiwrt"><a href="#immortaiwrt" class="headerlink" title="immortaiwrt"></a>immortaiwrt</h3><h2 id="openwrt-的文件系统"><a href="#openwrt-的文件系统" class="headerlink" title="openwrt 的文件系统"></a>openwrt 的文件系统</h2><p><code>cat /proc/filesystems</code> 查看当前可读取的文件系统<br><code>lsblk</code> 列出可用块设备的信息<br>openwrt 使用的是 mini_fo 文件系统，可以看作是 squash fs 和 jffs2 的文件系统实现了连接，如果用户读取只读文件，则连到 squash 文件系统个，如果读取可修改文件则连接到 jffs2 上。<br>squashfs 是把 rom 压缩到一个文件刷进路由器，然后剩下的空间格式化成 jffs2 并且优于 ROM 文件，rom 的只读分区挂载到&#x2F;rom 下，另一个读写 jffs2 分区挂到&#x2F;overlay,当两个目录下有同名文件就优先读这个，相当于覆盖了 rom 文件，实际并没有覆盖，这种情况的优点是 rom 压缩率高，可写分区就大一些，其次只要备份&#x2F;overlay 就可以把 rom 以为的所有文件备份下来，以后可以全部还原不用配置了，格式化&#x2F;overlay 分区就相当于恢复 Openwrt 出厂设置了。<br>路由器的 flash 上，内核中常使用的是 MTD 设备驱动。查看 MTD 分配 <code>cat /proc/mtd</code> <code>cat /proc/partitions</code></p>
+<h3 id="flash-分区"><a href="#flash-分区" class="headerlink" title="flash 分区"></a>flash 分区</h3><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">u-boot:</span> 设备初始化程序和引导程序代码本身</span><br><span class="line"><span class="title">u-boot-enr:</span> 引导程序的配置数据</span><br><span class="line"><span class="title">factory:</span> 路由器芯片的初始化参数,通常挂载到/dev/mtd2</span><br><span class="line">kernel：固件分区，存放系统内核的二进制代码，不存放文件系统</span><br><span class="line"><span class="title">rootfs:</span> 固件分区，完整的系统文件包含只读和读写</span><br><span class="line"><span class="title">rootfs_rom:</span>固件分区，rootfs的只读部分,同时挂载到 `/rom` 和 `/`目录</span><br><span class="line">rootfs_data：固件分区，在rootfs中的读写部分的位置，通常挂载到 `/overlay`目录，再将 `/overlay`透明挂载到`/`目录</span><br><span class="line">art： EEPROM分区，主要保持无线的硬件参数</span><br><span class="line">firmware： 固件分区，完整的固件位置，包含了除 u-boot 和 art 之外的全部内容</span><br><span class="line">rootfs 挂载完成以后，剩余的内存会挂载到`/tmp`目录</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件系统-df-h"><a href="#文件系统-df-h" class="headerlink" title="文件系统 df -h"></a>文件系统 <code>df -h</code></h3><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- /</span><br><span class="line">  |- dev</span><br><span class="line">  |  |- root              # 根文件系统</span><br><span class="line">  |  |- ubi0_2            # UBI 设备的第二个分区</span><br><span class="line">  |</span><br><span class="line">  |- tmpfs                # 基于内存的临时文件系统</span><br><span class="line">  |</span><br><span class="line"><span class="title">  |- overlayfs:</span>/overlay   # Overlay 文件系统的挂载点，用于系统修改和用户自定义</span><br><span class="line">  |</span><br><span class="line">  |- ...</span><br><span class="line"></span><br><span class="line">---------------------</span><br><span class="line">  <span class="number">1</span>. `/dev/root`：这是根文件系统（root filesystem），它通常是只读的。它包含了操作系统的核心组件和基本文件。在启动过程中，它通常被挂载为只读文件系统。</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. `tmpfs`：`tmpfs` 是一种基于内存的临时文件系统。它在内存中创建一个文件系统，用于存储临时数据，例如临时文件、日志文件等。`tmpfs` 是易失性的，意味着在系统重启后，其中存储的数据将丢失。</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>. `/dev/ubi0_2`：这表示 UBI（Unsorted Block Images）设备的第二个分区。UBI 是用于处理闪存设备的抽象层，它允许将闪存分区虚拟化为逻辑块设备。`/dev/ubi0_2` 可能是一个可读写的分区，用于存储用户数据或配置。</span><br><span class="line"></span><br><span class="line"><span class="number">4</span>. `overlayfs:/overlay`：`overlayfs` 是一种联合文件系统，允许将多个文件系统层叠在一起。`/overlay` 表示一个 overlayfs 文件系统的挂载点，它是用于存储系统修改和用户自定义的文件系统。通常，`/overlay` 是可读写的，并且用于存储用户安装的软件包、配置更改和其他系统修改。</span><br><span class="line"></span><br><span class="line"><span class="title">这些文件系统在 OpenWrt 中扮演着不同的角色。其中，根文件系统包含了操作系统的核心组件和基本文件，`tmpfs` 用于临时存储，`/dev/ubi0_2` 可能是存储用户数据的分区，而 `overlayfs:</span>/overlay` 则用于存储系统修改和用户自定义的文件系统。</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>文件结构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">├── dev</span><br><span class="line">│   ├── mtdblockX       # 存储闪存芯片上的分区</span><br><span class="line">│   ├── mmcblk0pX       # SD卡或eMMC存储器的分区</span><br><span class="line">│   └── sdXN            # 外部USB存储设备的分区</span><br><span class="line">├── etc                 # 系统配置文件</span><br><span class="line">├── bin                 # 可执行文件</span><br><span class="line">├── sbin                # 系统可执行文件</span><br><span class="line">├── usr                 # 用户程序和数据</span><br><span class="line">│   ├── bin             # 用户可执行文件</span><br><span class="line">│   ├── sbin            # 用户系统可执行文件</span><br><span class="line">│   ├── lib             # 库文件</span><br><span class="line">│   ├── lib64           # 64位库文件</span><br><span class="line">│   ├── include         # 头文件</span><br><span class="line">│   ├── share           # 共享数据</span><br><span class="line">│   └── ...</span><br><span class="line">├── tmp                 # 临时文件</span><br><span class="line">├── proc                # 内核和进程信息</span><br><span class="line">├── sys                 # 系统相关信息</span><br><span class="line">├── mnt                 # 挂载点</span><br><span class="line">├── var                 # 可变数据</span><br><span class="line">├── www                 # Web服务器根目录</span><br><span class="line">└── ...</span><br></pre></td></tr></table></figure>
+
+<h2 id="openwrt-常用口令"><a href="#openwrt-常用口令" class="headerlink" title="openwrt 常用口令"></a>openwrt 常用口令</h2><p>用户名：root<br>密码：password 或者 空</p>
+<h2 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h2><ul>
+<li><code>ssh &lt;usr&gt;@&lt;ip&gt;</code><br>ssh 连接</li>
+<li><code>ssh-keygen -R &lt;ip&gt;</code><br>ssh 连接密钥重置</li>
+<li><code>cat /proc/mtd</code><br>查找分区的名称。在列出的输出中，可以看到每个分区的名称、起始地址和大小。</li>
+<li><code>df -h</code><br>硬盘空间查看</li>
+<li><code>du -h</code><br>查看指定文件或目录的磁盘占用</li>
+<li><code>ls &lt;dir&gt; -all -h</code><br>查看指定目录下的文件大小</li>
+<li><code>fdisk -l</code><br>查看当前磁盘分区情况<br>openwrt 是基于 linux 的，linux 一般情况下第一个磁盘的名称通常是 sda，第二个是 sdb 以此类推，而 sda1 就是 sda 磁盘的第一个分区，sda2 就是 sda 磁盘的第二个分区</li>
+<li><code>opkg files &lt;package&gt;</code><br>查看指定软件包的安装位置，会列出安装路径下的所有文件</li>
+<li><code>opkg info &lt;package&gt;</code><br>显示指定软件包的详细信息</li>
+</ul>
+<h2 id="软件源"><a href="#软件源" class="headerlink" title="软件源"></a>软件源</h2><p>推荐使用国内软件源，地址自行替换。<br>地址格式大多为:</p>
+<ul>
+<li><code>域名/releases | snapshots/&lt;版本号&gt;/packages/&lt;cpu架构&gt;/base | luci | packages | routing | telephony | feeds.conf</code><ul>
+<li>luci: 包含 Luci(openwrt 的 web 图形化界面)的扩展应用程序、插件，如额外的网络设置、vpn 客户端、文件管理等。</li>
+<li>packages： openwrt 社区维护的软件仓库，包含了大量的额外的软件包，社区的成员可以提交软件包到这个仓库。</li>
+<li>routing: 路由软件包，提供路由相关功能的软件包。</li>
+<li>telephony： 电话通信相关的软件包。</li>
+<li>feeds.conf: 软件源的配置文件。</li>
+</ul>
+</li>
+<li><code>域名/releases | snapshots/&lt;版本号&gt;/targets/&lt;芯片平台&gt;/&lt;芯片型号&gt; | filogic</code><br>主要是对应平台的固件包，</li>
+</ul>
+<h2 id="passwall-的安装及配置"><a href="#passwall-的安装及配置" class="headerlink" title="passwall 的安装及配置"></a>passwall 的安装及配置</h2><ol>
+<li>到 <a target="_blank" rel="noopener" href="https://github.com/xiaorouji/openwrt-passwall/releases">这里</a> 去下载 passwall 文件，对照自己的路由器芯片下载对应的版本。</li>
+<li>低版本的 openwrt 安装缺少 <code>luci-lua-runtime</code> 依赖，需要下载 <a target="_blank" rel="noopener" href="https://github.com/xiaorouji/openwrt-passwall/files/12605732/luci-lua-runtime_all_fake.zip">luci-lua-runtime-fake</a> 单独安装。 <a target="_blank" rel="noopener" href="https://github.com/xiaorouji/openwrt-passwall/issues/url">这里</a> 还有一些 openwrt 的其他装依赖。</li>
+<li>使用 文件传输 或者 文件助手 ，将 passwall 文件，luci-lua-runtime 依赖上传至 openwrt 的 &#x2F;tmp 路径下，比如 <code>/tmp/upload/</code>路径下。</li>
+<li>使用 ssh 连接 openwrt，进入<code>/tmp/upload/</code>目录，解压压缩文件到当前目录。</li>
+<li>在当前目录执行安装命令<code>opkg install *.ipk --force-reinstall</code></li>
+<li>进入 passwall 检查各组件安装情况及版本型号。sing-box 可能显示无，没关系，点击检查更新就行了。</li>
+<li>手工更新各组件的方法，比如 sing-box：</li>
+</ol>
+<ul>
+<li>找到<a target="_blank" rel="noopener" href="https://github.com/SagerNet/sing-box/releases">发行包</a>，当然要确保的你 openwrt 版本及芯片支持，下载文件包<a target="_blank" rel="noopener" href="https://github.com/SagerNet/sing-box/releases/download/v1.7.0-alpha.2/sing-box-1.7.0-alpha.2-darwin-arm64.tar.gz">sing-box-1.7.0-alpha.2-darwin-arm64.tar.gz</a>。</li>
+<li>上传 sing-box-1.7.0-alpha.2-darwin-arm64.tar.gz 到 openwrt 的<code>/tmp/upload/</code>文件夹并解压<code>tar -zxvf sing-box-1.7.0-alpha.2-darwin-arm64.tar.gz</code>修改解压后文件名字为 sing-box。<br>&lt;<br>为什么要这么做，没有执行自动检查更新？<br>当然是因为 &#x2F;overlay 空间不够，自动解压不成功了！！<br>&#x2F; &gt;</li>
+<li>将文件覆盖到 passwall 的 singbox 文件位置，默认&#x2F;usr&#x2F;bin&#x2F;sing-box，执行<code>mv sing-box /usr/bin/sing-box</code></li>
+<li>安装完成。</li>
+</ul>
+<ol start="7">
+<li>不必要的组件可以删除，也可以在第 5 步时直接忽略安装。（空间足够的话都安装吧，没必要精简，指不定哪就用到了不是）</li>
+</ol>
+<h2 id="小内存运行-passwall-的-Tips"><a href="#小内存运行-passwall-的-Tips" class="headerlink" title="小内存运行 passwall 的 Tips"></a>小内存运行 passwall 的 Tips</h2><ul>
+<li>组件更新问题参考上面手动安装步骤。</li>
+<li><h3 id="关于-geoip-dat-和-geosite-dat-文件的处理。"><a href="#关于-geoip-dat-和-geosite-dat-文件的处理。" class="headerlink" title="关于 geoip.dat 和 geosite.dat 文件的处理。"></a>关于 geoip.dat 和 geosite.dat 文件的处理。</h3>调整位置路径为<code>/tmp/share/v2ray</code>,但是&#x2F;tmp 目录不稳妥每次重启、断电都会抹掉，可以设置一个开机脚本实现自动下载。<br>脚本及设置方法如下：<center> 具体的是设置贴在这里，等我从air上复制过来！</center></li>
+</ul>
+<p>这是使用的是增强版的 geoip.dat 和 geosite.dat，来自 <a target="_blank" rel="noopener" href="https://github.com/Loyalsoldier/v2ray-rules-dat">这里</a> 。</p>
+<p>&lt;<br>这里就要吐槽一下，v2ray 使用的.dat 文件，sing-box 使用的是.db 文件，还不通用，通用的话直接调用同同一个文件多好。<br>&#x2F;&gt;</p>
+<ul>
+<li>当然如果你愿意，所有的组件文件都可以这么干。</li>
+</ul>
+<h2 id="IPV6"><a href="#IPV6" class="headerlink" title="IPV6"></a>IPV6</h2><p><a target="_blank" rel="noopener" href="https://post.smzdm.com/p/awzodmpp/">设置参考</a></p>
+<p>我是自动配置的 ipv6 发现极其不稳定，网络里的设备总有几台偶尔抽风，影响体验，就在 openwrt 的 DHCP\lan\wan 里全部禁用了 ipv6，把 wan6 也删除了。毕竟 ipv6 目前不是刚需，没折腾。</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/10/28/win%E4%B8%8Emac%E4%B9%8B%E9%97%B4%E7%9A%84%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB/" title="win与mac之间的文件共享"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: win与mac之间的文件共享</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2023/10/24/Ios-%E6%8D%B7%E5%BE%84-ShortCuts-%E7%AC%94%E8%AE%B0/" title="Ios 捷径 (ShortCuts)笔记">下一篇: Ios 捷径 (ShortCuts)笔记&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

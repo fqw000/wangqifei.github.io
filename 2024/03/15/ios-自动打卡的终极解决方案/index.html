@@ -1,48 +1,67 @@
-extends partial/layout
-
-include mixins
-
-block site_title
-    != page.title + " · " + config.title
-
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
-
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>ios 捷径实现自动打卡的终极解决方案 · 栖息地</title><meta name="description" content="ios 捷径实现自动打卡拯救打工人，从打卡开始。实现思路：  
+闲置手机通过捷径自动化，模拟人工打卡，指定时间段内随机个时间点打卡，打卡结果能及时imessage提醒。  
+方案一：*** 理论可行，实测Bug *** 
+实现思路
+指定日期指定时间点触发打卡任务
+设置一个随机数，控制在0-300s之"><meta name="og:description" content="ios 捷径实现自动打卡拯救打工人，从打卡开始。实现思路：  
+闲置手机通过捷径自动化，模拟人工打卡，指定时间段内随机个时间点打卡，打卡结果能及时imessage提醒。  
+方案一：*** 理论可行，实测Bug *** 
+实现思路
+指定日期指定时间点触发打卡任务
+设置一个随机数，控制在0-300s之"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="ios 捷径实现自动打卡的终极解决方案"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>ios 捷径实现自动打卡的终极解决方案</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2024-03-15 10:03</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/捷径/" title="捷径">捷径</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="ios-捷径实现自动打卡"><a href="#ios-捷径实现自动打卡" class="headerlink" title="ios 捷径实现自动打卡"></a>ios 捷径实现自动打卡</h2><p>拯救打工人，从打卡开始。<br>实现思路：  </p>
+<p>闲置手机通过捷径自动化，模拟人工打卡，指定时间段内随机个时间点打卡，打卡结果能及时imessage提醒。  </p>
+<h2 id="方案一："><a href="#方案一：" class="headerlink" title="方案一："></a>方案一：</h2><p>*** 理论可行，实测Bug *** </p>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><ol>
+<li>指定日期指定时间点触发打卡任务</li>
+<li>设置一个随机数，控制在0-300s之间。避免考勤表上出现每天的打卡时间都是同一个时间！</li>
+<li>开始打卡</li>
+<li>将打卡结果信息发送到用手机上，避免过于依赖捷径，一旦出现bug时好手动打卡补救。</li>
+</ol>
+<h3 id="实现步骤："><a href="#实现步骤：" class="headerlink" title="实现步骤："></a>实现步骤：</h3><ol>
+<li>新建捷径 check in&#x2F;out(这个就根据你的打卡app设置，比如钉钉、友空间等，可是使用软件提供的打卡捷径也可使用url scheme)</li>
+<li>新建捷径 auto check in&#x2F;out </li>
+<li>依次添加操作：设置随机数-格式化日期（日期：短，时间：长）-发送信息（格式化的日期：will be checked in&#x2F;out 随机数 s later）-等待（随机数）-运行 check in&#x2F;out捷径-格式化日期（日期：短，时间：长）-发送信息（格式化的日期：checked in&#x2F;out ）</li>
+<li>在自动化里设置 指定日期 指定时间，运行捷径auto check in&#x2F;out</li>
+</ol>
+<h3 id="实际情况"><a href="#实际情况" class="headerlink" title="实际情况"></a>实际情况</h3><ul>
+<li>锁屏时不能自动运行：开启自动运行，关闭锁屏密码；</li>
+<li>运行中间停止： 所有的运行通知都要关闭；</li>
+<li>等待运行 停止工作：捷径的bug，长时间熄屏执行 等待 操作时，偶发到会自动跳出捷径！！测试过程中，终止频发，不能很好的实现！</li>
+</ul>
+<h2 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h2><p><img src="https://ph.wangqifei.eu.org/file/e4d4e227fb2ab87b54817.png"></p>
+<h3 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h3><p>** 将方案一的 ‘等待’ 操作替换为 ‘专注|驾驶|个人模式的切换’ 操作，从而实现延迟操作。 **</p>
+<h3 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h3><ol>
+<li>新建捷径 checking in&#x2F;out <ul>
+<li>生成随机数；</li>
+<li>调整日期 加上 ‘随机数’ 秒&#x2F;分钟；</li>
+<li>打开个人模式（根据需要,选一个自己日常不常用的模式）直到 ‘调整后的日期’；</li>
+<li>发送信息 ‘当前日期 ： checking in&#x2F;out。’ 给 ‘&lt;imessage接收号码&gt;’；<br>个人模式需要确认打开一次并完成首次设置，不然运行中会因未配置而出现中止！</li>
+</ul>
+</li>
+<li>新建捷径 checked in&#x2F;out log。<ul>
+<li>调用打卡指令（根据需要自己设置）；</li>
+<li>配置一个3s的等待延迟；</li>
+<li>截图</li>
+<li>从 ‘截图’ 中提取文本</li>
+<li>匹配 ‘提取文本’ 中的 ‘签到成功’;  &#x2F;&#x2F; 根据打卡软件反馈的打卡完成的提示词设置</li>
+<li>如果 ‘匹配’ 中有任何值;</li>
+<li>发送信息 ‘当前日期 ： checked in&#x2F;out。’ 给 ‘&lt;imessage接收号码&gt;’  </li>
+<li>否则 发信息 ‘!!! 考勤异常 ： 当前日期 未能打卡成功，请手动处理。’ 给 ‘&lt;imessage接收号码&gt;’</li>
+<li>删除 ‘截图’;  &#x2F;&#x2F; 这里需要手动确认，可以不配置，每月定时清理一次考勤的截图即可；<br>我这里加入了打卡结果的确认，你也可以不使用确认。另外统一了所有的日期格式：自定义 YY&#x2F;MM&#x2F;DD EEE Hh:mm:ss<br>小技巧：捷径中的任何操作步骤都是可以长按拖动复制到另一个捷径中的，对于一些不是常规提供的操作非常<br>有用，比如第三方软件生成的捷径操作或者siri建议的捷径操作。</li>
+</ul>
+</li>
+<li>创建个人自动化<ul>
+<li>自动化1： 配置对应的打卡时间执行 checking in&#x2F;out;</li>
+<li>自动化2： 当个人模式（需要和之前的设置对应）关闭时执行 checked in&#x2F;out;</li>
+</ul>
+</li>
+</ol>
+<p>至此，自动打开设置完成，实测方案二完美运行。  </p>
+<p>** 这里还配置了另一个需求，只是没有生效@@ **<br>通过信息发送指定的指令比如 checknow 时，打开机执行checked in&#x2F;out log 立即打卡。<br>实测中这个不能实现自动运行，需要手动确认以后才能运行。</p>
+<h2 id="常用打卡软件的打卡捷径配置"><a href="#常用打卡软件的打卡捷径配置" class="headerlink" title="常用打卡软件的打卡捷径配置"></a>常用打卡软件的打卡捷径配置</h2><ul>
+<li>钉钉：<br>  设置自动打卡-捷径里直接搜钉钉</li>
+<li>友空间：<br>  我-设置-Siri捷径-一键签到（Add to Siri）。也可以设置快速打卡</li>
+</ul>
+<h2 id="关于定位问题（合理使用）"><a href="#关于定位问题（合理使用）" class="headerlink" title="关于定位问题（合理使用）"></a>关于定位问题（合理使用）</h2><p>ios: appdump2<br>windows-android: mumu模拟器</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2024/04/05/hexo%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/" title="hexo代码折叠的实现方案"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: hexo代码折叠的实现方案</a></span><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2024/03/14/cloudflare-workers%E6%90%AD%E5%BB%BAvless%E7%9A%84%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/" title="基于cloudflare workers搭建vless的技术实现">下一篇: 基于cloudflare workers搭建vless的技术实现&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>

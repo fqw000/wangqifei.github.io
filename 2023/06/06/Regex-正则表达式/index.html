@@ -1,48 +1,386 @@
-extends partial/layout
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>Regex 正则表达式 · 栖息地</title><meta name="description" content="RegularExpressionRegux &amp;#x2F; Reguxp
+语法构成普通字符涵盖：大小写字母、数字、标点、特殊符号
 
-include mixins
 
-block site_title
-    != page.title + " · " + config.title
 
-block description
-    - var desc = page.desc || strip_html(page.content).replace(/^\s*/, '').replace(/\s*$/, '').substring(0, 150);
-    meta(name="description", content=desc)
-    meta(name="og:description", content=desc)
-    meta(name="twitter:site", content=config.title)
-    meta(name="twitter:title", content=page.title)
-    meta(name="twitter:card", content="summary")
+打印字符
+描述
 
-block content
-    .autopagerize_page_element: .content: .post-page
-        include mixins
-        +make_post(page, true)
-        //- .share
-        //-     span= __('share')
-        //-     | &nbsp;
-        //-     span.soc
-        //-         a.fa.fa-bookmark(href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);}})();", ref="nofollow", target="_blank")
-        //-     span.soc
-        //-         a.fa.fa-weibo(href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));")
-        //-     span.soc
-        //-         a.fa.fa-twitter(href=url_for("http://twitter.com/home?status=" + "" + config.url + "/" + page.path + "%20" + config.title + "%20" + page.title + ""))
-        - var prev = page.prev ? page.prev.path : false;
-        - var next = page.next ? page.next.path : false;
-        .pagination
-            p.clearfix
-                if prev
-                    span.pre.pagbuttons
-                        a(role="navigation",href=url_for(prev), title=page.prev.title)
-                            i.fa.fa-angle-double-left
-                            |&nbsp;
-                            != __('prev_post')+': ' + page.prev.title
-                if next
-                    span
-                    | &nbsp;
-                    p 
-                    span.next.pagbuttons
-                        a(role="navigation",href=url_for(next), title=page.next.title)
-                            != __('next_post')+': ' + page.next.title
-                            |&nbsp;
-                            i.fa.fa-angle-double-right
-        include partial/comments
+
+
+abc
+匹配所有字符中的 abc。注意与[abc]的区别
+
+
+[abc]
+字符簇。匹配所有字符中单个的 a、b 或 c。[a | b | c]"><meta name="og:description" content="RegularExpressionRegux &amp;#x2F; Reguxp
+语法构成普通字符涵盖：大小写字母、数字、标点、特殊符号
+
+
+
+打印字符
+描述
+
+
+
+abc
+匹配所有字符中的 abc。注意与[abc]的区别
+
+
+[abc]
+字符簇。匹配所有字符中单个的 a、b 或 c。[a | b | c]"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="Regex 正则表达式"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>Regex 正则表达式</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2023-06-06 16:06</span><span class="meta-item"><i class="fa fa-tag"></i><span>&nbsp;</span><a class="a-tag" href="/tags/DEV/" title="DEV">DEV</a><span>&nbsp;</span></span></p><p class="post-abstract"><h2 id="RegularExpression"><a href="#RegularExpression" class="headerlink" title="RegularExpression"></a>RegularExpression</h2><p>Regux &#x2F; Reguxp</p>
+<h2 id="语法构成"><a href="#语法构成" class="headerlink" title="语法构成"></a>语法构成</h2><h3 id="普通字符"><a href="#普通字符" class="headerlink" title="普通字符"></a>普通字符</h3><p>涵盖：大小写字母、数字、标点、特殊符号</p>
+<table>
+<thead>
+<tr>
+<th>打印字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>abc</td>
+<td>匹配所有字符中的 abc。注意与[abc]的区别</td>
+</tr>
+<tr>
+<td>[abc]</td>
+<td>字符簇。匹配所有字符中单个的 a、b 或 c。[a | b | c]</td>
+</tr>
+<tr>
+<td>[a-z]</td>
+<td>字符簇。匹配所有字符中的任一小写字母。</td>
+</tr>
+<tr>
+<td>[A-Z]</td>
+<td>字符簇。 匹配所有字符中的任一大写字母。</td>
+</tr>
+<tr>
+<td>[0-9]</td>
+<td>字符簇。 匹配所有字符中的任一数字。</td>
+</tr>
+<tr>
+<td>[^abc]</td>
+<td>字符簇。匹配所有字符中非的 a、b 或 c。</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行(\n、\r)之外的任一字符。[^\n\r]</td>
+</tr>
+<tr>
+<td>[\s]</td>
+<td>匹配所有的空白字符包括换行符、空格、制表符、换页符等。</td>
+</tr>
+<tr>
+<td>[\S]</td>
+<td>匹配所有的非空白字符不包括换行符、制表符、换页符。[^\f\n\r\t\v]</td>
+</tr>
+<tr>
+<td>[\w]</td>
+<td>匹配任一数字、字母、下划线 。[0-9a-zA-Z_]</td>
+</tr>
+<tr>
+<td>[\W]</td>
+<td>匹配任一非单词字符。[^0-9a-zA-Z_]</td>
+</tr>
+<tr>
+<td>[\d]</td>
+<td>匹配任一数字字符。[0-9]</td>
+</tr>
+<tr>
+<td>[\D]</td>
+<td>匹配任一非数字字符，包括字母、空格、下划线。[^0-9]</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="非打印字符"><a href="#非打印字符" class="headerlink" title="非打印字符"></a>非打印字符</h3><table>
+<thead>
+<tr>
+<th>非打印字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\cx</td>
+<td>匹配为 x 字母的控制字符。x 可以是任一字母。</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>匹配一个换页符。\x0c 、\cL</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>匹配一个换行符。</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>匹配一个回车符。</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>匹配一个制表符。</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>匹配一个垂直制表符。</td>
+</tr>
+<tr>
+<td>\num</td>
+<td>匹配正整数 num，对所获取的匹配的引用。</td>
+</tr>
+</tbody></table>
+<h3 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h3><table>
+<thead>
+<tr>
+<th>元字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>^</td>
+<td>匹配整个字符串的开始位置。</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配整个字符串的结束位置。</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前一个子表达式零次及以上。{0,}</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前一个子表达式一次及以上。{1,}</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前一个子表达式零次到一次。{0,1}</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符之外的任一字符。</td>
+</tr>
+<tr>
+<td>\</td>
+<td>转义字符。将下一个字符标记为特殊字符、原意字符或向后引用，或八进制转义字符。</td>
+</tr>
+<tr>
+<td>()</td>
+<td>标记一个组（子表达式）。定义操作符的范围和有限级。选择项必须要放置在()中。</td>
+</tr>
+<tr>
+<td>[</td>
+<td>标记一个中括号表达式的开始。</td>
+</tr>
+<tr>
+<td>]</td>
+<td>标记一个中括号表达式的结束。</td>
+</tr>
+<tr>
+<td>{</td>
+<td>标记限定符表达式开始。</td>
+</tr>
+<tr>
+<td>}</td>
+<td>标记限定符表达式结束。</td>
+</tr>
+<tr>
+<td>|</td>
+<td>或。匹配前后两项中的任一个。优先级最低。</td>
+</tr>
+</tbody></table>
+<h3 id="限定符"><a href="#限定符" class="headerlink" title="限定符"></a>限定符</h3><p>表述指定的<code>正则组件</code>必须出现的次数才符合匹配</p>
+<table>
+<thead>
+<tr>
+<th>限定符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配前一个子表达式零次及以上。{0,}</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前一个子表达式一次及以上。{1,}</td>
+</tr>
+<tr>
+<td>？</td>
+<td>匹配前一个子表达式零次到一次。{0,1}。跟在任一其他限定符后面时，表示匹配模式是非贪婪的，即尽可能少的匹配描述的字符串。</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>匹配前一个子表达式 n 次。</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>匹配前一个子表达式 n 次及以上。</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>匹配前一个子表达式 n 次到 m 次。</td>
+</tr>
+</tbody></table>
+<h3 id="定位符-锚点"><a href="#定位符-锚点" class="headerlink" title="定位符(锚点)"></a>定位符(锚点)</h3><table>
+<thead>
+<tr>
+<th>定位符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>^</td>
+<td>匹配字符串的开始位置。</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配字符串的结束位置。</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个单词的边界(wordboundary，A word boundary is a zero-width test between two characters)。匹配字符与空格之间的位置。即匹配前一个子表达式且在单词的收尾或开头(取决于\b 放置的位置)</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>匹配非单词的边界。匹配单词间字符与字符之间的边界。即匹配前一个子表达式且前一个表达式不能在字符串的收尾或开头(取决于\B 放置的位置)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="组与引用"><a href="#组与引用" class="headerlink" title="组与引用"></a>组与引用</h3><p>（）表示捕获分组</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>()</td>
+<td>捕获分组，把每个分组里匹配的值保存起来，多个可通过用 n 表示组的序号来查看</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="零宽断言"><a href="#零宽断言" class="headerlink" title="零宽断言"></a>零宽断言</h3><table>
+<thead>
+<tr>
+<th>非捕获元</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(?:pattern)</td>
+<td>非捕获组，创建无法引用的分组。</td>
+</tr>
+<tr>
+<td>(?&#x3D;pattern)</td>
+<td>正向预查，在任何开始匹配圆括号内表达式的位置查询。匹配的元素后方紧跟着需要有能匹配括号内表达式匹配到的元素。</td>
+</tr>
+<tr>
+<td>(?!pattern)</td>
+<td>正向否定预查。在任何不匹配该表达式的位置查询。匹配到的元素后方紧跟着的不能含有括号内表达式匹配的元素。</td>
+</tr>
+<tr>
+<td>(?&lt;&#x3D;pattern)</td>
+<td>反向肯定预查。匹配元素的前一个元素是括号表达式陪陪的元素。</td>
+</tr>
+<tr>
+<td>(?&lt;!&#x3D;pattern)</td>
+<td>反向否定预查。匹配元素的前一个元素不能是括号表达式陪陪的元素。</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r(?&#x3D;e)</td>
+<td>匹配单词中后面有 e 的 r</td>
+</tr>
+<tr>
+<td>r(?!e)</td>
+<td>匹配单词中后面没有 e 的 r</td>
+</tr>
+<tr>
+<td>(?&lt;&#x3D;e)r</td>
+<td>匹配前面有 e 的 r</td>
+</tr>
+<tr>
+<td>(?&lt;!&#x3D;e)r</td>
+<td>匹配前面没有 e 的 r</td>
+</tr>
+</tbody></table>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">文本：</span><br><span class="line"><span class="section">    &lt;href=\&quot;https://d254.twcdn.xyz/tw/1ea?file=aHRwMjRwKS5tcDQ\&quot; rel=\&quot;nofollow\&quot;&gt;&lt;/href&gt;</span></span><br><span class="line"><span class="section">--------------</span></span><br><span class="line">(pattern)       捕获组</span><br><span class="line">使用pattern匹配文本，并将匹配到的文本保存到一个临时变量中，以便后续引用，一般使用$&amp; $1 引用</span><br><span class="line">eg:</span><br><span class="line">(https?:\/\/)[^\s#.?$/][^\s&quot;]*      //  https://d254.twcdn.xyz/tw/1ea?file=aHRwMjRwKS5tcDQ\</span><br><span class="line">(https?:\/\/)                       //  https://</span><br><span class="line">https://</span><br><span class="line"></span><br><span class="line"><span class="code">--------------</span></span><br><span class="line"><span class="code">(?:pattern)     非捕获组</span></span><br><span class="line"><span class="code">使用pattern匹配文本，但不对匹配的结果进行保存。</span></span><br><span class="line"><span class="code">eg：</span></span><br><span class="line"><span class="code">(?:https?:\/\/)[^\s#.?$/][^\s&quot;]*   //   https://d254.twcdn.xyz/tw/1ea?file=aHRwMjRwKS5tcDQ\</span></span><br><span class="line"><span class="code">(?:https?:\/\/)                    //   https://</span></span><br><span class="line"><span class="code">--------------</span></span><br><span class="line">(?=pattern)     正向先行断言（正向断言）    //放在匹配表达式的后面作为匹配结果的筛选条件</span><br><span class="line">eg：</span><br><span class="line"><span class="section">\w*(?=\.xyz)                       // twcdn // 匹配的内容后面紧跟着有.xyz的多个字母</span></span><br><span class="line"><span class="section">--------------</span></span><br><span class="line">(?!=pattern)    负向先行断言（负向断言）    //放在匹配表达式的后面作为匹配结果的筛选条件</span><br><span class="line">eg:</span><br><span class="line"><span class="section">tw(?!\/)                           // tw    // 文本中有两个tw,这里匹配的是第一个tw(后面跟着/的tw)</span></span><br><span class="line"><span class="section">--------------</span></span><br><span class="line">(?&lt;=pattern)    正向后行断言（正向后顾断言）    //放在匹配表达式的前面作为匹配结果的筛选条件</span><br><span class="line">eg:</span><br><span class="line">(?&lt;=rel=\\&quot;)[^\s]<span class="strong">*(?=&quot;)                            // nofollow\</span></span><br><span class="line"><span class="strong">(?&lt;=rel=\\)&quot;[^\s]*&quot;                             //  &quot;nofollow\&quot;</span></span><br><span class="line"><span class="strong">--------------</span></span><br><span class="line"><span class="strong">(?&lt;!=pattern)   负向后行断言（负向后顾断言）    //放在匹配表达式的前面作为匹配结果的筛选条件</span></span><br><span class="line"><span class="strong">eg:</span></span><br><span class="line"><span class="strong">(?&lt;!rel=\\)&quot;[^\s]*&quot;                         //  &quot;https://d254.twcdn.xyz/tw/1ea?file=aHRwMjRwKS5tcDQ\&quot;</span></span><br><span class="line"><span class="strong">--------------</span></span><br><span class="line"><span class="strong"> **pattern         类型为正则表达 **</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="flags-标志"><a href="#flags-标志" class="headerlink" title="flags 标志"></a>flags 标志</h3><p>flags 放置在 pattern 的后面，可以是多个 flags 同时使用。</p>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>i</td>
+<td>忽略大小写。</td>
+</tr>
+<tr>
+<td>g</td>
+<td>全局查找，确保表达式不会在第一个匹配项时停止。</td>
+</tr>
+<tr>
+<td>m</td>
+<td>多行查找，不启用^和$只匹配整个字符串的开始和结束，而不会单独匹配每一行。</td>
+</tr>
+<tr>
+<td>s</td>
+<td>默认.匹配的是除换行\n 以外的任一字符，加上 s 后.可以匹配包括换行在內的任一字符。</td>
+</tr>
+</tbody></table>
+<h3 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>符号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最高</td>
+<td>\</td>
+</tr>
+<tr>
+<td>高</td>
+<td>()、(?:)、(?&#x3D;)、[]</td>
+</tr>
+<tr>
+<td>中</td>
+<td>*、+、?、{n}、{n,}、{n,m}</td>
+</tr>
+<tr>
+<td>低</td>
+<td>^、$、中介字符</td>
+</tr>
+<tr>
+<td>次低</td>
+<td>串联。相邻的字符连接在一起</td>
+</tr>
+<tr>
+<td>最低</td>
+<td>｜</td>
+</tr>
+</tbody></table>
+<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e06eed0-cf1c-44e7-a0bc-aee4e33945f9/Untitled.png" alt="正则表达的解析"></p>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><p>shell 的 sed 不支持、\d、\D、零宽断言，且 sed 下的正则表达没有懒惰模式，都是贪婪模式。</p>
+<h2 id="Per"><a href="#Per" class="headerlink" title="Per"></a>Per</h2><p>可更好的替代 sed 使用。</p>
+</p></div><div class="pagination"><p class="clearfix"><span class="pre pagbuttons"><a role="navigation" href="/2023/06/06/ADB/" title="ADB"><i class="fa fa-angle-double-left"></i>&nbsp;上一篇: ADB</a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>
