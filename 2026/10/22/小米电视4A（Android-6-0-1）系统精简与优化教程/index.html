@@ -1,0 +1,750 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author"><title>小米电视4A（Android 6.0.1）系统精简与优化教程 · 栖息地</title><meta name="description" content="小米电视4A（Android 6.0.1）系统精简与优化教程
+设备：小米电视4A，Android 6.0.1（API 23），1GB 内存，无 root，开启开发者模式（开启usb调试、adb调试【可选】），已安装第三方launcher。现状：已完成 36 个系统包的 adb shell pm un"><meta name="og:description" content="小米电视4A（Android 6.0.1）系统精简与优化教程
+设备：小米电视4A，Android 6.0.1（API 23），1GB 内存，无 root，开启开发者模式（开启usb调试、adb调试【可选】），已安装第三方launcher。现状：已完成 36 个系统包的 adb shell pm un"><meta name="twitter:site" content="栖息地"><meta name="twitter:title" content="小米电视4A（Android 6.0.1）系统精简与优化教程"><meta name="twitter:card" content="summary"><meta name="keywords" content="王奇飞 wangqifei"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="stylesheet" href="/css/highlight.css?important"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKai-Bold.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Regular.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Light.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/satouriko/LxgwWenKai_Webfonts@v1.101/dist/LXGWWenKaiMono-Bold.css"><link rel="stylesheet" href="/css/style.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"><meta name="generator" content="Hexo 7.3.0"><link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head><body><div class="container" id="stage"><div class="row"><div class="col-sm-3 col-xs-12 side-container invisible" id="side-bar"><div class="vertical-text site-title"><h3 class="site-title-small" tabindex="-1"><a class="a-title" href="/">WangQiFei</a></h3><h1 class="site-title-large" tabindex="-1"><a class="a-title" href="/">Keefer</a></h1><!--h6(onclick="triggerSiteNav()") Trigger--></div><br class="visible-lg visible-md visible-sm"><img class="avatar" src="https://s2.loli.net/2023/06/10/xIeQpSEKYM2c8zU.png" width="200" height="300"><div class="dscr">思想提纯</div><div class="site-title-links" id="site-nav"><ul><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li><li><a href="/tags">标签</a></li><li><a href="/about">关于</a></li><li class="soc"><a href="https://github.com/fqw000" target="_blank" rel="noopener noreferrer" aria-label="Github"><i class="fa fa-github">&nbsp;</i></a><a href="https://twitter.com/wqf000" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa fa-twitter">&nbsp;</i></a><a href="https://wangqifei.eu.org/atom.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS"><i class="fa fa-rss">&nbsp;</i></a><a href="https://t.me/Zephyr0x00" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa fa-telegram">&nbsp;</i></a></li></ul><div class="visible-lg visible-md visible-sm site-nav-footer"><br class="site-nav-footer-br"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div><div class="col-sm-9 col-xs-12 main-container invisible" id="main-container"><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post-container"><p class="post-title"><a>小米电视4A（Android 6.0.1）系统精简与优化教程</a></p><p class="post-meta"><span class="date meta-item">发布于&nbsp;2026-10-22 18:10</span></p><p class="post-abstract"><h1 id="小米电视4A（Android-6-0-1）系统精简与优化教程"><a href="#小米电视4A（Android-6-0-1）系统精简与优化教程" class="headerlink" title="小米电视4A（Android 6.0.1）系统精简与优化教程"></a>小米电视4A（Android 6.0.1）系统精简与优化教程</h1><blockquote>
+<p>设备：小米电视4A，Android 6.0.1（API 23），1GB 内存，无 root，开启开发者模式（开启usb调试、adb调试【可选】），已安装第三方launcher。<br>现状：已完成 36 个系统包的 <code>adb shell pm uninstall --user 0</code> 用户级卸载，系统设置、输入源、遥控器、播放均正常。<br>原则：<strong>不再卸载核心系统包</strong>，优化重心转向 <code>settings</code> 参数调优、<code>force-stop</code> 临时压制、开发者选项手动调整。</p>
+</blockquote>
+<hr>
+<h2 id="一、已验证的精简"><a href="#一、已验证的精简" class="headerlink" title="一、已验证的精简"></a>一、已验证的精简</h2><p>以下 36 个包已通过 <code>adb shell pm uninstall --user 0 &lt; 包名 &gt;</code>部分是通过 <code>adb shell pm uninstall &lt; 包名 &gt;</code> 从当前用户卸载，APK 仍在系统分区，<strong>不需要再动</strong>. 路径是卸载前 <code>pm list packages -u -s -f &lt; 包名 &gt;</code> 记录的原 APK 路径；<code>/data/app/...</code> 下的路径在卸载后可能已被清理，恢复前先用 <code>pm path &lt; 包名 &gt;</code> 确认或使用提前备份的 APK <code>adb pull &lt; 路径&gt; &lt;提取地址&gt;</code>。恢复命令统一为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb install -r -d --user 0 ./&lt;包名&gt;.apk</span><br></pre></td></tr></table></figure>
+
+<p>风险是“卸载后可能影响”，不是必然发生；经验证当前系统正常，说明多数风险未触发。</p>
+<hr>
+<h2 id="1-广告-统计-推送-上报"><a href="#1-广告-统计-推送-上报" class="headerlink" title="1. 广告 &#x2F; 统计 &#x2F; 推送 &#x2F; 上报"></a>1. 广告 &#x2F; 统计 &#x2F; 推送 &#x2F; 上报</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.miui.systemAdSolution</code></td>
+<td>小米系统广告解决方案</td>
+<td><code>/system/vendor/app/AdServer/AdServer.apk</code></td>
+<td>低风险；系统广告减少，无直接功能影响</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.miui.tv.analytics</code></td>
+<td>小米电视行为分析&#x2F;遥测</td>
+<td><code>/data/app/com.miui.tv.analytics-1/base.apk</code></td>
+<td>低风险；停止行为统计，无功能影响</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.xiaomi.statistic</code></td>
+<td>小米统计服务</td>
+<td><code>/system/vendor/app/MiTVStat/MiTVStat.apk</code></td>
+<td>低风险；统计上报停止，无功能影响</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>com.xiaomi.mitv.tvpush.tvpushservice</code></td>
+<td>小米电视推送服务</td>
+<td><code>/system/vendor/app/TVPushService/TVPushService.apk</code></td>
+<td>低风险；可能收不到系统&#x2F;广告推送，不影响播放和设置</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>com.xiaomi.devicereport</code></td>
+<td>设备信息上报</td>
+<td><code>/data/app/com.xiaomi.devicereport-1/base.apk</code></td>
+<td>低风险；设备数据上报停止，一般无感；售后诊断&#x2F;账号设备同步可能少数据</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-系统更新-应用升级-应用商店"><a href="#2-系统更新-应用升级-应用商店" class="headerlink" title="2. 系统更新 &#x2F; 应用升级 &#x2F; 应用商店"></a>2. 系统更新 &#x2F; 应用升级 &#x2F; 应用商店</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.xiaomi.mitv.upgrade</code></td>
+<td>小米电视系统 OTA 升级</td>
+<td><code>/system/vendor/app/MiTVUpgrade/MiTVUpgrade.apk</code></td>
+<td>中低风险；无法接收系统更新；对老机型通常利大于弊</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.xiaomi.tv.appupgrade</code></td>
+<td>小米电视应用升级服务</td>
+<td><code>/system/vendor/app/AppUpgrade/AppUpgrade.apk</code></td>
+<td>低风险；应用不会自动升级</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.xiaomi.mitv.appstore</code></td>
+<td>小米电视应用商店</td>
+<td><code>/system/vendor/app/MiTVAppStore/MiTVAppStore.apk</code></td>
+<td>中风险；无法从小米商店安装&#x2F;更新应用，需 U 盘或第三方商店</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-商城-游戏-支付"><a href="#3-商城-游戏-支付" class="headerlink" title="3. 商城 &#x2F; 游戏 &#x2F; 支付"></a>3. 商城 &#x2F; 游戏 &#x2F; 支付</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.xiaomi.mitv.shop</code></td>
+<td>小米电视商城</td>
+<td><code>/system/vendor/app/MiTVShop/MiTVShop.apk</code></td>
+<td>低风险；商城入口消失，无其他影响</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.xiaomi.mibox.gamecenter</code></td>
+<td>小米游戏中心</td>
+<td><code>/system/vendor/app/MiTvGameCenter/MiTvGameCenter.apk</code></td>
+<td>低风险；游戏中心入口消失</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.xiaomi.gamecenter.sdk.service.mibox</code></td>
+<td>小米游戏中心 SDK 服务</td>
+<td><code>/system/vendor/app/MiGameCenterSDKService/MiGameCenterSDKService.apk</code></td>
+<td>中低风险；游戏中心&#x2F;部分小米游戏登录或支付可能受影响</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>com.mipay.wallet.tv</code></td>
+<td>小米钱包 TV 版</td>
+<td><code>/system/vendor/app/Mipay/Mipay.apk</code></td>
+<td>中低风险；电视端钱包支付不可用</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>com.xiaomi.mitv.pay</code></td>
+<td>小米电视支付组件</td>
+<td><code>/system/vendor/app/MiTVPay/MiTVPay.apk</code></td>
+<td>中低风险；电视内支付&#x2F;购买不可用</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>com.xiaomi.mitv.payment</code></td>
+<td>小米电视支付服务</td>
+<td><code>/data/app/com.xiaomi.mitv.payment-1/base.apk</code></td>
+<td>中低风险；电视内购买&#x2F;支付流程不可用</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="4-天气-日历-音乐-相册"><a href="#4-天气-日历-音乐-相册" class="headerlink" title="4. 天气 &#x2F; 日历 &#x2F; 音乐 &#x2F; 相册"></a>4. 天气 &#x2F; 日历 &#x2F; 音乐 &#x2F; 相册</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.xiaomi.tweather</code></td>
+<td>小米电视天气</td>
+<td><code>/data/app/com.xiaomi.tweather-1/base.apk</code></td>
+<td>低风险；天气入口&#x2F;天气信息消失</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.xiaomi.mitv.calendar</code></td>
+<td>小米电视日历</td>
+<td><code>/system/app/TVCalendar/TVCalendar.apk</code></td>
+<td>低风险；日历入口消失</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.xiaomi.mimusic2</code></td>
+<td>小米音乐 TV 版</td>
+<td><code>/system/app/TVMusic/TVMusic.apk</code></td>
+<td>低风险；小米音乐入口&#x2F;播放功能消失，第三方音乐不受影响</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>com.mitv.gallery</code></td>
+<td>小米电视相册</td>
+<td><code>/system/priv-app/MiTVGallery/MiTVGallery.apk</code></td>
+<td>低风险；系统相册入口消失；可用第三方文件管理器&#x2F;相册替代</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5-投屏-多屏互动-UPnP"><a href="#5-投屏-多屏互动-UPnP" class="headerlink" title="5. 投屏 &#x2F; 多屏互动 &#x2F; UPnP"></a>5. 投屏 &#x2F; 多屏互动 &#x2F; UPnP</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.xiaomi.mitv.smartshare</code></td>
+<td>小米电视无线投屏&#x2F;多屏互动</td>
+<td><code>/data/app/com.xiaomi.mitv.smartshare-1/base.apk</code></td>
+<td>中风险；原生投屏&#x2F;多屏互动失效；第三方投屏接收器可替代</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.xiaomi.upnp</code></td>
+<td>小米 UPnP&#x2F;DLNA 服务</td>
+<td><code>/data/app/com.xiaomi.upnp-1/base.apk</code></td>
+<td>中低风险；DLNA&#x2F;UPnP 发现与投屏失效</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.mi.miplay.mitvupnpsink</code></td>
+<td>米联 UPnP 投屏接收</td>
+<td><code>/system/app/MiTVUpnpApp/MiTVUpnpApp.apk</code></td>
+<td>中低风险；米联&#x2F;UPnP 接收端失效</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>com.xiaomi.miplay</code></td>
+<td>小米米联投屏服务</td>
+<td><code>/data/app/com.xiaomi.miplay-1/base.apk</code></td>
+<td>中低风险；米联投屏相关功能失效</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>com.duokan.airkan.tvbox</code></td>
+<td>多屏互动&#x2F;米联投屏服务</td>
+<td><code>/data/app/com.duokan.airkan.tvbox-1/base.apk</code></td>
+<td>中低风险；多屏互动&#x2F;Airkan 投屏可能失效</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-屏保-锁屏-画报"><a href="#6-屏保-锁屏-画报" class="headerlink" title="6. 屏保 &#x2F; 锁屏 &#x2F; 画报"></a>6. 屏保 &#x2F; 锁屏 &#x2F; 画报</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.mitv.screensaver</code></td>
+<td>小米电视智能屏保</td>
+<td><code>/system/priv-app/TVSmartScreenSaver/TVSmartScreenSaver.apk</code></td>
+<td>低风险；智能屏保不可用，可能回退为无屏保&#x2F;黑屏</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.xiaomi.mibox.lockscreen</code></td>
+<td>小米电视锁屏&#x2F;屏保</td>
+<td><code>/system/vendor/app/MiBoxLockScreen/MiBoxLockScreen.apk</code></td>
+<td>低风险；锁屏&#x2F;屏保样式失效，不影响正常使用</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.xiaomi.tv.gallery</code></td>
+<td>小米电视时尚画报&#x2F;壁纸轮播</td>
+<td><code>/system/vendor/app/MiGallery/MiGallery.apk</code></td>
+<td>低风险；画报&#x2F;壁纸轮播停止，无功能影响</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="7-其他预装-功能组件（重点看风险）"><a href="#7-其他预装-功能组件（重点看风险）" class="headerlink" title="7. 其他预装 &#x2F; 功能组件（重点看风险）"></a>7. 其他预装 &#x2F; 功能组件（重点看风险）</h2><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>包名</th>
+<th>作用</th>
+<th>原 APK 路径</th>
+<th>可能风险 &#x2F; 备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>com.xiaomi.mitv.karaoke.service</code></td>
+<td>小米电视 K 歌服务</td>
+<td><code>/system/app/KaraokeService/KaraokeService.apk</code></td>
+<td>低风险；K 歌功能失效</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>com.xiaomi.smarthome.tv</code></td>
+<td>米家 TV 智能家居入口</td>
+<td><code>/system/vendor/app/SmartHomeTV/SmartHomeTV.apk</code></td>
+<td>低风险；电视端米家入口消失，不影响手机米家</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>com.xiaomi.screenrecorder</code></td>
+<td>小米电视屏幕录制</td>
+<td><code>/system/app/TVScreenRecorder/TVScreenRecorder.apk</code></td>
+<td>低风险；系统录屏功能失效</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>com.xiaomi.voicecontrol</code></td>
+<td>小米电视语音控制（小爱同学）</td>
+<td><code>/system/app/VoiceControl/VoiceControl.apk</code></td>
+<td>中低风险；遥控器语音控制失效，普通按键不受影响</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>com.xiaomi.mitv.handbook</code></td>
+<td>小米电视用户手册</td>
+<td><code>/system/priv-app/Mitv_handbook/Mitv_handbook.apk</code></td>
+<td>低风险；内置说明书入口消失</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>com.mitv.alarmcenter</code></td>
+<td>小米电视定时提醒&#x2F;闹钟中心</td>
+<td><code>/system/priv-app/AlarmCenter/AlarmCenter.apk</code></td>
+<td>低风险；定时提醒&#x2F;闹钟功能失效</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>com.sogou.speech.offlineservice</code></td>
+<td>搜狗离线语音识别服务</td>
+<td><code>/system/vendor/app/SogouInputOffline/SogouInputOffline.apk</code></td>
+<td>中低风险；语音输入离线识别失效，在线输入&#x2F;普通输入不受影响</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>com.mitv.tvhome</code></td>
+<td>小米电视原生桌面&#x2F;Launcher</td>
+<td><code>/data/app/com.mitv.tvhome-3/base.apk</code></td>
+<td><strong>中高风险</strong>；当前由第三方桌面替代；若默认桌面丢失&#x2F;第三方桌面异常，需恢复此包或确保其他桌面可用</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>com.xiaomi.mitv.media</code></td>
+<td>MiTVMediaExplorerDaemon 媒体浏览守护</td>
+<td><code>/system/vendor/app/MiTVMediaExplorerDaemon/MiTVMediaExplorerDaemon.apk</code></td>
+<td>中风险；与 <code>mediaexplorer</code> 配套；若 U 盘&#x2F;媒体扫描&#x2F;存储访问异常，优先恢复它和 <code>mediaexplorer</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>com.android.providers.downloads</code></td>
+<td>Android 下载管理提供者</td>
+<td><code>/system/priv-app/DownloadProvider/DownloadProvider.apk</code></td>
+<td><strong>中高风险</strong>；核心下载 Provider；若应用内下载、浏览器下载、安装器下载异常，优先恢复此包</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="恢复优先级提醒"><a href="#恢复优先级提醒" class="headerlink" title="恢复优先级提醒"></a>恢复优先级提醒</h3><ul>
+<li><strong>遇到下载异常</strong>：先恢复 <code>com.android.providers.downloads</code>。</li>
+<li><strong>遇到桌面异常&#x2F;默认桌面丢失</strong>：恢复 <code>com.mitv.tvhome</code>，或确认 Projectivy 等第三方桌面仍可用。</li>
+<li><strong>遇到 U 盘&#x2F;媒体扫描&#x2F;存储访问异常</strong>：检查 <code>com.xiaomi.mitv.media</code> 与 <code>com.xiaomi.mitv.mediaexplorer</code>（后者你已恢复）。</li>
+<li><strong>恢复 <code>/data/app</code> 下的包</strong>：原路径可能已被清理，优先用之前 <code>adb pull</code> 备份的 APK；没有备份时，<code>/system</code> 下的包通常仍可 <code>adb install</code> 恢复。</li>
+</ul>
+<blockquote>
+<p><strong>特别注意</strong>：<code>com.mitv.tvhome</code>（原生桌面）和 <code>com.android.providers.downloads</code>（下载提供者）也在已卸载列表中。<strong>前者卸载前需要确认已经安装第三方launcher不如： ATVlauncher、leanbakc、 Projectivy 等第三方桌面替代</strong>，后者如遇下载异常可用 <code>adb install -r -d --user 0</code> 恢复。</p>
+</blockquote>
+<hr>
+<h2 id="二、当前可执行的优化（按风险从低到高）"><a href="#二、当前可执行的优化（按风险从低到高）" class="headerlink" title="二、当前可执行的优化（按风险从低到高）"></a>二、当前可执行的优化（按风险从低到高）</h2><h3 id="第一批：settings-全局参数（低风险，立即生效）"><a href="#第一批：settings-全局参数（低风险，立即生效）" class="headerlink" title="第一批：settings 全局参数（低风险，立即生效）"></a>第一批：<code>settings</code> 全局参数（低风险，立即生效）</h3><p>逐条执行，每条后测试电视反应。异常时用 <code>settings delete</code> 撤销。</p>
+<p><strong>1. 关闭动画（收益最明显）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put global window_animation_scale 0</span><br><span class="line">adb shell settings put global transition_animation_scale 0</span><br><span class="line">adb shell settings put global animator_duration_scale 0</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 限制后台进程数（1GB 内存关键优化）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put global limit_background_processes 2</span><br></pre></td></tr></table></figure>
+<p><code>2</code> 或 <code>4</code> 是平衡点，不建议设为 <code>1</code> 以下，否则应用切换频繁重载。</p>
+<p><strong>3. CPU 调度倾向性能</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put global cpuset.sched_boost 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 关闭强制门户检测（家庭固定网络适用）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put global captive_portal_mode 0</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>副作用：连接需要网页认证的公共 Wi-Fi 时，不会自动弹出认证页。</p>
+</blockquote>
+<p><strong>5. 关闭 Wi-Fi 扫描节流限制</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put global wifi_scan_throttle_enabled 0</span><br></pre></td></tr></table></figure>
+
+<p><strong>6. 尝试速度模式（不保证生效，成本低）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put secure speed_mode_enable 1</span><br><span class="line">adb shell settings put system speed_mode 1</span><br><span class="line">adb shell settings put global speed_mode_on 1</span><br></pre></td></tr></table></figure>
+<p>无效或异常时撤销：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings delete secure speed_mode_enable</span><br><span class="line">adb shell settings delete system speed_mode</span><br><span class="line">adb shell settings delete global speed_mode_on</span><br></pre></td></tr></table></figure>
+
+<p><strong>7. 硬件加速补充（不保证生效）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings put global media.sf.hwaccel 1</span><br><span class="line">adb shell settings put global video.accelerate.hw 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>撤销模板</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings delete global &lt;设置项&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="第二批：force-stop-临时压制（不跨重启）"><a href="#第二批：force-stop-临时压制（不跨重启）" class="headerlink" title="第二批：force-stop 临时压制（不跨重启）"></a>第二批：<code>force-stop</code> 临时压制（不跨重启）</h3><p><code>pm disable-user</code> 在这台电视上被 <code>SecurityException</code> 挡住，<code>force-stop</code> 是唯一可用的临时压制手段。<strong>效果仅限本次开机</strong>，重启后包会复活。</p>
+<p><strong>1. 电视管家（可安全 force-stop，不建议卸载）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am force-stop com.xiaomi.mitv.tvmanager</span><br></pre></td></tr></table></figure>
+<p>已知副作用：内置“网络测速”可能失效。重启后自动复活，需要时重新执行。</p>
+<p><strong>2. 编解码更新服务（低风险，可考虑卸载）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell am force-stop com.mitv.codec.update</span><br></pre></td></tr></table></figure>
+<p>先 force-stop，测试本地视频&#x2F;U 盘视频播放正常后，再决定是否 <code>uninstall</code>。卸载前备份：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm path com.mitv.codec.update</span><br><span class="line">adb pull &lt;返回路径&gt; ./com.mitv.codec.update.apk</span><br><span class="line">adb shell pm uninstall --user 0 com.mitv.codec.update</span><br><span class="line"><span class="comment"># 异常恢复</span></span><br><span class="line">adb install -r -d --user 0 ./com.mitv.codec.update.apk</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 第三方常驻应用（按需压制，释放内存最直接）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 与 Projectivy 重复的亚马逊桌面</span></span><br><span class="line">adb shell am force-stop com.amazon.tv.leanbacklauncher</span><br><span class="line"><span class="comment"># 投屏接收器（不用投屏时）</span></span><br><span class="line">adb shell am force-stop com.softmedia.receiver</span><br><span class="line"><span class="comment"># 文件管理器（不用时）</span></span><br><span class="line">adb shell am force-stop com.xiaobaifile.tv</span><br><span class="line"><span class="comment"># 代理工具（不需要代理时）</span></span><br><span class="line">adb shell am force-stop com.v2ray.ang</span><br><span class="line"><span class="comment"># 影视/商店/屏保类，不用时</span></span><br><span class="line">adb shell am force-stop flix.com.vision</span><br><span class="line">adb shell am force-stop app.orchard.tv</span><br><span class="line">adb shell am force-stop com.overseas.store.appstore</span><br><span class="line">adb shell am force-stop org.videolan.vlc</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这些 <code>force-stop</code> 不跨重启，适合“本次开机想腾内存”。长期不用某应用，直接在电视“应用管理”里正常卸载更彻底。</p>
+</blockquote>
+<hr>
+<h3 id="第三批：开发者选项手动调整（零风险）"><a href="#第三批：开发者选项手动调整（零风险）" class="headerlink" title="第三批：开发者选项手动调整（零风险）"></a>第三批：开发者选项手动调整（零风险）</h3><ol>
+<li>进入 <code>设置</code> → <code>关于</code> → 连续点击“版本号”7 次解锁开发者选项。</li>
+<li>在开发者选项中：<ul>
+<li><strong>窗口动画缩放 &#x2F; 过渡动画缩放 &#x2F; 动画程序时长缩放</strong> → 全部设为 <code>0</code></li>
+<li><strong>强制进行 GPU 渲染</strong> → 开启</li>
+<li><strong>后台进程限制</strong> → 设为 <code>不得超过 2 个进程</code> 或 <code>4 个</code></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="三、不建议再动的包（黑名单）"><a href="#三、不建议再动的包（黑名单）" class="headerlink" title="三、不建议再动的包（黑名单）"></a>三、不建议再动的包（黑名单）</h2><p>以下包是系统核心依赖，**不要 <code>force-stop</code>，不要 <code>uninstall</code>**：</p>
+<table>
+<thead>
+<tr>
+<th>包名</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mitv.service</code></td>
+<td>通用设置、输入源依赖</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.mitv.mediaexplorer</code></td>
+<td>设置存储&#x2F;U盘访问依赖</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.mitv.settings</code> &#x2F; <code>com.xiaomi.mitv.providers.settings</code></td>
+<td>设置本体与数据</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.mitv.systemui</code> &#x2F; <code>com.android.systemui</code></td>
+<td>系统 UI</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.mitv.remotecontroller.service</code></td>
+<td>遥控器服务</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.mitv.tvplayer</code></td>
+<td>HDMI&#x2F;DTMB&#x2F;模拟电视输入源（不是播放器）</td>
+</tr>
+<tr>
+<td><code>com.droidlogic.tvinput</code> &#x2F; <code>com.droidlogic</code></td>
+<td>晶晨 TV 输入源</td>
+</tr>
+<tr>
+<td><code>com.miui.core</code> &#x2F; <code>com.miui.daemon</code></td>
+<td>MIUI 核心与守护进程（<code>persistent</code>，杀不死，不建议卸载）</td>
+</tr>
+<tr>
+<td><code>com.android.providers.*</code> &#x2F; <code>com.android.externalstorage</code></td>
+<td>Android 核心 Provider</td>
+</tr>
+<tr>
+<td><code>com.google.android.webview</code></td>
+<td>WebView 组件</td>
+</tr>
+<tr>
+<td><code>com.android.packageinstaller</code></td>
+<td>应用安装器</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.account</code> &#x2F; <code>com.xiaomi.account.auth</code></td>
+<td>账号服务，卸载风险高</td>
+</tr>
+<tr>
+<td><code>com.xiaomi.mitv.tvmanager</code></td>
+<td>可 force-stop，<strong>不建议卸载</strong>（网络测速失效 + 潜在系统依赖）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="四、验证与回滚速查"><a href="#四、验证与回滚速查" class="headerlink" title="四、验证与回滚速查"></a>四、验证与回滚速查</h2><p><strong>查看已卸载的系统包</strong>（差集命令）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages -s &gt; installed.txt</span><br><span class="line">adb shell pm list packages -u -s &gt; all.txt</span><br><span class="line"><span class="built_in">comm</span> -13 &lt;(<span class="built_in">sort</span> installed.txt) &lt;(<span class="built_in">sort</span> all.txt)</span><br></pre></td></tr></table></figure>
+
+<p><strong>查看已禁用的包</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages -d</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这台电视返回为空，说明 <code>disable-user</code> 未成功执行过，所有操作均为 <code>uninstall --user 0</code>。</p>
+</blockquote>
+<p><strong>force-stop 后确认进程状态</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell ps | grep &lt;包名片段&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不要用 <code>pidof</code>，这台电视的 toybox <code>pidof</code> 在找不到精确匹配时会错误打印所有 PID。</p>
+</blockquote>
+<p><strong>恢复被卸载的系统包</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb install -r -d --user 0 ./&lt;包名&gt;.apk</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、执行顺序建议"><a href="#五、执行顺序建议" class="headerlink" title="五、执行顺序建议"></a>五、执行顺序建议</h2><ol>
+<li><strong>先做第一批 <code>settings</code> 参数</strong>：动画归零 + 后台进程限制为 2，这两条对 1GB 内存的流畅度提升最直接。</li>
+<li>**再做第二批 <code>force-stop</code>**：对 <code>tvmanager</code>、<code>codec.update</code> 和第三方常驻应用逐条压制，每条后测试设置与桌面。</li>
+<li><strong>最后做第三批开发者选项</strong>：手动确认动画与 GPU 渲染设置。</li>
+<li><strong>每次只改一项，改完立即测试</strong>：设置各页面、桌面、遥控器、本地播放。异常立即撤销或重启。</li>
+</ol>
+<p>精简已进入尾声，继续动系统包的收益极低、风险极高。把精力放在 <code>settings</code> 调优和对第三方应用的按需管理上，是这台 1GB 内存 Android 6 电视当前最安全、最有效的优化路径。</p>
+<h2 id="六、常用-ADB-命令手册（电视场景）"><a href="#六、常用-ADB-命令手册（电视场景）" class="headerlink" title="六、常用 ADB 命令手册（电视场景）"></a>六、常用 ADB 命令手册（电视场景）</h2><h3 id="连接与设备管理"><a href="#连接与设备管理" class="headerlink" title="连接与设备管理"></a>连接与设备管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adb connect 192.168.x.x:5555      <span class="comment"># 无线连接电视</span></span><br><span class="line">adb disconnect                     <span class="comment"># 断开所有无线连接</span></span><br><span class="line">adb devices                        <span class="comment"># 列出设备及状态（device / offline / unauthorized）</span></span><br><span class="line">adb kill-server                    <span class="comment"># 重启 ADB 服务前先停止</span></span><br><span class="line">adb start-server                   <span class="comment"># 重新启动 ADB 服务</span></span><br><span class="line">adb -s 192.168.x.x:5555 shell     <span class="comment"># 多设备时指定目标</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果 <code>adb devices</code> 显示 <code>offline</code>，先 <code>adb kill-server</code> → <code>adb start-server</code> → 重新 <code>adb connect</code>。仍 offline 时，用 USB 连接后执行 <code>adb tcpip 5555</code> 重置无线监听。</p>
+</blockquote>
+<hr>
+<h3 id="基础信息检测"><a href="#基础信息检测" class="headerlink" title="基础信息检测"></a>基础信息检测</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">adb shell getprop ro.build.display.id</span><br><span class="line">adb shell getprop ro.build.version.release      <span class="comment"># Android 版本</span></span><br><span class="line">adb shell getprop ro.product.model              <span class="comment"># 设备型号</span></span><br><span class="line">adb shell getprop ro.build.version.sdk          <span class="comment"># API 级别</span></span><br><span class="line">adb shell getprop | grep -i <span class="string">&quot;low_ram&quot;</span>           <span class="comment"># 是否低内存模式</span></span><br><span class="line">adb shell wm size                               <span class="comment"># 屏幕分辨率</span></span><br><span class="line">adb shell wm density                            <span class="comment"># 屏幕密度</span></span><br><span class="line">adb shell ip addr show wlan0                    <span class="comment"># 电视当前 IP</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="包管理（精简场景核心）"><a href="#包管理（精简场景核心）" class="headerlink" title="包管理（精简场景核心）"></a>包管理（精简场景核心）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages | <span class="built_in">sort</span>                          <span class="comment"># 全部包，排序</span></span><br><span class="line">adb shell pm list packages -s                              <span class="comment"># 仅系统包</span></span><br><span class="line">adb shell pm list packages -3                              <span class="comment"># 仅第三方包</span></span><br><span class="line">adb shell pm list packages -u                              <span class="comment"># 包含已卸载的包</span></span><br><span class="line">adb shell pm list packages -u -s                           <span class="comment"># 系统包 + 已卸载系统包（全集）</span></span><br><span class="line">adb shell pm list packages -d                              <span class="comment"># 已禁用的包</span></span><br><span class="line">adb shell pm list packages -f -U --user 0                  <span class="comment"># 带路径、UID、user 0 视图</span></span><br><span class="line">adb shell pm path &lt;包名&gt;                                    <span class="comment"># 查 APK 路径</span></span><br><span class="line">adb shell pm list packages -f -u | grep &lt;包名&gt;              <span class="comment"># 包被禁用了，普通的 pm path 会失效，必须加上 -u（包含未安装/禁用）和 -f（显示路径）参数</span></span><br><span class="line">adb shell dumpsys package &lt;包名&gt; | grep -B 2 <span class="string">&quot;stopped&quot;</span>      <span class="comment"># 查包的 stopped 状态</span></span><br><span class="line">adb shell <span class="string">&quot;for pkg in \$(pm list packages | cut -d &#x27;:&#x27; -f 2); do ver=\$(dumpsys package \$pkg | grep versionName | head -n 1 | cut -d &#x27;=&#x27; -f 2); echo \&quot;\$pkg : \$ver\&quot;; done&quot;</span>  <span class="comment"># 查看软件 包名 及版本号</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>找出“已卸载”的系统包（差集）</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm list packages -s &gt; installed.txt</span><br><span class="line">adb shell pm list packages -u -s &gt; all.txt</span><br><span class="line"><span class="built_in">comm</span> -13 &lt;(<span class="built_in">sort</span> installed.txt) &lt;(<span class="built_in">sort</span> all.txt)            <span class="comment"># 出现在全集但不在当前安装集的包</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>恢复被 <code>uninstall --user 0</code> 的系统包</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm path &lt;包名&gt;                  <span class="comment"># 先确认原 APK 是否还在</span></span><br><span class="line">adb pull &lt;APK路径&gt; ./&lt;包名&gt;.apk</span><br><span class="line">adb install -r -d --user 0 ./&lt;包名&gt;.apk</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="按键模拟（遥控器替代）"><a href="#按键模拟（遥控器替代）" class="headerlink" title="按键模拟（遥控器替代）"></a>按键模拟（遥控器替代）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell input keyevent &lt;键值&gt;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>键值</th>
+<th>含义</th>
+<th>键值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>3</code></td>
+<td>HOME</td>
+<td><code>19</code></td>
+<td>方向上</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>BACK</td>
+<td><code>20</code></td>
+<td>方向下</td>
+</tr>
+<tr>
+<td><code>23</code></td>
+<td>确认&#x2F;OK（DPAD_CENTER）</td>
+<td><code>21</code></td>
+<td>方向左</td>
+</tr>
+<tr>
+<td><code>26</code></td>
+<td>电源（POWER）</td>
+<td><code>22</code></td>
+<td>方向右</td>
+</tr>
+<tr>
+<td><code>24</code> &#x2F; <code>25</code></td>
+<td>音量 + &#x2F; -</td>
+<td><code>164</code></td>
+<td>静音</td>
+</tr>
+<tr>
+<td><code>85</code></td>
+<td>播放&#x2F;暂停</td>
+<td><code>87</code></td>
+<td>下一曲</td>
+</tr>
+<tr>
+<td><code>88</code></td>
+<td>上一曲</td>
+<td><code>126</code></td>
+<td>播放</td>
+</tr>
+<tr>
+<td><code>127</code></td>
+<td>暂停</td>
+<td><code>130</code></td>
+<td>媒体播放暂停</td>
+</tr>
+</tbody></table>
+<p>电视遥控的方向和确认键对应 <code>DPAD_UP(19)/DOWN(20)/LEFT(21)/RIGHT(22)/CENTER(23)</code>，HOME 是 <code>3</code>，BACK 是 <code>4</code>。</p>
+<p><strong>输入文本</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell input text <span class="string">&quot;hello&quot;</span>             <span class="comment"># 仅支持 ASCII，中文需借助输入法或 TVRemoteIME</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>点击坐标</strong>（需要知道屏幕分辨率）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell input tap 960 540              <span class="comment"># 在 1920x1080 屏幕上点击中心</span></span><br><span class="line">adb shell input swipe 500 500 1000 500   <span class="comment"># 从 (500,500) 滑动到 (1000,500)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="截图与录屏"><a href="#截图与录屏" class="headerlink" title="截图与录屏"></a>截图与录屏</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">adb shell screencap -p /sdcard/testscr.png</span><br><span class="line">adb pull /sdcard/testscr.png ./</span><br><span class="line"><span class="built_in">ls</span> -l testscr.png</span><br><span class="line"></span><br><span class="line"><span class="comment"># 录屏（部分 Android 6 电视支持，最多 180 秒）</span></span><br><span class="line">adb shell screenrecord /sdcard/demo.mp4</span><br><span class="line">adb pull /sdcard/demo.mp4 ./</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">adb pull &lt;设备路径&gt; &lt;本地路径&gt;              <span class="comment"># 从电视拉到电脑</span></span><br><span class="line">adb push &lt;本地路径&gt; &lt;设备路径&gt;              <span class="comment"># 从电脑推到电视</span></span><br><span class="line">adb shell <span class="built_in">cp</span> &lt;源&gt; &lt;目标&gt;                  <span class="comment"># 设备内部复制</span></span><br><span class="line">adb shell <span class="built_in">mv</span> &lt;源&gt; &lt;目标&gt;                  <span class="comment"># 设备内部移动/重命名</span></span><br><span class="line">adb shell <span class="built_in">rm</span> &lt;路径&gt;                       <span class="comment"># 删除（谨慎）</span></span><br><span class="line">adb shell <span class="built_in">ls</span> -l &lt;目录&gt;                    <span class="comment"># 查看权限和大小</span></span><br><span class="line">adb shell <span class="built_in">chmod</span> 644 &lt;文件&gt;                <span class="comment"># 修改权限</span></span><br><span class="line">adb shell <span class="built_in">df</span> /data                        <span class="comment"># 查看 /data 剩余空间</span></span><br><span class="line">adb shell <span class="built_in">du</span> -sh /data/local/tmp/*        <span class="comment"># 查看临时目录占用</span></span><br></pre></td></tr></table></figure>
+
+<p><code>pull</code>&#x2F;<code>push</code> 可复制任意文件或目录，不受 <code>install</code> 只能装 APK 的限制。电视上 <code>/data/local/tmp/</code> 是 shell 可写的安全暂存区，适合在安装&#x2F;恢复 APK 前做中转。</p>
+<hr>
+<h3 id="进程与服务管理"><a href="#进程与服务管理" class="headerlink" title="进程与服务管理"></a>进程与服务管理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adb shell ps | grep &lt;包名片段&gt;                       <span class="comment"># 最可靠的进程检查（Android 6 推荐）</span></span><br><span class="line">adb shell top -n 1 | grep &lt;包名&gt;                    <span class="comment"># 单次快照 CPU/内存占用</span></span><br><span class="line">adb shell top -m 6 -n 1                            <span class="comment"># 内存占用前 6 的进程</span></span><br><span class="line">adb shell dumpsys activity processes | grep -A 3 &lt;包名&gt;   <span class="comment"># AMS 进程记录</span></span><br><span class="line">adb shell dumpsys activity services | grep -A 3 &lt;包名&gt;    <span class="comment"># 服务记录</span></span><br><span class="line">adb shell dumpsys window | grep mCurrentFocus           <span class="comment">## 获取当前前台应用包名和组件信息</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>强制停止（临时压制，不跨重启）</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell am force-stop &lt;包名&gt;      <span class="comment"># 强杀包的所有进程，重启后复活</span></span><br><span class="line">adb shell am <span class="built_in">kill</span> &lt;包名&gt;            <span class="comment"># 仅杀“可安全结束”的进程，更温和</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这台电视上 <code>pidof</code> 在找不到精确匹配时会错误打印所有 PID，<strong>不要用 <code>pidof</code> 判断进程是否存活</strong>，用 <code>ps | grep</code> 替代。</p>
+</blockquote>
+<p><strong>启动 Activity</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell am start -n &lt;包名&gt;/&lt;Activity全类名&gt;</span><br><span class="line">adb shell dumpsys window | grep mCurrentFocus     <span class="comment"># 查看当前前台 Activity</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="性能监控"><a href="#性能监控" class="headerlink" title="性能监控"></a>性能监控</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">adb shell dumpsys meminfo                  <span class="comment"># 全局内存概览</span></span><br><span class="line">adb shell dumpsys meminfo &lt;包名&gt;           <span class="comment"># 指定包的内存详情</span></span><br><span class="line">adb shell dumpsys cpuinfo                  <span class="comment"># 各进程 CPU 占用</span></span><br><span class="line">adb shell dumpsys gfxinfo &lt;包名&gt;           <span class="comment"># 图形渲染性能（帧耗时）</span></span><br><span class="line">adb shell dumpsys diskstats                <span class="comment"># 磁盘 I/O 统计</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/meminfo                <span class="comment"># 原始内存信息</span></span><br><span class="line">adb shell <span class="built_in">cat</span> /proc/cpuinfo                <span class="comment"># 原始 CPU 信息</span></span><br></pre></td></tr></table></figure>
+
+<p><code>dumpsys meminfo</code> 看总内存&#x2F;可用内存&#x2F;各进程 PSS；<code>dumpsys cpuinfo</code> 看 CPU 使用率和负载；<code>top -n 1</code> 适合快速抓一次瞬时快照。</p>
+<hr>
+<h3 id="日志抓取（崩溃排查）"><a href="#日志抓取（崩溃排查）" class="headerlink" title="日志抓取（崩溃排查）"></a>日志抓取（崩溃排查）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">adb logcat -c                                    <span class="comment"># 清空旧日志（抓之前先做）</span></span><br><span class="line">adb logcat -v time &gt; tv.log                      <span class="comment"># 带时间戳保存到本地</span></span><br><span class="line">adb logcat -d                                    <span class="comment"># 导出当前日志后退出</span></span><br><span class="line">adb logcat -b crash                              <span class="comment"># 只看崩溃缓冲区</span></span><br><span class="line">adb logcat *:E                                   <span class="comment"># 只看 Error 及以上</span></span><br><span class="line">adb logcat | grep -E <span class="string">&quot;AndroidRuntime|FATAL&quot;</span>      <span class="comment"># 抓 Java 崩溃堆栈</span></span><br><span class="line">adb logcat -s &lt;Tag&gt;:D                            <span class="comment"># 按标签过滤</span></span><br><span class="line">adb logcat -v threadtime AndroidRuntime:E *:S    <span class="comment"># 带线程信息的崩溃日志，屏蔽其他</span></span><br></pre></td></tr></table></figure>
+
+<p>设置应用闪退时，标准流程是：<code>adb logcat -c</code> → 打开设置复现 → <code>adb logcat -d | grep -E &quot;FATAL|AndroidRuntime&quot;</code>。</p>
+<hr>
+<h3 id="settings-参数（无需-root）"><a href="#settings-参数（无需-root）" class="headerlink" title="settings 参数（无需 root）"></a>settings 参数（无需 root）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">adb shell settings list global                    <span class="comment"># 列出所有 global 项</span></span><br><span class="line">adb shell settings list system</span><br><span class="line">adb shell settings list secure                    <span class="comment">#</span></span><br><span class="line">adb shell settings get global &lt;key&gt;               <span class="comment"># 读单个值</span></span><br><span class="line">adb shell settings put global &lt;key&gt; &lt;value&gt;       <span class="comment"># 写入</span></span><br><span class="line">adb shell settings delete global &lt;key&gt;            <span class="comment"># 删除（恢复默认）</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>电视&#x2F;1GB 内存常用写入</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭动画（三项必须一起）</span></span><br><span class="line">adb shell settings put global window_animation_scale 0</span><br><span class="line">adb shell settings put global transition_animation_scale 0</span><br><span class="line">adb shell settings put global animator_duration_scale 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 限制后台进程数</span></span><br><span class="line">adb shell settings put global limit_background_processes 2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭强制门户检测（家庭固定网络）</span></span><br><span class="line">adb shell settings put global captive_portal_mode 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭 Wi-Fi 扫描节流</span></span><br><span class="line">adb shell settings put global wifi_scan_throttle_enabled 0</span><br><span class="line"></span><br><span class="line"><span class="comment"># CPU 调度倾向性能（不保证所有固件生效）</span></span><br><span class="line">adb shell settings put global cpuset.sched_boost 1</span><br></pre></td></tr></table></figure>
+
+<p><code>window_animation_scale</code> 控制 Activity 窗口动画，<code>transition_animation_scale</code> 控制 Activity 过渡，<code>animator_duration_scale</code> 控制属性动画，三项是开发者选项中“动画缩放”的底层键。</p>
+<hr>
+<h3 id="广播发送（高级调试）"><a href="#广播发送（高级调试）" class="headerlink" title="广播发送（高级调试）"></a>广播发送（高级调试）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb shell am broadcast -a &lt;Action&gt;</span><br><span class="line">adb shell am broadcast -a &lt;Action&gt; --es &lt;key&gt; <span class="string">&quot;&lt;string&gt;&quot;</span>    <span class="comment"># 字符串参数</span></span><br><span class="line">adb shell am broadcast -a &lt;Action&gt; --ei &lt;key&gt; 200           <span class="comment"># 整型参数</span></span><br><span class="line">adb shell am broadcast -a &lt;Action&gt; --ez &lt;key&gt; <span class="literal">true</span>          <span class="comment"># 布尔参数</span></span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络状态变化</span></span><br><span class="line">adb shell am broadcast -a android.net.conn.CONNECTIVITY_CHANGE</span><br><span class="line"><span class="comment"># 屏幕解锁/用户在场</span></span><br><span class="line">adb shell am broadcast -a android.intent.action.USER_PRESENT</span><br></pre></td></tr></table></figure>
+
+<p>广播常用于在不触碰 UI 的情况下触发系统或应用逻辑；排查无响应时，配合 <code>adb logcat | grep &quot;Broadcast&quot;</code> 观察接收情况。</p>
+<hr>
+<h3 id="屏幕与分辨率"><a href="#屏幕与分辨率" class="headerlink" title="屏幕与分辨率"></a>屏幕与分辨率</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb shell wm size                              <span class="comment"># 当前分辨率</span></span><br><span class="line">adb shell wm size 1920x1080                    <span class="comment"># 临时修改</span></span><br><span class="line">adb shell wm size reset                        <span class="comment"># 恢复默认</span></span><br><span class="line">adb shell wm density                           <span class="comment"># 当前密度</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="无线调试的关键一步"><a href="#无线调试的关键一步" class="headerlink" title="无线调试的关键一步"></a>无线调试的关键一步</h3><p>如果你还有 USB 连接，<strong>在 USB 下执行一次</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb tcpip 5555</span><br></pre></td></tr></table></figure>
+<p>然后拔掉 USB，<code>adb connect &lt;电视IP&gt;:5555</code>。这条命令让电视的 <code>adbd</code> 监听网络端口，<strong>不经过设置界面</strong>，是设置应用异常时保住无线调试通道的可靠手段。</p>
+<hr>
+<h3 id="“避坑备注”"><a href="#“避坑备注”" class="headerlink" title="“避坑备注”"></a>“避坑备注”</h3><table>
+<thead>
+<tr>
+<th>命令&#x2F;场景</th>
+<th>注意</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pidof</code></td>
+<td>这台 Android 6 电视在无精确匹配时错误打印所有 PID，<strong>用 <code>ps | grep</code> 代替</strong></td>
+</tr>
+<tr>
+<td><code>settings put ... animation</code></td>
+<td>三项<strong>必须一起设 0</strong>，只设一项效果不完整</td>
+</tr>
+<tr>
+<td><code>am force-stop</code></td>
+<td>不跨重启；<code>persistent</code> 应用（如 <code>com.miui.daemon</code>）会被系统立刻拉起，PID 可能不变</td>
+</tr>
+<tr>
+<td><code>pm install</code></td>
+<td>后面<strong>必须跟 APK 绝对路径</strong>，跟包名会 <code>INSTALL_FAILED_INVALID_URI</code></td>
+</tr>
+<tr>
+<td>恢复系统包</td>
+<td>优先 <code>adb install -r -d --user 0</code>，<code>adb shell pm install</code> 可能返回 <code>Success</code> 但未注册到 user 0</td>
+</tr>
+<tr>
+<td><code>logcat -b crash</code></td>
+<td>Android 7+ 的 crash 缓冲区在 Android 6 上行为可能不完整，优先用 <code>AndroidRuntime</code> 关键字过滤</td>
+</tr>
+</tbody></table>
+<h2 id="七、一键脚本"><a href="#七、一键脚本" class="headerlink" title="七、一键脚本"></a>七、一键脚本</h2><p>下面是整合了<strong>非卸载优化</strong>的完整脚本。新增模块：settings 扩展参数、缓存与日志清理、状态快照、<code>force-stop</code> 临时压制、开发者选项手动清单、重启提示。卸载部分保留原有安全关卡。</p>
+<hr>
+<h3 id="脚本：mi-tv-optimize-sh"><a href="#脚本：mi-tv-optimize-sh" class="headerlink" title="脚本：mi_tv_optimize.sh"></a>脚本：<code>mi_tv_optimize.sh</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="comment"># ============================================================</span></span><br><span class="line"><span class="comment"># 小米电视4A (Android 6.0.1) 恢复出厂后一键优化</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 前置条件（缺一不可）：</span></span><br><span class="line"><span class="comment">#   1. 电视已恢复出厂并完成初始设置（正常开机电视即可，不需要刻意恢复）。开启开发者模式，usb调试</span></span><br><span class="line"><span class="comment">#   2. 已安装第三方 launcher（Projectivy / Amazon Leanback / Aerial）</span></span><br><span class="line"><span class="comment">#   3. 已在电视【设置 → 应用 → 默认应用 → 主屏幕】中将其设为默认</span></span><br><span class="line"><span class="comment">#   4. adb devices 显示 device（已授权）</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 用法：</span></span><br><span class="line"><span class="comment">#   chmod +x mi_tv_optimize.sh</span></span><br><span class="line"><span class="comment">#   DEVICE=192.168.6.185:5555 ./mi_tv_optimize.sh</span></span><br><span class="line"><span class="comment"># ============================================================</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> -uo pipefail</span><br><span class="line"></span><br><span class="line">DEVICE=<span class="string">&quot;<span class="variable">$&#123;DEVICE:-192.168.6.185:5555&#125;</span>&quot;</span></span><br><span class="line">SCRIPT_DIR=<span class="string">&quot;<span class="subst">$(cd <span class="string">&quot;<span class="subst">$(dirname <span class="string">&quot;<span class="variable">$&#123;BASH_SOURCE[0]&#125;</span>&quot;</span>)</span>&quot;</span> &amp;&amp; pwd)</span>&quot;</span></span><br><span class="line">LOG_DIR=<span class="string">&quot;<span class="variable">$SCRIPT_DIR</span>/optimize_logs&quot;</span></span><br><span class="line"><span class="built_in">mkdir</span> -p <span class="string">&quot;<span class="variable">$LOG_DIR</span>&quot;</span></span><br><span class="line">TS=<span class="string">&quot;<span class="subst">$(date +%Y%m%d_%H%M%S)</span>&quot;</span></span><br><span class="line">LOG_FILE=<span class="string">&quot;<span class="variable">$LOG_DIR</span>/optimize_<span class="variable">$TS</span>.log&quot;</span></span><br><span class="line"></span><br><span class="line">RED=<span class="string">&#x27;\033[0;31m&#x27;</span>; GREEN=<span class="string">&#x27;\033[0;32m&#x27;</span>; YELLOW=<span class="string">&#x27;\033[1;33m&#x27;</span></span><br><span class="line">BLUE=<span class="string">&#x27;\033[0;34m&#x27;</span>; BOLD=<span class="string">&#x27;\033[1m&#x27;</span>; NC=<span class="string">&#x27;\033[0m&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">log</span></span>()  &#123; <span class="built_in">echo</span> -e <span class="string">&quot;$*&quot;</span> | <span class="built_in">tee</span> -a <span class="string">&quot;<span class="variable">$LOG_FILE</span>&quot;</span>; &#125;</span><br><span class="line"><span class="function"><span class="title">info</span></span>() &#123; <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;BLUE&#125;</span>[INFO]<span class="variable">$&#123;NC&#125;</span> $*&quot;</span>; &#125;</span><br><span class="line"><span class="function"><span class="title">ok</span></span>()   &#123; <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>[ OK ]<span class="variable">$&#123;NC&#125;</span> $*&quot;</span>; &#125;</span><br><span class="line"><span class="function"><span class="title">warn</span></span>() &#123; <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;YELLOW&#125;</span>[WARN]<span class="variable">$&#123;NC&#125;</span> $*&quot;</span>; &#125;</span><br><span class="line"><span class="function"><span class="title">err</span></span>()  &#123; <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;RED&#125;</span>[ERR ]<span class="variable">$&#123;NC&#125;</span> $*&quot;</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">adb_</span></span>() &#123; adb -s <span class="string">&quot;<span class="variable">$DEVICE</span>&quot;</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ============ 包清单 ============</span></span><br><span class="line"></span><br><span class="line">SAFE_PKGS=(</span><br><span class="line">  com.miui.systemAdSolution com.miui.tv.analytics com.xiaomi.statistic</span><br><span class="line">  com.xiaomi.mitv.tvpush.tvpushservice com.xiaomi.devicereport</span><br><span class="line">  com.xiaomi.mitv.upgrade com.xiaomi.tv.appupgrade com.xiaomi.mitv.appstore</span><br><span class="line">  com.xiaomi.mitv.shop com.xiaomi.mibox.gamecenter</span><br><span class="line">  com.xiaomi.gamecenter.sdk.service.mibox</span><br><span class="line">  com.mipay.wallet.tv com.xiaomi.mitv.pay com.xiaomi.mitv.payment</span><br><span class="line">  com.xiaomi.tweather com.xiaomi.mitv.calendar com.xiaomi.mimusic2</span><br><span class="line">  com.mitv.gallery</span><br><span class="line">  com.xiaomi.mitv.smartshare com.xiaomi.upnp</span><br><span class="line">  com.mi.miplay.mitvupnpsink com.xiaomi.miplay com.duokan.airkan.tvbox</span><br><span class="line">  com.mitv.screensaver com.xiaomi.mibox.lockscreen com.xiaomi.tv.gallery</span><br><span class="line">  com.xiaomi.mitv.karaoke.service com.xiaomi.smarthome.tv</span><br><span class="line">  com.xiaomi.screenrecorder com.xiaomi.voicecontrol</span><br><span class="line">  com.xiaomi.mitv.handbook com.mitv.alarmcenter</span><br><span class="line">  com.sogou.speech.offlineservice</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">RISKY_PKGS=(</span><br><span class="line">  com.mitv.tvhome</span><br><span class="line">  com.android.providers.downloads</span><br><span class="line">  com.xiaomi.mitv.media</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">CORE_PKGS=(</span><br><span class="line">  mitv.service com.xiaomi.mitv.mediaexplorer</span><br><span class="line">  com.xiaomi.mitv.settings com.xiaomi.mitv.providers.settings</span><br><span class="line">  com.xiaomi.mitv.systemui com.android.systemui</span><br><span class="line">  com.xiaomi.mitv.remotecontroller.service</span><br><span class="line">  com.xiaomi.mitv.tvplayer com.droidlogic.tvinput com.droidlogic</span><br><span class="line">  com.miui.core</span><br><span class="line">  com.android.providers.media com.android.providers.tv</span><br><span class="line">  com.android.providers.settings com.android.externalstorage</span><br><span class="line">  com.android.packageinstaller com.google.android.webview</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">LAUNCHERS=(</span><br><span class="line">  <span class="string">&quot;com.spocky.projengmenu:Projectivy Launcher&quot;</span></span><br><span class="line">  <span class="string">&quot;com.amazon.tv.leanbacklauncher:Amazon Leanback Launcher&quot;</span></span><br><span class="line">  <span class="string">&quot;app.orchard.tv:Aerial&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 不卸载、仅 force-stop 的系统服务</span></span><br><span class="line">FORCESTOP_SYS=(</span><br><span class="line">  com.xiaomi.mitv.tvmanager</span><br><span class="line">  com.mitv.codec.update</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第三方常驻应用（可选 force-stop）</span></span><br><span class="line">FORCESTOP_3RD=(</span><br><span class="line">  com.amazon.tv.leanbacklauncher</span><br><span class="line">  com.softmedia.receiver</span><br><span class="line">  com.xiaobaifile.tv</span><br><span class="line">  com.v2ray.ang</span><br><span class="line">  com.overseas.store.appstore</span><br><span class="line">  flix.com.vision</span><br><span class="line">  app.orchard.tv</span><br><span class="line">  org.videolan.vlc</span><br><span class="line">  com.android.tvremoteime</span><br><span class="line">  net.kollnig.missioncontrol</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># ============ 检查函数 ============</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">check_adb</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;检查 ADB 连接...&quot;</span></span><br><span class="line">  <span class="built_in">command</span> -v adb &amp;&gt;/dev/null || &#123; err <span class="string">&quot;未找到 adb&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line">  adb connect <span class="string">&quot;<span class="variable">$DEVICE</span>&quot;</span> &amp;&gt;/dev/null || <span class="literal">true</span></span><br><span class="line">  <span class="built_in">local</span> state; state=$(adb -s <span class="string">&quot;<span class="variable">$DEVICE</span>&quot;</span> get-state 2&gt;/dev/null || <span class="built_in">echo</span> offline)</span><br><span class="line">  [[ <span class="string">&quot;<span class="variable">$state</span>&quot;</span> == <span class="string">&quot;device&quot;</span> ]] || &#123; err <span class="string">&quot;设备状态: <span class="variable">$state</span>&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line">  <span class="built_in">local</span> model ver</span><br><span class="line">  model=$(adb_ shell getprop ro.product.model 2&gt;/dev/null | <span class="built_in">tr</span> -d <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">  ver=$(adb_ shell getprop ro.build.version.release 2&gt;/dev/null | <span class="built_in">tr</span> -d <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">  ok <span class="string">&quot;ADB 已连接: <span class="variable">$DEVICE</span> (<span class="variable">$model</span> / Android <span class="variable">$ver</span>)&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">check_launcher</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;检查第三方 launcher...&quot;</span></span><br><span class="line">  <span class="built_in">local</span> pkgs; pkgs=$(adb_ shell pm list packages 2&gt;/dev/null)</span><br><span class="line">  <span class="built_in">local</span> found=0</span><br><span class="line">  <span class="keyword">for</span> entry <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;LAUNCHERS[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">local</span> pkg=<span class="string">&quot;<span class="variable">$&#123;entry%%:*&#125;</span>&quot;</span> name=<span class="string">&quot;<span class="variable">$&#123;entry##*:&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$pkgs</span>&quot;</span> | grep -qx <span class="string">&quot;package:<span class="variable">$pkg</span>&quot;</span>; <span class="keyword">then</span></span><br><span class="line">      ok <span class="string">&quot;已安装: <span class="variable">$name</span> (<span class="variable">$pkg</span>)&quot;</span>; found=1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">  <span class="keyword">if</span> [[ <span class="variable">$found</span> -eq 0 ]]; <span class="keyword">then</span></span><br><span class="line">    err <span class="string">&quot;未检测到任何第三方 launcher！&quot;</span></span><br><span class="line">    err <span class="string">&quot;执行卸载（尤其 com.mitv.tvhome）后电视将无法进入主屏幕。&quot;</span></span><br><span class="line">    err <span class="string">&quot;请先安装 Projectivy / Amazon Leanback / Aerial，并设为默认主屏幕。&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  info <span class="string">&quot;当前默认 Home:&quot;</span></span><br><span class="line">  adb_ shell pm resolve-activity --brief -a android.intent.action.MAIN \</span><br><span class="line">    -c android.intent.category.HOME 2&gt;/dev/null | <span class="built_in">tail</span> -1 | sed <span class="string">&#x27;s/^/    /&#x27;</span></span><br><span class="line">  warn <span class="string">&quot;请确认按遥控器 HOME 键能正常返回第三方桌面。&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">check_core</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> phase=<span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line">  info <span class="string">&quot;检查核心包完整性（<span class="variable">$phase</span>）...&quot;</span></span><br><span class="line">  <span class="built_in">local</span> pkgs; pkgs=$(adb_ shell pm list packages 2&gt;/dev/null)</span><br><span class="line">  <span class="built_in">local</span> missing=0</span><br><span class="line">  <span class="keyword">for</span> c <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;CORE_PKGS[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$pkgs</span>&quot;</span> | grep -qx <span class="string">&quot;package:<span class="variable">$c</span>&quot;</span> || &#123; err <span class="string">&quot;核心包缺失: <span class="variable">$c</span>&quot;</span>; missing=$((missing+<span class="number">1</span>)); &#125;</span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">  [[ <span class="variable">$missing</span> -gt 0 ]] &amp;&amp; &#123; err <span class="string">&quot;发现 <span class="variable">$missing</span> 个核心包缺失，终止！&quot;</span>; <span class="built_in">exit</span> 1; &#125;</span><br><span class="line">  ok <span class="string">&quot;核心包完整&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">confirm</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> prompt=<span class="string">&quot;<span class="variable">$1</span>&quot;</span> expect=<span class="string">&quot;<span class="variable">$2</span>&quot;</span> answer</span><br><span class="line">  <span class="built_in">read</span> -r -p <span class="string">&quot;<span class="subst">$(echo -e <span class="string">&quot;<span class="variable">$&#123;YELLOW&#125;</span><span class="variable">$&#123;prompt&#125;</span><span class="variable">$&#123;NC&#125;</span>&quot;</span>)</span>&quot;</span> answer</span><br><span class="line">  [[ <span class="string">&quot;<span class="variable">$answer</span>&quot;</span> == <span class="string">&quot;<span class="variable">$expect</span>&quot;</span> ]]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ============ 非卸载优化模块 ============</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">apply_settings</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== [1/6] settings 参数 =====&quot;</span></span><br><span class="line">  <span class="built_in">local</span> entries=(</span><br><span class="line">    <span class="string">&quot;global|window_animation_scale|0&quot;</span></span><br><span class="line">    <span class="string">&quot;global|transition_animation_scale|0&quot;</span></span><br><span class="line">    <span class="string">&quot;global|animator_duration_scale|0&quot;</span></span><br><span class="line">    <span class="string">&quot;global|limit_background_processes|2&quot;</span></span><br><span class="line">    <span class="string">&quot;global|captive_portal_mode|0&quot;</span></span><br><span class="line">    <span class="string">&quot;global|wifi_scan_throttle_enabled|0&quot;</span></span><br><span class="line">    <span class="string">&quot;global|cpuset.sched_boost|1&quot;</span></span><br><span class="line">    <span class="string">&quot;global|auto_sync|0&quot;</span></span><br><span class="line">  )</span><br><span class="line">  <span class="keyword">for</span> e <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;entries[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    IFS=<span class="string">&#x27;|&#x27;</span> <span class="built_in">read</span> -r ns key val &lt;&lt;&lt; <span class="string">&quot;<span class="variable">$e</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> adb_ shell settings put <span class="string">&quot;<span class="variable">$ns</span>&quot;</span> <span class="string">&quot;<span class="variable">$key</span>&quot;</span> <span class="string">&quot;<span class="variable">$val</span>&quot;</span> &amp;&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">local</span> got; got=$(adb_ shell settings get <span class="string">&quot;<span class="variable">$ns</span>&quot;</span> <span class="string">&quot;<span class="variable">$key</span>&quot;</span> 2&gt;/dev/null | <span class="built_in">tr</span> -d <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">      <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$got</span>&quot;</span> == <span class="string">&quot;<span class="variable">$val</span>&quot;</span> ]]; <span class="keyword">then</span></span><br><span class="line">        ok <span class="string">&quot;<span class="variable">$ns</span>/<span class="variable">$key</span> = <span class="variable">$val</span>&quot;</span></span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        warn <span class="string">&quot;<span class="variable">$ns</span>/<span class="variable">$key</span> 写入后读回为 &#x27;<span class="variable">$got</span>&#x27;（可能不生效）&quot;</span></span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      warn <span class="string">&quot;写入失败: <span class="variable">$ns</span>/<span class="variable">$key</span>（该 key 可能不存在）&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;尝试速度模式 / 硬件加速（不保证生效）...&quot;</span></span><br><span class="line">  <span class="built_in">local</span> extra=(</span><br><span class="line">    <span class="string">&quot;secure|speed_mode_enable|1&quot;</span></span><br><span class="line">    <span class="string">&quot;system|speed_mode|1&quot;</span></span><br><span class="line">    <span class="string">&quot;global|speed_mode_on|1&quot;</span></span><br><span class="line">    <span class="string">&quot;global|media.sf.hwaccel|1&quot;</span></span><br><span class="line">    <span class="string">&quot;global|video.accelerate.hw|1&quot;</span></span><br><span class="line">  )</span><br><span class="line">  <span class="keyword">for</span> e <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;extra[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    IFS=<span class="string">&#x27;|&#x27;</span> <span class="built_in">read</span> -r ns key val &lt;&lt;&lt; <span class="string">&quot;<span class="variable">$e</span>&quot;</span></span><br><span class="line">    <span class="keyword">if</span> adb_ shell settings put <span class="string">&quot;<span class="variable">$ns</span>&quot;</span> <span class="string">&quot;<span class="variable">$key</span>&quot;</span> <span class="string">&quot;<span class="variable">$val</span>&quot;</span> &amp;&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">      <span class="built_in">local</span> got; got=$(adb_ shell settings get <span class="string">&quot;<span class="variable">$ns</span>&quot;</span> <span class="string">&quot;<span class="variable">$key</span>&quot;</span> 2&gt;/dev/null | <span class="built_in">tr</span> -d <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">      [[ <span class="string">&quot;<span class="variable">$got</span>&quot;</span> == <span class="string">&quot;<span class="variable">$val</span>&quot;</span> ]] &amp;&amp; ok <span class="string">&quot;<span class="variable">$ns</span>/<span class="variable">$key</span> = <span class="variable">$val</span>&quot;</span> \</span><br><span class="line">        || warn <span class="string">&quot;<span class="variable">$ns</span>/<span class="variable">$key</span> 未生效（读回 &#x27;<span class="variable">$got</span>&#x27;），可忽略&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      warn <span class="string">&quot;不支持: <span class="variable">$ns</span>/<span class="variable">$key</span>（可忽略）&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">clean_cache_and_logs</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== [2/6] 缓存与日志清理 =====&quot;</span></span><br><span class="line">  info <span class="string">&quot;pm trim-caches（清理所有应用缓存，不删数据）...&quot;</span></span><br><span class="line">  adb_ shell pm trim-caches 999999999999 &amp;&gt;/dev/null &amp;&amp; ok <span class="string">&quot;缓存清理完成&quot;</span> \</span><br><span class="line">    || warn <span class="string">&quot;pm trim-caches 失败（可忽略）&quot;</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;清理 /data/local/tmp...&quot;</span></span><br><span class="line">  adb_ shell <span class="built_in">rm</span> -rf /data/local/tmp/* &amp;&gt;/dev/null &amp;&amp; ok <span class="string">&quot;临时目录已清理&quot;</span> \</span><br><span class="line">    || warn <span class="string">&quot;临时目录清理失败（可忽略）&quot;</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;清空 logcat 缓冲区...&quot;</span></span><br><span class="line">  adb_ logcat -c &amp;&gt;/dev/null &amp;&amp; ok <span class="string">&quot;logcat 已清空&quot;</span> || warn <span class="string">&quot;logcat -c 失败（可忽略）&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">snapshot_state</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== [3/6] 状态快照 =====&quot;</span></span><br><span class="line">  <span class="built_in">local</span> lowram; lowram=$(adb_ shell getprop ro.config.low_ram 2&gt;/dev/null | <span class="built_in">tr</span> -d <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">  info <span class="string">&quot;ro.config.low_ram = <span class="variable">$&#123;lowram:-&lt;空&gt;&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;存储 /data:&quot;</span></span><br><span class="line">  adb_ shell <span class="built_in">df</span> /data 2&gt;/dev/null | <span class="built_in">tail</span> -1 | sed <span class="string">&#x27;s/^/    /&#x27;</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;内存概览:&quot;</span></span><br><span class="line">  adb_ shell <span class="built_in">cat</span> /proc/meminfo 2&gt;/dev/null | grep -E <span class="string">&quot;MemTotal|MemFree|MemAvailable|Cached&quot;</span> \</span><br><span class="line">    | sed <span class="string">&#x27;s/^/    /&#x27;</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;屏幕:&quot;</span></span><br><span class="line">  adb_ shell wm size 2&gt;/dev/null | sed <span class="string">&#x27;s/^/    /&#x27;</span></span><br><span class="line">  adb_ shell wm density 2&gt;/dev/null | sed <span class="string">&#x27;s/^/    /&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">force_stop_sys</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== [4/6] force-stop 系统服务（不跨重启） =====&quot;</span></span><br><span class="line">  <span class="keyword">if</span> ! confirm <span class="string">&quot;是否 force-stop 系统服务 [<span class="variable">$&#123;FORCESTOP_SYS[*]&#125;</span>]？(y/N): &quot;</span> <span class="string">&quot;y&quot;</span>; <span class="keyword">then</span></span><br><span class="line">    info <span class="string">&quot;已跳过&quot;</span>; <span class="built_in">return</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">for</span> p <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;FORCESTOP_SYS[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    adb_ shell am force-stop <span class="string">&quot;<span class="variable">$p</span>&quot;</span> &amp;&gt;/dev/null &amp;&amp; ok <span class="string">&quot;force-stop: <span class="variable">$p</span>&quot;</span> || warn <span class="string">&quot;失败: <span class="variable">$p</span>&quot;</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">  <span class="built_in">sleep</span> 2</span><br><span class="line">  <span class="keyword">for</span> p <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;FORCESTOP_SYS[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">local</span> hit; hit=$(adb_ shell ps 2&gt;/dev/null | grep -F <span class="string">&quot;<span class="variable">$p</span>&quot;</span> | grep -v grep)</span><br><span class="line">    [[ -z <span class="string">&quot;<span class="variable">$hit</span>&quot;</span> ]] &amp;&amp; ok <span class="string">&quot;进程已停: <span class="variable">$p</span>&quot;</span> || warn <span class="string">&quot;进程仍存在: <span class="variable">$p</span>（可能被系统拉起）&quot;</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">force_stop_third</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== [5/6] force-stop 第三方常驻应用（可选） =====&quot;</span></span><br><span class="line">  info <span class="string">&quot;候选: <span class="variable">$&#123;FORCESTOP_3RD[*]&#125;</span>&quot;</span></span><br><span class="line">  warn <span class="string">&quot;force-stop 会中断这些应用当前进程，重启后复活。&quot;</span></span><br><span class="line">  <span class="keyword">if</span> ! confirm <span class="string">&quot;是否执行第三方 force-stop？(y/N): &quot;</span> <span class="string">&quot;y&quot;</span>; <span class="keyword">then</span></span><br><span class="line">    info <span class="string">&quot;已跳过&quot;</span>; <span class="built_in">return</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">for</span> p <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;FORCESTOP_3RD[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> adb_ shell pm list packages 2&gt;/dev/null | grep -qx <span class="string">&quot;package:<span class="variable">$p</span>&quot;</span>; <span class="keyword">then</span></span><br><span class="line">      adb_ shell am force-stop <span class="string">&quot;<span class="variable">$p</span>&quot;</span> &amp;&gt;/dev/null &amp;&amp; ok <span class="string">&quot;force-stop: <span class="variable">$p</span>&quot;</span> || warn <span class="string">&quot;失败: <span class="variable">$p</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      warn <span class="string">&quot;未安装，跳过: <span class="variable">$p</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">dev_options_hint</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== 开发者选项手动清单（脚本无法可靠写入） =====&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  请在电视上进入 设置 → 关于 → 连续点击版本号 7 次解锁开发者选项，然后：&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;    [ ] 强制进行 GPU 渲染 → 开启（如选项中存在）&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;    [ ] 后台进程限制 → 确认已是 2 或 4&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;    [ ] 动画三项 → 确认已是 0（脚本已写入，此处仅核对）&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;    [ ] 不保留活动 → 保持关闭（开启会影响多任务）&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">uninstall_pkgs</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> label=<span class="string">&quot;<span class="variable">$1</span>&quot;</span>; <span class="built_in">shift</span></span><br><span class="line">  <span class="built_in">local</span> pkgs=(<span class="string">&quot;<span class="variable">$@</span>&quot;</span>) success=0 fail=0 skip=0</span><br><span class="line">  info <span class="string">&quot;===== <span class="variable">$label</span>（共 <span class="variable">$&#123;#pkgs[@]&#125;</span> 个）=====&quot;</span></span><br><span class="line">  <span class="keyword">for</span> pkg <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$&#123;pkgs[@]&#125;</span>&quot;</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> ! adb_ shell pm list packages --user 0 2&gt;/dev/null | grep -qx <span class="string">&quot;package:<span class="variable">$pkg</span>&quot;</span>; <span class="keyword">then</span></span><br><span class="line">      warn <span class="string">&quot;跳过（已无）: <span class="variable">$pkg</span>&quot;</span>; skip=$((skip+<span class="number">1</span>)); <span class="built_in">continue</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">local</span> out; out=$(adb_ shell pm uninstall --user 0 <span class="string">&quot;<span class="variable">$pkg</span>&quot;</span> 2&gt;&amp;1 | <span class="built_in">tr</span> -d <span class="string">&#x27;\r&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$out</span>&quot;</span> | grep -qi <span class="string">&quot;success&quot;</span>; <span class="keyword">then</span></span><br><span class="line">      ok <span class="string">&quot;卸载: <span class="variable">$pkg</span>&quot;</span>; success=$((success+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      err <span class="string">&quot;失败: <span class="variable">$pkg</span> -&gt; <span class="variable">$out</span>&quot;</span>; fail=$((fail+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line">  info <span class="string">&quot;结果: 成功=<span class="variable">$success</span> 失败=<span class="variable">$fail</span> 跳过=<span class="variable">$skip</span>&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">verify_after</span></span>() &#123;</span><br><span class="line">  info <span class="string">&quot;===== [6/6] 验证 =====&quot;</span></span><br><span class="line">  check_core <span class="string">&quot;执行后&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> d <span class="keyword">in</span> com.xiaomi.mitv.mediaexplorer mitv.service com.xiaomi.mitv.settings; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> adb_ shell pm list packages --user 0 2&gt;/dev/null | grep -qx <span class="string">&quot;package:<span class="variable">$d</span>&quot;</span>; <span class="keyword">then</span></span><br><span class="line">      ok <span class="string">&quot;依赖包存在: <span class="variable">$d</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      err <span class="string">&quot;依赖包缺失！: <span class="variable">$d</span> —— 请立即恢复！&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;打开设置并检查前台...&quot;</span></span><br><span class="line">  adb_ shell am start -a android.settings.SETTINGS &amp;&gt;/dev/null || <span class="literal">true</span></span><br><span class="line">  <span class="built_in">sleep</span> 3</span><br><span class="line">  adb_ shell dumpsys window 2&gt;/dev/null | grep -E <span class="string">&quot;mCurrentFocus|mFocusedApp&quot;</span> \</span><br><span class="line">    | <span class="built_in">head</span> -2 | sed <span class="string">&#x27;s/^/    /&#x27;</span></span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;发送 HOME 键...&quot;</span></span><br><span class="line">  adb_ shell input keyevent 3; <span class="built_in">sleep</span> 2</span><br><span class="line"></span><br><span class="line">  info <span class="string">&quot;当前进程（前 15）:&quot;</span></span><br><span class="line">  adb_ shell ps 2&gt;/dev/null | grep -E <span class="string">&quot;^u0_|^system&quot;</span> | <span class="built_in">head</span> -15 \</span><br><span class="line">    | awk <span class="string">&#x27;&#123;printf &quot;    %-12s %s\n&quot;, $1, $NF&#125;&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># ============ 主流程 ============</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">main</span></span>() &#123;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;BOLD&#125;</span>============================================================<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;BOLD&#125;</span> 小米电视4A (Android 6) 恢复出厂后一键优化<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;BOLD&#125;</span> 日志: $LOG_FILE<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;BOLD&#125;</span>============================================================<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  check_adb;    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  check_launcher; <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  check_core <span class="string">&quot;执行前&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;BOLD&#125;</span>===== 操作清单 =====<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  [1] settings 参数：动画×3=0 | 后台进程=2 | 门户检测=关 | Wi-Fi节流=关 | CPU boost=1 | auto_sync=关&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;      尝试写入：速度模式×3、硬件加速×2（不保证生效）&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  [2] 缓存清理：pm trim-caches、/data/local/tmp、logcat&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  [3] 状态快照：low_ram、存储、内存、屏幕&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  [4] force-stop 系统服务（可选）：<span class="variable">$&#123;FORCESTOP_SYS[*]&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  [5] force-stop 第三方常驻（可选）：<span class="variable">$&#123;FORCESTOP_3RD[*]&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;  [6] 卸载 <span class="variable">$&#123;#SAFE_PKGS[@]&#125;</span> 个安全包；高风险包（<span class="variable">$&#123;RISKY_PKGS[*]&#125;</span>）需二次确认&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  warn <span class="string">&quot;卸载使用 pm uninstall --user 0，APK 仍在系统分区，可用 adb install -r -d --user 0 恢复。&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ! confirm <span class="string">&quot;确认已安装并设为默认第三方 launcher，且理解以上操作？输入 I UNDERSTAND 继续: &quot;</span> <span class="string">&quot;I UNDERSTAND&quot;</span>; <span class="keyword">then</span></span><br><span class="line">    err <span class="string">&quot;用户取消，未做任何修改。&quot;</span>; <span class="built_in">exit</span> 1</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  info <span class="string">&quot;备份当前包列表...&quot;</span></span><br><span class="line">  adb_ shell pm list packages -s &gt; <span class="string">&quot;<span class="variable">$LOG_DIR</span>/packages_before_<span class="variable">$TS</span>.txt&quot;</span> 2&gt;/dev/null || <span class="literal">true</span></span><br><span class="line">  adb_ shell pm list packages -u -s &gt; <span class="string">&quot;<span class="variable">$LOG_DIR</span>/packages_all_before_<span class="variable">$TS</span>.txt&quot;</span> 2&gt;/dev/null || <span class="literal">true</span></span><br><span class="line">  ok <span class="string">&quot;已保存到 <span class="variable">$LOG_DIR</span>/&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  apply_settings;      <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  clean_cache_and_logs; <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  snapshot_state;      <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  force_stop_sys;      <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  force_stop_third;    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  uninstall_pkgs <span class="string">&quot;安全包卸载&quot;</span> <span class="string">&quot;<span class="variable">$&#123;SAFE_PKGS[@]&#125;</span>&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> confirm <span class="string">&quot;是否卸载高风险包 [<span class="variable">$&#123;RISKY_PKGS[*]&#125;</span>]？（可能影响原桌面/下载/U盘媒体扫描）输入 RISKY 确认: &quot;</span> <span class="string">&quot;RISKY&quot;</span>; <span class="keyword">then</span></span><br><span class="line">    uninstall_pkgs <span class="string">&quot;高风险包卸载&quot;</span> <span class="string">&quot;<span class="variable">$&#123;RISKY_PKGS[@]&#125;</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    info <span class="string">&quot;已跳过高风险包。&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  verify_after; <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  dev_options_hint; <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>============================================================<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span> 完成！日志: $LOG_FILE<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">log</span> <span class="string">&quot;<span class="variable">$&#123;GREEN&#125;</span>============================================================<span class="variable">$&#123;NC&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> confirm <span class="string">&quot;是否重启电视以让 settings 完全生效？(y/N): &quot;</span> <span class="string">&quot;y&quot;</span>; <span class="keyword">then</span></span><br><span class="line">    info <span class="string">&quot;重启中...&quot;</span></span><br><span class="line">    adb_ reboot</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    info <span class="string">&quot;未重启。建议手动重启一次电视。&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="新增模块说明"><a href="#新增模块说明" class="headerlink" title="新增模块说明"></a>新增模块说明</h3><table>
+<thead>
+<tr>
+<th>模块</th>
+<th>内容</th>
+<th>风险</th>
+<th>是否可逆</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>[1] settings 参数</strong></td>
+<td>动画×3、后台进程&#x3D;2、门户检测、Wi-Fi节流、CPU boost、auto_sync；尝试速度模式×3、硬件加速×2</td>
+<td>低</td>
+<td><code>settings delete</code> 可撤销</td>
+</tr>
+<tr>
+<td><strong>[2] 缓存与日志清理</strong></td>
+<td><code>pm trim-caches</code>、清空 <code>/data/local/tmp</code>、<code>logcat -c</code></td>
+<td>极低</td>
+<td>无需撤销，不删个人数据</td>
+</tr>
+<tr>
+<td><strong>[3] 状态快照</strong></td>
+<td><code>low_ram</code>、<code>df /data</code>、<code>/proc/meminfo</code>、<code>wm size/density</code></td>
+<td>无</td>
+<td>只读</td>
+</tr>
+<tr>
+<td><strong>[4] force-stop 系统服务</strong></td>
+<td><code>tvmanager</code>、<code>codec.update</code>，可选确认</td>
+<td>低</td>
+<td>重启复活</td>
+</tr>
+<tr>
+<td><strong>[5] force-stop 第三方常驻</strong></td>
+<td>亚马逊桌面、投屏接收器、文件管理器、v2ray、商店、影视、VLC、远程输入、监控</td>
+<td>低</td>
+<td>重启复活</td>
+</tr>
+<tr>
+<td><strong>[6] 卸载</strong></td>
+<td>原安全包 + 高风险包（二次确认）</td>
+<td>中</td>
+<td><code>adb install</code> 恢复</td>
+</tr>
+<tr>
+<td><strong>开发者选项清单</strong></td>
+<td>强制GPU渲染、后台进程限制、动画核对</td>
+<td>无</td>
+<td>仅提示</td>
+</tr>
+<tr>
+<td><strong>重启提示</strong></td>
+<td>可选重启让 settings 完全生效</td>
+<td>无</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>注：</p>
+<ul>
+<li><strong>settings 参数扩展</strong>：新增 <code>auto_sync=0</code>，尝试写入速度模式与硬件加速，每条写入后 <code>settings get</code> 读回验证，不生效只警告不中断。</li>
+<li><strong>新增缓存清理</strong>：<code>pm trim-caches</code> 清理所有应用缓存（不删数据），清空 <code>/data/local/tmp</code>，清空 logcat。</li>
+<li><strong>新增状态快照</strong>：记录 <code>low_ram</code>、存储、内存、屏幕分辨率&#x2F;密度，执行后可在日志里对比。</li>
+<li><strong>新增 force-stop 模块</strong>：系统服务（<code>tvmanager</code>、<code>codec.update</code>）和第三方常驻应用（亚马逊桌面、投屏接收器、文件管理器、v2ray、商店、影视、VLC、远程输入、监控）分开确认，每条后检查进程是否真的停掉。</li>
+<li><strong>新增开发者选项手动清单</strong>：<code>强制GPU渲染</code> 无法通过 <code>settings put</code> 可靠写入，脚本改为提示用户手动开启并核对。</li>
+<li><strong>新增重启提示</strong>：settings 部分参数需要重启才完全生效，脚本末尾询问是否 <code>adb reboot</code>。</li>
+</ul>
+<h3 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h3><ol>
+<li>检查 ADB → launcher → 核心包（三道关卡，任一失败直接退出）</li>
+<li>总确认 <code>I UNDERSTAND</code></li>
+<li>备份包列表</li>
+<li>[1] settings → [2] 缓存清理 → [3] 状态快照 → [4] force-stop 系统服务 → [5] force-stop 第三方（均为可选确认）</li>
+<li>[6] 卸载安全包 → 高风险包二次确认 <code>RISKY</code></li>
+<li>验证 → 开发者选项清单 → 可选重启</li>
+</ol>
+<p>所有操作写入 <code>optimize_logs/optimize_&lt;时间戳&gt;.log</code>，备份文件同目录。</p>
+<h3 id="推荐软件"><a href="#推荐软件" class="headerlink" title="推荐软件"></a>推荐软件</h3><p><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/aerialLauncher-standard.apk">桌面 - aerial </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/ProjectivyLauncher-4.72-c97-xda-release.apk">桌面 - ProjectivyLauncher4.72</a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/AirReceiver.Premium.v4.9.6.armeabi-v7a.FileCR.apk">投屏 - airReceiverPremium4.9.6 </a> 投屏使用，但是可以扩展mac屏幕<br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/Emotn.Store_1.0.40.apk">商店 - Emotn1.0.40 </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/IMEService-release.apk">手机输入 - IMEService </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/Launcher.Manager_1.1.6.apk">桌面管理 - LauncherManger1.1.6 </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/MT.2.26.8-clone._@.apk">文件 - MT2.26.8 </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/org.videolan.vlc_13070105.apk">播放 - VLC  </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/TiviMate_Premium_v5.9.1.apk">直播 - TiviMatePremium5.9.1 </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/TrackerControl-githubRelease-latest.apk">工具 - TrackerControl </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/acitivitylauncher_1.14.4.apks">工具 - activityLauncher1.14.4 </a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/deviceinfo_v2.7.5.2.apk">工具 - deviceInfo2.7.5.2</a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/LM.Ultimate_1.0.1.apk">工具 - LMUltimate1.0.1</a><br><a target="_blank" rel="noopener" href="https://github.com/fqw000/apkandipa/releases/download/apk/AdGuard_v4.5.22_.PREMIUM._@.apk">工具 - AdGuardPremium4.5.22</a><br><a href=""></a></p>
+<p><img src="https://visitor-badge.laobi.icu/badge?page_id=fqw000.%3C!--swig%EF%BF%BC40--%3E&left_text=Visitors" alt="Visitors"></p>
+</p></div><div class="pagination"><p class="clearfix"><span></span>&nbsp;<p> </p><span class="next pagbuttons"><a role="navigation" href="/2026/10/21/%E5%B0%8F%E7%B1%B3%E7%94%B5%E8%A7%864A%EF%BC%88Android-6-0-1%EF%BC%89pm-uninstall-user-0-%E5%8D%B8%E8%BD%BD%E4%B8%8E%E6%81%A2%E5%A4%8D%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%9B%98-md/" title="小米电视4A（Android 6.0.1）pm uninstall --user 0 卸载与恢复完整复盘.md">下一篇: 小米电视4A（Android 6.0.1）pm uninstall --user 0 卸载与恢复完整复盘.md&nbsp;<i class="fa fa-angle-double-right"></i></a></span></p></div></div></div></div><div class="visible-xs site-bottom-footer"><footer><p>&copy;&nbsp;2026&nbsp; by &nbsp;<a target="_blank" href="https://wangqifei.eu.org" rel="noopener noreferrer">Wangqifei</a></p></footer></div></div></div></div><script src="/js/jquery-3.1.0.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script><script src="/js/google-analytics.js"></script><script src="/js/typography.js"></script><script src="/js/code-unfold.js"></script><script src="/js/search.js"></script></body></html>
