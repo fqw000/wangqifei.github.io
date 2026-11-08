@@ -6,7 +6,7 @@
   <link href="https://wangqifei.eu.org/atom.xml" rel="self"/>
   
   <link href="https://wangqifei.eu.org/"/>
-  <updated>2026-10-22T10:37:08.000Z</updated>
+  <updated>2026-11-08T16:43:02.000Z</updated>
   <id>https://wangqifei.eu.org/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>飞智 冰原狼2手柄使用说明</title>
+    <link href="https://wangqifei.eu.org/2026/11/09/%E9%A3%9E%E6%99%BA-%E5%86%B0%E5%8E%9F%E7%8B%BC2%E6%89%8B%E6%9F%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/"/>
+    <id>https://wangqifei.eu.org/2026/11/09/%E9%A3%9E%E6%99%BA-%E5%86%B0%E5%8E%9F%E7%8B%BC2%E6%89%8B%E6%9F%84%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/</id>
+    <published>2026-11-08T16:43:02.000Z</published>
+    <updated>2026-11-08T16:43:02.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="飞智-冰原狼2手柄使用说明"><a href="#飞智-冰原狼2手柄使用说明" class="headerlink" title="飞智 冰原狼2手柄使用说明"></a>飞智 冰原狼2手柄使用说明</h1><h2 id="技术参数"><a href="#技术参数" class="headerlink" title="技术参数"></a>技术参数</h2><ul><li><p>蓝牙： Bluetooth 5.0</p></li><li><p>使用距离： &lt; 10m</p></li><li><p>电池：</p><pre><code>  类型：锂电池  容量：800 mAh  充电：2 小时  充电电压：5 V  充电电流：800 mA  工作电流：&lt; 45 mA  待机电流： &lt; 10 µA  温度范围： 5°C - 45°C</code></pre></li></ul><h2 id="首次连接方式"><a href="#首次连接方式" class="headerlink" title="首次连接方式"></a>首次连接方式</h2><h3 id="蓝牙"><a href="#蓝牙" class="headerlink" title="蓝牙"></a>蓝牙</h3><p>背部挡位调至蓝牙  —&gt;&gt;   按 一下 🏠键（白灯长亮）  —&gt;&gt;   长按🏠键3秒（白灯开始闪烁）  —&gt;&gt;   设备可以搜索并连接到到 Xbox Wireless Controller 蓝牙设备</p><p>二次连接手柄开机可自动连接。要特别注意：如果连接过设备一，再连接设备二时需要先在设备一忽略手柄蓝牙，不然设备二无法连接。</p><h3 id="2-4G无线接收器连接"><a href="#2-4G无线接收器连接" class="headerlink" title="2.4G无线接收器连接"></a>2.4G无线接收器连接</h3><p>背部挡位调至 USB接收器 —&gt;&gt;  关机状态 长按 🏠键（白灯快闪）—&gt;&gt;  手柄USB接收器插入设备开始配对</p><h3 id="NS"><a href="#NS" class="headerlink" title="NS"></a>NS</h3><p>Switch进入 更改握法&#x2F;顺序  –&gt;&gt;  背部挡位调至 NS  —&gt;&gt;  按 一下 🏠键（蓝灯常量）</p><h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><ul><li><p>开机： 按 一下 🏠键</p></li><li><p>关机： 任意切换背部挡位（或者无操作等15分钟自动关机）</p></li><li><p>Xinput: 长按 <code>O + X</code> 键，指示灯亮白色⚪</p></li><li><p>Dinput: 长按 <code>O + A</code> 键，指示灯亮蓝色🔵</p></li><li><p>低电量： 指示灯红色闪烁</p></li><li><p>关机充电指示灯：充电红色🔴常亮， 充满变绿色🟢常亮</p></li><li><p>震动调节： 长按 <code>O</code> + 左摇杆向上&#x2F;下推动，可提高&#x2F;降低针对力度</p></li><li><p>板载配置方案切换： <code>select + A/B/X/Y</code> 可切换到对应键存储的配置</p></li><li><p>安卓智连模式（横屏非原生游戏）： 蓝牙 挡，点按开机，长按 <code>O + Y</code>（指示灯亮蓝色🔵）</p></li><li><p>安卓传统模式（原生游戏）：牙 挡，点按开机，长按 <code>O + Y</code>（指示灯亮蓝色🔵）</p></li></ul><p>【Xinput: 新街口，适配大多数现代游戏； Dinput： 老旧接口，适配复古游戏、街机等】</p><h2 id="自定义"><a href="#自定义" class="headerlink" title="自定义"></a>自定义</h2><p>使用 飞智空间</p><ul><li>按键映射</li><li>宏定义</li><li>体感映射</li><li>遥感调节</li></ul><h2 id="手柄端快捷设置"><a href="#手柄端快捷设置" class="headerlink" title="手柄端快捷设置"></a>手柄端快捷设置</h2><h3 id="连点"><a href="#连点" class="headerlink" title="连点"></a>连点</h3><p>设置：点按 <code>O + &lt;需要连点的按键&gt;</code> (点按连点状态的按键时指示灯会闪烁)</p><p>取消：点按 <code>O + &lt;需要取消连点的按键&gt;</code></p><h3 id="宏（只对-M1-M2-按键生效）"><a href="#宏（只对-M1-M2-按键生效）" class="headerlink" title="宏（只对 M1&#x2F;M2 按键生效）"></a>宏（只对 M1&#x2F;M2 按键生效）</h3><p>录制： 长按 <code>O + M1/M2</code> (指示灯蓝白闪烁🔵⚪)  —&gt;&gt;   &lt;按 需要录制的按键组合&gt;  —&gt;&gt;   按对应的 M1&#x2F;M2 结束录制</p><p>取消： 长按 <code>O + M1/M2</code></p><p>注意： 如果仅录制一个键,则会把M1&#x2F;M2映射为该键</p><h3 id="体感-扳机矫正"><a href="#体感-扳机矫正" class="headerlink" title="体感&#x2F;扳机矫正"></a>体感&#x2F;扳机矫正</h3><p>开机状态  —&gt;&gt;   长按 <code>select + start + 十字键上键盘</code> 3秒（指示灯红色🔴慢烁）  —&gt;&gt;   拿起 短按（按满）LT&#x2F;RT 2次  —&gt;&gt;   分别旋转左右摇杆 2圈  —&gt;&gt;   短按 <code>select + start + 十字键上键盘</code>退出矫正模式完成矫正</p><h3 id="遥感矫正"><a href="#遥感矫正" class="headerlink" title="遥感矫正"></a>遥感矫正</h3><p>开机状态  —&gt;&gt;   长按 <code>select + start + 十字键上键盘</code> 3秒（指示灯红色🔴慢烁）  —&gt;&gt;   平放桌面后自动矫准，1秒后自动退出矫正模式</p><h3 id="恢复出厂设置"><a href="#恢复出厂设置" class="headerlink" title="恢复出厂设置"></a>恢复出厂设置</h3><p>开机状态  —&gt;&gt;  长按 <code>select +LB + RB</code> 5秒（手柄震动一下提示</p><h3 id="DFU模式"><a href="#DFU模式" class="headerlink" title="DFU模式"></a>DFU模式</h3><p>开机状态  —&gt;&gt;  长按 <code>LB + RB + START</code> 5秒，强制进入Bootloader模式</p><p><img src="https://visitor-badge.laobi.icu/badge?page_id=fqw000.%3C!--swig%EF%BF%BC0--%3E&left_text=Visitors" alt="Visitors"></p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html"></summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>小米电视4A（Android 6.0.1）系统精简与优化教程</title>
@@ -110,9 +133,9 @@
     
     
     
-    <category term="stremio" scheme="https://wangqifei.eu.org/tags/stremio/"/>
-    
     <category term="jwt" scheme="https://wangqifei.eu.org/tags/jwt/"/>
+    
+    <category term="stremio" scheme="https://wangqifei.eu.org/tags/stremio/"/>
     
   </entry>
   
